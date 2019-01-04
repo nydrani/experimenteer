@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,24 +8,61 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppThemeOverlay.AppBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:actionBarTheme="@style/AppThemeOverlay.AppBar"/>
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:title="Wao"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:text="Hello World!"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/message2"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:text="Hello World!" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/message3"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:text="Hello World!"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_margin="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="bottom|end"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
