@@ -1,12 +1,18 @@
 package xyz.velvetmilk.testingtool
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var adapter: TestAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +26,20 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, R.string.test_message, Toast.LENGTH_SHORT).show()
                     }
                     .show()
+
+            // add item to adapter
+            adapter.addItem(java.util.UUID.randomUUID().toString())
         }
+
+        fab2.setOnClickListener {
+            startActivity(AppBarLayoutTestActivity.buildIntent(this))
+        }
+
+        adapter = TestAdapter()
+        adapter.setHasStableIds(true)
+
+        recycler_view.adapter = adapter
+        recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 }
