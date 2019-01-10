@@ -1,10 +1,8 @@
 package xyz.velvetmilk.testingtool
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -33,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         fab2.setOnClickListener {
             startActivity(AppBarLayoutTestActivity.buildIntent(this))
+        }
+
+        fab3.setOnClickListener {
+            startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
         }
 
         adapter = TestAdapter()
