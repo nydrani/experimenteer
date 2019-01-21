@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".AppBarLayoutTestActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
+        <activity android:name=".ConstraintBarrierActivity"/>
 
     </application>
 

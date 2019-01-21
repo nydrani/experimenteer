@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
         }
 
+        fab4.setOnClickListener {
+            startActivity(ConstraintBarrierActivity.buildIntent(this))
+        }
+
         adapter = TestAdapter()
         adapter.setHasStableIds(true)
 
