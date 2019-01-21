@@ -20,5 +20,9 @@ class ConstraintBarrierActivity : AppCompatActivity() {
         setContentView(R.layout.activity_constraint_barrier)
 
         setSupportActionBar(toolbar)
+
+        textView1.text = getString(R.string.format_string1, "hello")
+        textView2.text = getString(R.string.format_string2, "hello")
+        textView3.text = getString(R.string.format_string3, "hello", "there")
     }
 }
