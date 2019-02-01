@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.item_test.view.*
 
 
 class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    val viewClickSubject: Subject<Pair<View, Int>> = PublishSubject.create<Pair<View, Int>>()
     private val items: MutableList<String> = mutableListOf()
 
     override fun getItemCount(): Int {
@@ -18,7 +20,7 @@ class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is TestViewHolder) {
-            holder.bind(items[position])
+            holder.bind(items[position], viewClickSubject)
         }
     }
 
@@ -66,7 +68,10 @@ class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     class TestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(string: String) {
+        fun bind(string: String, clickSubject: Subject<Pair<View, Int>>) {
+            itemView.setOnClickListener {
+                clickSubject.onNext(Pair(it, layoutPosition))
+            }
             itemView.test_text.text = string
         }
     }
