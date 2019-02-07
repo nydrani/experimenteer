@@ -12,6 +12,9 @@ import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
+import org.slf4j.LoggerFactory
+import timber.log.Timber
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,11 +25,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: TestAdapter
     private val disposer = CompositeDisposable()
 
+    private val logger = LoggerFactory.getLogger(MainActivity::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        Log.d(TAG, "hello there from android log")
+        Timber.d("hello there from timber")
+        logger.warn("hello there from slf4j")
 
         fab.setOnClickListener {
             Snackbar.make(it, R.string.test_message, Snackbar.LENGTH_LONG)
