@@ -66,6 +66,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_coroutine -> {
+                    startActivity(CoroutineActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }
@@ -78,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         adapter.viewClickSubject.subscribe {
-            Log.d(TAG, it.second.toString())
+            Timber.d(it.second.toString())
         }.addTo(disposer)
     }
 
@@ -89,6 +93,14 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(nav_view)) {
+            drawer_layout.closeDrawers()
+        } else {
+            super.onBackPressed()
         }
     }
 

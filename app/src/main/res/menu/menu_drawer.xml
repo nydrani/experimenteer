@@ -7,6 +7,10 @@
             android:id="@+id/nav_focusable"
             android:title="Focusable activity"/>
 
+        <item
+            android:id="@+id/nav_coroutine"
+            android:title="Coroutine activity"/>
+
     </group>
 
 </menu>
