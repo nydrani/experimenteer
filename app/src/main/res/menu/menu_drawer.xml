@@ -11,6 +11,10 @@
             android:id="@+id/nav_coroutine"
             android:title="Coroutine activity"/>
 
+        <item
+            android:id="@+id/nav_native"
+            android:title="Native activity"/>
+
     </group>
 
 </menu>

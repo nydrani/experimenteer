@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CoroutineActivity">
+    tools:context=".NativeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -29,7 +29,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/log_view"
+            android:id="@+id/native_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
@@ -57,5 +57,15 @@
         app:srcCompat="@mipmap/ic_launcher_round"
         app:layout_anchor="@+id/scroll_view"
         app:layout_anchorGravity="bottom|center_horizontal"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="bottom|start"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

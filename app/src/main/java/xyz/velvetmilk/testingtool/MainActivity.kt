@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(CoroutineActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_native-> {
+                    startActivity(NativeActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }
