@@ -9,6 +9,8 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class CoroutineActivity : AppCompatActivity() {
 
@@ -39,6 +41,18 @@ class CoroutineActivity : AppCompatActivity() {
         fab2.setOnClickListener {
             coroutineRunBlocking()
         }
+
+        val byteBuffer = ByteBuffer.allocate(100)
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
+        byteBuffer.put(1)
+        byteBuffer.put(2)
+        byteBuffer.put(3)
+        byteBuffer.put(4)
+
+        val byteArraySize = 4
+
+        Timber.d("arrayOffset: %d", byteBuffer.arrayOffset())
+        Timber.d("byteArray: %s", pythonPrintByteArray(byteBuffer.array(), byteBuffer.arrayOffset(), byteArraySize))
     }
 
     override fun onDestroy() {
@@ -57,6 +71,16 @@ class CoroutineActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun pythonPrintByteArray(array: ByteArray, offset: Int, size: Int): String {
+        val stringBuilder = StringBuilder()
+        for (i in offset until size+offset) {
+            stringBuilder.append(array[i])
+        }
+
+        return stringBuilder.toString()
     }
 
     private fun coroutineFun() {

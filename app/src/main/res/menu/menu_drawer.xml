@@ -15,6 +15,10 @@
             android:id="@+id/nav_native"
             android:title="Native activity"/>
 
+        <item
+            android:id="@+id/nav_quiet"
+            android:title="Quiet activity"/>
+
     </group>
 
 </menu>

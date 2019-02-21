@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="xyz.velvetmilk.testingtool">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
         android:name=".TestingApp"
         android:allowBackup="false"
@@ -27,7 +29,7 @@
         <activity android:name=".FocusableActivity"/>
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".NativeActivity"/>
-
+        <activity android:name=".QuietActivity"/>
     </application>
 
 </manifest>
