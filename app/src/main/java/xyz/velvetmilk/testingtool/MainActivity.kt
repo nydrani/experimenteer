@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(QuietActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_opensles -> {
+                    startActivity(OpenSLESActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }

@@ -5,6 +5,7 @@
     package="xyz.velvetmilk.testingtool">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".TestingApp"
@@ -30,6 +31,7 @@
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".NativeActivity"/>
         <activity android:name=".QuietActivity"/>
+        <activity android:name=".OpenSLESActivity"/>
     </application>
 
 </manifest>

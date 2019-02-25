@@ -14,6 +14,16 @@ add_library(testing
             SHARED
             testlib.cpp)
 
+add_library(eaves
+        SHARED
+        eaveslib.cpp)
+
 target_link_libraries(testing
-                      log
-                      android)
+        log
+        android
+        OpenSLES)
+
+target_link_libraries(eaves
+        log
+        android
+        OpenSLES)

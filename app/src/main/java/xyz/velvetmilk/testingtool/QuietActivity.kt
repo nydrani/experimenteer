@@ -10,13 +10,9 @@ import kotlinx.android.synthetic.main.activity_quiet.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.quietmodem.Quiet.FrameReceiverConfig
-import org.quietmodem.Quiet.FrameTransmitterConfig
+import org.quietmodem.Quiet.*
 import timber.log.Timber
 import java.io.IOException
-import org.quietmodem.Quiet.ModemException
-import org.quietmodem.Quiet.FrameTransmitter
-import org.quietmodem.Quiet.FrameReceiver
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 
@@ -30,8 +26,8 @@ class QuietActivity : AppCompatActivity() {
         }
     }
 
-    private var receiver: FrameReceiver? = null
-    private var transmitter: FrameTransmitter? = null
+    private var receiver: LoopbackFrameReceiver? = null
+    private var transmitter: LoopbackFrameTransmitter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +44,7 @@ class QuietActivity : AppCompatActivity() {
 
             Timber.d("starting send: %s", data)
 
-            sendQuietDataWithPermissionCheck()
+            sendQuietDataWithPermissionCheck(data)
         }
 
         receive_button.setOnClickListener {
@@ -62,15 +58,15 @@ class QuietActivity : AppCompatActivity() {
             Timber.d(defaultConfigs)
             val transmitterConfig = FrameTransmitterConfig(
                 this,
-                "audible-7k-channel-0"
+                "ultrasonic"
             )
             val receiverConfig = FrameReceiverConfig(
                 this,
-                "audible-7k-channel-0"
+                "ultrasonic"
             )
 
-            receiver = FrameReceiver(receiverConfig)
-            transmitter = FrameTransmitter(transmitterConfig)
+            receiver = LoopbackFrameReceiver(receiverConfig)
+            transmitter = LoopbackFrameTransmitter(transmitterConfig)
         } catch (e: IOException) {
             // could not build configs
         } catch (e: ModemException) {
@@ -80,9 +76,8 @@ class QuietActivity : AppCompatActivity() {
     }
 
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
-    fun sendQuietData() {
+    fun sendQuietData(payload: String) {
         // send this data
-        val payload = "Hello, World!"
         try {
             transmitter?.send(payload.toByteArray())
         } catch (e: IOException) {
@@ -111,6 +106,9 @@ class QuietActivity : AppCompatActivity() {
                 }
             } catch (e: IOException) {
                 Timber.e(e, "error when receiving")
+                launch(Dispatchers.Main) {
+                    textView1.text = "got nothing"
+                }
             }
         }
     }

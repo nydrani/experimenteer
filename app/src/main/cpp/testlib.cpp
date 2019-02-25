@@ -1,8 +1,12 @@
 #include <jni.h>
 #include <android/log.h>
 #include <string>
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+#include <SLES/OpenSLES_AndroidConfiguration.h>
 
-#define LOG_TAG "libbboycore"
+
+#define LOG_TAG "libtest"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 
 
