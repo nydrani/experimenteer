@@ -38,10 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="start"
-                app:layout_constraintEnd_toStartOf="@+id/stop_recording_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <Button
                 android:id="@+id/stop_recording_button"
@@ -49,10 +47,17 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="stop"
-                app:layout_constraintEnd_toStartOf="@+id/store_button"
-                app:layout_constraintStart_toEndOf="@+id/start_recording_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/start_recording_button"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <Button
+                android:id="@+id/play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="play"
+                app:layout_constraintTop_toBottomOf="@+id/stop_recording_button"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <Button
                 android:id="@+id/store_button"
@@ -60,13 +65,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="store"
-                app:layout_constraintStart_toEndOf="@+id/stop_recording_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/play_button"
+                app:layout_constraintStart_toStartOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

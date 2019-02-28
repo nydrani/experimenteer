@@ -14,10 +14,13 @@ class EavesJNILib {
         external fun createEngine()
 
         @JvmStatic
-        external fun createBufferQueueAudioPlayer(sampleRate: Int, samplesPerBuf: Int): Boolean
+        external fun createAudioRecorder(): Boolean
 
         @JvmStatic
-        external fun createAudioRecorder(): Boolean
+        external fun createAudioPlayer(): Boolean
+
+        @JvmStatic
+        external fun startPlaying()
 
         @JvmStatic
         external fun startRecording()
@@ -30,11 +33,5 @@ class EavesJNILib {
 
         @JvmStatic
         external fun shutdown()
-
-        @JvmStatic
-        external fun nativeByteArray(byteArray: ByteArray): String
-
-        @JvmStatic
-        external fun nativeToByteArray(string: String): ByteArray
     }
 }

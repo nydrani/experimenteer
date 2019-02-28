@@ -16,6 +16,10 @@ static SLEngineItf engineEngine = nullptr;
 
 static SLObjectItf outputMixObject = nullptr;
 
+static SLObjectItf playerObject = nullptr;
+static SLPlayItf playerPlay = nullptr;
+static SLAndroidSimpleBufferQueueItf playerBufferQueue = nullptr;
+
 static SLObjectItf recorderObject = nullptr;
 static SLRecordItf recorderRecord = nullptr;
 static SLAndroidSimpleBufferQueueItf recorderBufferQueue = nullptr;
@@ -25,6 +29,20 @@ static SLAndroidSimpleBufferQueueItf recorderBufferQueue = nullptr;
 #define RECORDER_FRAMES (44100 * 5 * 2)
 static short recorderBuffer[RECORDER_FRAMES];
 static int recorderSize = 0;
+
+
+// this callback handler is called every time a buffer finishes recording
+void playerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
+{
+    assert(bq == playerBufferQueue);
+    assert(context == nullptr);
+
+    LOGA("Player callback fired");
+    SLresult result;
+    result = (*playerPlay)->SetPlayState(playerPlay, SL_PLAYSTATE_STOPPED);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+}
 
 // this callback handler is called every time a buffer finishes recording
 void recorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
@@ -57,32 +75,6 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_nativeByteArray(JNIEnv* env, jclass clazz, jbyteArray byteArray) {
-    auto arrayLen = static_cast<u_int32_t>(env->GetArrayLength(byteArray));
-
-    jbyte buffer[arrayLen];
-    env->GetByteArrayRegion(byteArray, 0, arrayLen, buffer);
-
-    const char* cstring = reinterpret_cast<const char*>(buffer);
-    std::string byteString(cstring, arrayLen);
-
-    jstring string = env->NewStringUTF(byteString.c_str());
-
-    return string;
-}
-
-JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_nativeToByteArray(JNIEnv* env, jclass clazz, jstring string) {
-    auto strLength = static_cast<u_int32_t>(env->GetStringUTFLength(string));
-
-    char buffer[strLength];
-    env->GetStringUTFRegion(string, 0, strLength, buffer);
-
-    jbyteArray array = env->NewByteArray(strLength);
-    env->SetByteArrayRegion(array, 0, strLength, reinterpret_cast<const jbyte*>(buffer));
-
-    return array;
-}
-
 // create the engine and output mix objects
 JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createEngine(JNIEnv* env, jclass clazz)
 {
@@ -91,27 +83,27 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createEngine(
     // create engine
     SLEngineOption engineOption[] = {{SL_ENGINEOPTION_THREADSAFE, SL_BOOLEAN_TRUE}};
     result = slCreateEngine(&engineObject, 1, engineOption, 0, nullptr, nullptr);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // realize the engine
     result = (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // get the engine interface, which is needed in order to create other objects
     result = (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // create output mix, with environmental reverb specified as a non-required interface
     result = (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, nullptr, nullptr);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // realize the output mix
     result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 }
 
@@ -124,7 +116,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createAud
     // configure audio source
     SLDataLocator_IODevice loc_dev = {SL_DATALOCATOR_IODEVICE,
                                       SL_IODEVICE_AUDIOINPUT,
-                                      SL_DEFAULTDEVICEID_AUDIOINPUT,
+                                      SL_DEFAULTDEVICEID_AUDIOOUTPUT,
                                       nullptr};
     SLDataSource audioSrc = {&loc_dev, nullptr};
 
@@ -156,20 +148,99 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createAud
 
     // get the record interface
     result = (*recorderObject)->GetInterface(recorderObject, SL_IID_RECORD, &recorderRecord);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // get the buffer queue interface
     result = (*recorderObject)->GetInterface(recorderObject, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &recorderBufferQueue);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // register callback on the buffer queue
     result = (*recorderBufferQueue)->RegisterCallback(recorderBufferQueue, recorderCallback, nullptr);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     return JNI_TRUE;
+}
+
+// create audio recorder: recorder is not in fast path
+// like to avoid excessive re-sampling while playing back from Hello & Android clip
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createAudioPlayer(JNIEnv* env, jclass clazz)
+{
+    SLresult result;
+
+    // configure audio source
+    SLDataLocator_AndroidSimpleBufferQueue bufferQueue = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
+    SLDataFormat_PCM pcm = {SL_DATAFORMAT_PCM,
+                            2,
+                            SL_SAMPLINGRATE_44_1,
+                            SL_PCMSAMPLEFORMAT_FIXED_16,
+                            16,
+                            SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+                            SL_BYTEORDER_LITTLEENDIAN};
+    SLDataSource audioSrc = {&bufferQueue, &pcm};
+
+    SLDataLocator_OutputMix outMixLocator = {SL_DATALOCATOR_OUTPUTMIX, outputMixObject};
+
+    // configure audio sink
+    SLDataSink audioSnk = {&outMixLocator, nullptr};
+
+    // create audio recorder
+    // (requires the RECORD_AUDIO permission)
+    SLInterfaceID id[1] = {SL_IID_ANDROIDSIMPLEBUFFERQUEUE};
+    SLboolean req[1] = {SL_BOOLEAN_TRUE};
+    result = (*engineEngine)->CreateAudioPlayer(engineEngine, &playerObject, &audioSrc, &audioSnk, 1, id, req);
+    if (SL_RESULT_SUCCESS != result) {
+        return JNI_FALSE;
+    }
+
+    // realize the audio recorder
+    result = (*playerObject)->Realize(playerObject, SL_BOOLEAN_FALSE);
+    if (SL_RESULT_SUCCESS != result) {
+        return JNI_FALSE;
+    }
+
+    // get the record interface
+    result = (*playerObject)->GetInterface(playerObject, SL_IID_PLAY, &playerPlay);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+
+    // get the buffer queue interface
+    result = (*playerObject)->GetInterface(playerObject, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &playerBufferQueue);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+
+    // register callback on the buffer queue
+    result = (*playerBufferQueue)->RegisterCallback(playerBufferQueue, playerCallback, nullptr);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+
+    return JNI_TRUE;
+}
+
+// set the recording state for the audio recorder
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_startPlaying(JNIEnv* env, jclass clazz)
+{
+    SLresult result;
+
+    // in case already recording, stop recording and clear buffer queue
+    result = (*playerPlay)->SetPlayState(playerPlay, SL_PLAYSTATE_STOPPED);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+
+    // enqueue an empty buffer to be played by the player
+    result = (*playerBufferQueue)->Enqueue(playerBufferQueue, recorderBuffer,
+                                             RECORDER_FRAMES * sizeof(short));
+    // the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
+    // which for this code example would indicate a programming error
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+
+    // start playing
+    result = (*playerPlay)->SetPlayState(playerPlay, SL_PLAYSTATE_PLAYING);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
 }
 
 // set the recording state for the audio recorder
@@ -183,11 +254,11 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_startRecordin
 
     // in case already recording, stop recording and clear buffer queue
     result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_STOPPED);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     result = (*recorderBufferQueue)->Clear(recorderBufferQueue);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // the buffer is not valid for playback yet
@@ -199,12 +270,12 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_startRecordin
                                              RECORDER_FRAMES * sizeof(short));
     // the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
     // which for this code example would indicate a programming error
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
     // start recording
     result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_RECORDING);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 }
 
@@ -219,7 +290,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_stopRecording
 
     // in case already recording, stop recording and clear buffer queue
     result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_STOPPED);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
 
@@ -227,12 +298,12 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_stopRecording
     SLmillisecond recordPosition = 0;
 
     result = (*recorderRecord)->GetPosition(recorderRecord, &recordPosition);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
     LOGA("GetPosition: %u", recordPosition);
 
     result = (*recorderRecord)->GetMarkerPosition(recorderRecord, &recordPosition);
-    assert(SL_RESULT_SUCCESS == result);
+    assert(result == SL_RESULT_SUCCESS);
     (void)result;
     LOGA("GetMarkerPosition: %u", recordPosition);
 
@@ -257,6 +328,13 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_shutdown(JNIE
         recorderObject = nullptr;
         recorderRecord = nullptr;
         recorderBufferQueue = nullptr;
+    }
+
+    if (playerObject != nullptr) {
+        (*playerObject)->Destroy(playerObject);
+        playerObject = nullptr;
+        playerPlay = nullptr;
+        playerBufferQueue = nullptr;
     }
 
     // destroy output mix object, and invalidate all associated interfaces

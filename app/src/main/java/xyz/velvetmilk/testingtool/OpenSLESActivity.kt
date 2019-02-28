@@ -34,6 +34,7 @@ class OpenSLESActivity : AppCompatActivity() {
         // Setup OpenSLES
         EavesJNILib.createEngine()
         EavesJNILib.createAudioRecorder()
+        EavesJNILib.createAudioPlayer()
 
         // Setup click listeners
         start_recording_button.setOnClickListener {
@@ -52,6 +53,12 @@ class OpenSLESActivity : AppCompatActivity() {
             Timber.d("store recording")
 
             storeRecordingWithPermissionCheck()
+        }
+
+        play_button.setOnClickListener {
+            Timber.d("play button")
+
+            playRecording()
         }
     }
 
@@ -86,6 +93,10 @@ class OpenSLESActivity : AppCompatActivity() {
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
     fun stopRecording() {
         EavesJNILib.stopRecording()
+    }
+
+    fun playRecording() {
+        EavesJNILib.startPlaying()
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -185,5 +196,4 @@ class OpenSLESActivity : AppCompatActivity() {
     private fun ByteArray.toHexStringUTF8(): String {
         return toString(Charsets.UTF_8)
     }
-
 }
