@@ -82,6 +82,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_nfc -> {
+                    startActivity(NFCActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }

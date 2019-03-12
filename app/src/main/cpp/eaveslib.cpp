@@ -26,9 +26,11 @@ static SLAndroidSimpleBufferQueueItf recorderBufferQueue = nullptr;
 
 // global ints for recorder
 // 5 seconds of recorded audio at 44.1 kHz stereo, 16-bit signed little endian (2channel)
-#define RECORDER_FRAMES (44100 * 5 * 2)
-static short recorderBuffer[RECORDER_FRAMES];
-static int recorderSize = 0;
+#define BITS_PER_DECISECOND (4410 * 2)
+#define BITS_PER_SECOND (BITS_PER_DECISECOND * 10)
+#define RECORDER_FRAMES (BITS_PER_SECOND * 5)
+static int16_t recorderBuffer[RECORDER_FRAMES];
+static int32_t recorderSize = 0;
 
 
 // this callback handler is called every time a buffer finishes recording
@@ -56,8 +58,16 @@ void recorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
     SLresult result;
     result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_STOPPED);
     if (result == SL_RESULT_SUCCESS) {
-        recorderSize = RECORDER_FRAMES * sizeof(short);
+        recorderSize = RECORDER_FRAMES * sizeof(int16_t);
     }
+
+    // query the record position
+    SLmillisecond recordPosition = 0;
+
+    result = (*recorderRecord)->GetPosition(recorderRecord, &recordPosition);
+    assert(result == SL_RESULT_SUCCESS);
+    (void)result;
+    LOGA("GetPosition: %u", recordPosition);
 }
 
 extern "C" {
@@ -116,7 +126,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_createAud
     // configure audio source
     SLDataLocator_IODevice loc_dev = {SL_DATALOCATOR_IODEVICE,
                                       SL_IODEVICE_AUDIOINPUT,
-                                      SL_DEFAULTDEVICEID_AUDIOOUTPUT,
+                                      SL_DEFAULTDEVICEID_AUDIOINPUT,
                                       nullptr};
     SLDataSource audioSrc = {&loc_dev, nullptr};
 
@@ -293,7 +303,6 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_stopRecording
     assert(result == SL_RESULT_SUCCESS);
     (void)result;
 
-
     // query the record position
     SLmillisecond recordPosition = 0;
 
@@ -302,12 +311,8 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_EavesJNILib_stopRecording
     (void)result;
     LOGA("GetPosition: %u", recordPosition);
 
-    result = (*recorderRecord)->GetMarkerPosition(recorderRecord, &recordPosition);
-    assert(result == SL_RESULT_SUCCESS);
-    (void)result;
-    LOGA("GetMarkerPosition: %u", recordPosition);
-
-    recorderSize = 0;
+    // NOTE: We cut round down to the closest centisecond due to OpenSLES GetPosition() being inaccurate
+    recorderSize = recordPosition / 100 * BITS_PER_DECISECOND * sizeof(int16_t);
 }
 
 // set the recording state for the audio recorder
