@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_focusable.*
+import timber.log.Timber
 
 class FocusableActivity : AppCompatActivity() {
 
@@ -29,12 +30,12 @@ class FocusableActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         keyboardCheckObservable(this).subscribe {
-            // clear focus of currently focused
-            if (!it) {
-                currentFocus?.clearFocus()
-            }
-            Log.d(TAG, it.toString())
-        }.addTo(disposer)
+                // clear focus of currently focused
+                if (!it) {
+                    currentFocus?.clearFocus()
+                }
+                Timber.d(it.toString())
+            }.addTo(disposer)
     }
 
     override fun onDestroy() {

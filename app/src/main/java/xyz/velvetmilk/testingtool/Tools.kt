@@ -6,6 +6,8 @@ import android.graphics.Rect
 import android.util.TypedValue
 import android.view.View
 import io.reactivex.Observable
+import java.lang.StringBuilder
+import java.nio.charset.Charset
 
 
 fun dpToPx(context: Context, valueInDp: Float): Float {
@@ -13,8 +15,56 @@ fun dpToPx(context: Context, valueInDp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics)
 }
 
+fun ByteArray?.toHexStringUTF8(): String {
+    if (this == null) {
+        return "null"
+    }
 
-fun keyboardCheckObservable(activity: Activity) : Observable<Boolean> {
+    return String(this, Charset.forName("UTF-8"))
+}
+
+fun String?.toByteArrayUTF8(): ByteArray {
+    if (this == null) {
+        return byteArrayOf()
+    }
+
+    return toByteArray(Charsets.UTF_8)
+}
+
+fun ByteArray?.toByteString(): String {
+    if (this == null) {
+        return "null"
+    }
+
+    val builder = StringBuilder()
+    builder.append('[')
+    for (item in this) {
+        builder.append(item)
+        builder.append(", ")
+    }
+    if (this.isNotEmpty()) {
+        builder.deleteCharAt(builder.length - 1)
+        builder.deleteCharAt(builder.length - 1)
+    }
+    builder.append(']')
+
+    return builder.toString()
+}
+
+fun ByteArray?.toRawString(size: Int, offset: Int): String {
+    if (this == null) {
+        return "null"
+    }
+
+    val stringBuilder = StringBuilder()
+    for (i in offset until size + offset) {
+        stringBuilder.append(this[i])
+    }
+
+    return stringBuilder.toString()
+}
+
+fun keyboardCheckObservable(activity: Activity): Observable<Boolean> {
     val contentView = activity.findViewById<View>(android.R.id.content)
 
     return Observable.create<Boolean> {

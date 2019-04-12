@@ -25,6 +25,7 @@ class OpenSLESActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opensles)
@@ -85,6 +86,7 @@ class OpenSLESActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
     fun startRecording() {
         EavesJNILib.startRecording()
@@ -95,7 +97,7 @@ class OpenSLESActivity : AppCompatActivity() {
         EavesJNILib.stopRecording()
     }
 
-    fun playRecording() {
+    private fun playRecording() {
         EavesJNILib.startPlaying()
     }
 
@@ -177,23 +179,10 @@ class OpenSLESActivity : AppCompatActivity() {
 
         Timber.d("size: %d", dataStream.size())
         Timber.d("offset: %d", byteBuffer.arrayOffset())
-        Timber.d("array: %s", pythonPrintArray(byteBuffer.array(), headerSize))
+        Timber.d("array: %s", byteBuffer.array().toRawString(headerSize, byteBuffer.arrayOffset()))
 
         // NOTE: NEED TO OFFSET THIS ARRAY BY THE BYTEBUFFER OFFSET, NOT SURE WHY THERES AN OFFSET
         outStream.write(byteBuffer.array(), byteBuffer.arrayOffset(), headerSize)
         dataStream.writeTo(outStream)
-    }
-
-    private fun pythonPrintArray(array: ByteArray, size: Int): String {
-        val stringBuilder = StringBuilder()
-        for (i in 0 until size) {
-            stringBuilder.append(array[i])
-        }
-
-        return stringBuilder.toString()
-    }
-
-    private fun ByteArray.toHexStringUTF8(): String {
-        return toString(Charsets.UTF_8)
     }
 }

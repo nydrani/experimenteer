@@ -113,10 +113,6 @@ class QuietActivity : AppCompatActivity() {
         }
     }
 
-    private fun ByteArray.toHexStringUTF8(): String {
-        return toString(Charsets.UTF_8)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 

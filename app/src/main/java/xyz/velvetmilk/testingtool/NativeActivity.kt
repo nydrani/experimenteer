@@ -7,8 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_native.*
-import timber.log.Timber
-import java.nio.charset.Charset
 
 class NativeActivity : AppCompatActivity() {
 
@@ -57,13 +55,5 @@ class NativeActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun ByteArray.toHexStringUTF8() : String {
-        return String(this, Charset.forName("UTF-8"))
-    }
-
-    private fun String.toByteArrayUTF8() : ByteArray {
-        return toByteArray(Charsets.UTF_8)
     }
 }

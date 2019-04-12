@@ -48,6 +48,18 @@ class MainActivity : AppCompatActivity() {
             adapter.addItem(java.util.UUID.randomUUID().toString())
         }
 
+        fab.setOnLongClickListener {
+            Snackbar.make(it, "Clearing messages", Snackbar.LENGTH_LONG)
+                .setAction(R.string.test_action) {
+                    Toast.makeText(this, "Gottem", Toast.LENGTH_SHORT).show()
+                }
+                .show()
+
+            // clear list of messages
+            adapter.updateItems(listOf())
+            true
+        }
+
         fab2.setOnClickListener {
             startActivity(AppBarLayoutTestActivity.buildIntent(this))
         }
