@@ -25,7 +25,7 @@ class MaxHeightRecyclerView(context: Context, attrs: AttributeSet) : RecyclerVie
     fun setMaxHeight(newMaxHeight: Int) {
         if (maxHeight != newMaxHeight) {
             maxHeight = newMaxHeight
-            requestLayout()
+            //requestLayout()
         }
     }
 }

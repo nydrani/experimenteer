@@ -18,12 +18,19 @@ add_library(eaves
         SHARED
         eaveslib.cpp)
 
+add_library(attestation
+        SHARED
+        attestationlib.cpp)
+
 target_link_libraries(testing
         log
-        android
-        OpenSLES)
+        android)
 
 target_link_libraries(eaves
         log
         android
         OpenSLES)
+
+target_link_libraries(attestation
+        log
+        android)

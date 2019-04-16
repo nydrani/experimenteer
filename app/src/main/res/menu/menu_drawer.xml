@@ -16,16 +16,16 @@
             android:title="Native activity"/>
 
         <item
-            android:id="@+id/nav_quiet"
-            android:title="Quiet activity"/>
-
-        <item
             android:id="@+id/nav_opensles"
             android:title="OpenSLES activity"/>
 
         <item
             android:id="@+id/nav_nfc"
             android:title="NFC activity"/>
+
+        <item
+            android:id="@+id/nav_attestation"
+            android:title="Attestation activity"/>
 
     </group>
 

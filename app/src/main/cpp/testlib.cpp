@@ -1,9 +1,6 @@
 #include <jni.h>
 #include <android/log.h>
 #include <string>
-#include <SLES/OpenSLES.h>
-#include <SLES/OpenSLES_Android.h>
-#include <SLES/OpenSLES_AndroidConfiguration.h>
 
 
 #define LOG_TAG "libtest"

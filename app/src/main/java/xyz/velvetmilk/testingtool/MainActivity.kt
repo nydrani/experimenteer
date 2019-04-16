@@ -86,16 +86,16 @@ class MainActivity : AppCompatActivity() {
                     startActivity(NativeActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_quiet -> {
-                    startActivity(QuietActivity.buildIntent(this))
-                    true
-                }
                 R.id.nav_opensles -> {
                     startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_nfc -> {
                     startActivity(NFCActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_attestation -> {
+                    startActivity(AttestationActivity.buildIntent(this))
                     true
                 }
                 else -> false

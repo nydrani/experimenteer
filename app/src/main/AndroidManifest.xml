@@ -31,9 +31,9 @@
         <activity android:name=".FocusableActivity"/>
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".NativeActivity"/>
-        <activity android:name=".QuietActivity"/>
         <activity android:name=".OpenSLESActivity"/>
         <activity android:name=".NFCActivity"/>
+        <activity android:name=".AttestationActivity"/>
     </application>
 
 </manifest>
