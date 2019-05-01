@@ -34,6 +34,7 @@
         <activity android:name=".OpenSLESActivity"/>
         <activity android:name=".NFCActivity"/>
         <activity android:name=".AttestationActivity"/>
+        <activity android:name=".KeyStoreActivity"/>
     </application>
 
 </manifest>

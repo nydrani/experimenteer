@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -14,6 +15,8 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -44,6 +47,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
     private var logBuilder = StringBuilder()
     private var debounceBuilder = StringBuilder()
 
+    private var curInstant = Instant.now()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,16 +59,55 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
 
         fab.setOnClickListener {
+            Snackbar.make(it, "Coroutine run non-blocking", Snackbar.LENGTH_SHORT).show()
             coroutineFun()
         }
 
         fab2.setOnClickListener {
+            Snackbar.make(it, "Coroutine run blocking", Snackbar.LENGTH_SHORT).show()
             coroutineRunBlocking()
         }
 
         fab3.setOnClickListener {
             click()
         }
+
+        fab4.setOnClickListener {
+            Snackbar.make(it, "Coroutine suspend", Snackbar.LENGTH_SHORT).show()
+            launch {
+                val builder = StringBuilder()
+                for (i in 1..20) {
+                    val s = doSomethingSuspend(i)
+
+                    val newInstant = Instant.now()
+                    val timeDiff = ChronoUnit.MILLIS.between(curInstant, newInstant)
+                    curInstant = newInstant
+                    builder.appendln(s)
+
+                    log_view.text = builder.toString()
+                    log_view3.text = timeDiff.toString()
+                }
+            }
+        }
+
+        fab5.setOnClickListener {
+            Snackbar.make(it, "Coroutine async deferred", Snackbar.LENGTH_SHORT).show()
+            launch {
+                val builder = StringBuilder()
+                for (i in 1..20) {
+                    val s = doSomethingAsync(i).await()
+
+                    val newInstant = Instant.now()
+                    val timeDiff = ChronoUnit.MILLIS.between(curInstant, newInstant)
+                    curInstant = newInstant
+                    builder.appendln(s)
+
+                    log_view2.text = builder.toString()
+                    log_view3.text = timeDiff.toString()
+                }
+            }
+        }
+
 
         Timber.d("onCreate thread: %s", Thread.currentThread().name)
         launch {
@@ -100,6 +144,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             }
             .addTo(disposer)
 
+        // Some random byte buffer test code
         val byteBuffer = ByteBuffer.allocate(100)
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
         byteBuffer.put(1)
@@ -133,6 +178,22 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
+    private suspend fun doSomethingSuspend(index: Int): Int {
+        return withContext(singleThreadedContext) {
+            Thread.sleep(100)
+            index
+        }
+    }
+
+    private fun doSomethingAsync(index: Int): Deferred<Int> {
+        val deferred = CompletableDeferred<Int>()
+        launch(singleThreadedContext) {
+            Thread.sleep(100)
+            deferred.complete(index)
+        }
+        return deferred
+    }
+
     private fun coroutineFun() {
         launch {
             logBuilder.appendln("start")
@@ -148,8 +209,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             }
 
             logBuilder.appendln("after launched")
-            Thread.sleep(600)
-            logBuilder.appendln("after slept")
+            delay(600)
+            logBuilder.appendln("after delay")
 
             launch(Dispatchers.Main) {
                 log_view.text = logBuilder.toString()

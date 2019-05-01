@@ -20,7 +20,7 @@ fun ByteArray?.toHexStringUTF8(): String {
         return "null"
     }
 
-    return String(this, Charset.forName("UTF-8"))
+    return String(this, Charsets.UTF_8)
 }
 
 fun String?.toByteArrayUTF8(): ByteArray {

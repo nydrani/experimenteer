@@ -60,20 +60,20 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        fab2.setOnClickListener {
-            startActivity(AppBarLayoutTestActivity.buildIntent(this))
-        }
-
-        fab3.setOnClickListener {
-            startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
-        }
-
-        fab4.setOnClickListener {
-            startActivity(ConstraintBarrierActivity.buildIntent(this))
-        }
-
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_appbar_layout -> {
+                    startActivity(AppBarLayoutTestActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_collapsing_toolbar -> {
+                    startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_constraint_barrier -> {
+                    startActivity(ConstraintBarrierActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_focusable -> {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
@@ -96,6 +96,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_attestation -> {
                     startActivity(AttestationActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_keystore -> {
+                    startActivity(KeyStoreActivity.buildIntent(this))
                     true
                 }
                 else -> false
