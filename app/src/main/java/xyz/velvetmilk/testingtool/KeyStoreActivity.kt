@@ -15,18 +15,28 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_keystore.*
 import java.io.ByteArrayInputStream
-import java.security.KeyFactory
-import java.security.KeyPairGenerator
-import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import android.security.keystore.KeyInfo
+import android.widget.Toast
+import com.google.gson.Gson
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import kotlinx.coroutines.*
+import okhttp3.OkHttpClient
 import org.spongycastle.asn1.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.POST
 import timber.log.Timber
+import java.net.ConnectException
+import java.security.*
+import java.security.cert.CertificateException
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 
-class KeyStoreActivity : AppCompatActivity() {
+class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 
     enum class SecurityLevel {
         Software,
@@ -40,6 +50,15 @@ class KeyStoreActivity : AppCompatActivity() {
         Unverified,
         Failed;
     }
+
+    interface NetworkService {
+        data class SendCertificateRequest(val chain: List<String>)
+        data class SendCertificateResponse(val verified: Boolean)
+
+        @POST("certificate-chain")
+        fun sendCertificateChainAsync(@Body body: SendCertificateRequest): Deferred<SendCertificateResponse>
+    }
+
 
     companion object {
         private val TAG = KeyStoreActivity::class.java.simpleName
@@ -92,17 +111,24 @@ class KeyStoreActivity : AppCompatActivity() {
         private const val VERIFIED_BOOT_STATE_INDEX = 2
         private const val VERIFIED_BOOT_STATE_HASH = 3
 
+        private const val SERVER_URL = "http://192.168.0.68:3000/"
+
+
         fun buildIntent(context: Context): Intent {
             return Intent(context, KeyStoreActivity::class.java)
         }
     }
 
+    private lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+
+    private lateinit var service: NetworkService
     private lateinit var store: KeyStore
     private lateinit var keyPairGenerator: KeyPairGenerator
     private lateinit var keyFactory: KeyFactory
-
-    private val secureRoot = CertificateFactory.getInstance("X.509")
-        .generateCertificate(ByteArrayInputStream(GOOGLE_ROOT_CERTIFICATE.toByteArrayUTF8())) as X509Certificate
+    private lateinit var secureRoot: X509Certificate
 
 
     private val disposer = CompositeDisposable()
@@ -112,6 +138,16 @@ class KeyStoreActivity : AppCompatActivity() {
         setContentView(R.layout.activity_keystore)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        job = Job()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(SERVER_URL)
+            .client(OkHttpClient())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .build()
+        service = retrofit.create(NetworkService::class.java)
 
         store = KeyStore.getInstance(KEYSTORE_TYPE).apply { this.load(null) }
         keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA)
@@ -124,6 +160,9 @@ class KeyStoreActivity : AppCompatActivity() {
             .setKeySize(2048)
             .build()
         keyPairGenerator.initialize(rsaSpec)
+
+        secureRoot = CertificateFactory.getInstance("X.509")
+            .generateCertificate(ByteArrayInputStream(GOOGLE_ROOT_CERTIFICATE.toByteArrayUTF8())) as X509Certificate
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Generating RSA Asymmetric key", Snackbar.LENGTH_LONG).show()
@@ -145,11 +184,29 @@ class KeyStoreActivity : AppCompatActivity() {
             val chain = store.getCertificateChain(RSA_KEY_ALIAS)
             // verify certificate chain
             for (i in chain.indices) {
+                Timber.d(chain[i].encoded.toBase64())
                 builder.appendln(chain[i].toString())
-                if (i == chain.size - 1) {
-                    chain[i].verify(chain[i].publicKey)
-                } else {
-                    chain[i].verify(chain[i + 1].publicKey)
+                try {
+                    if (i == chain.size - 1) {
+                        chain[i].verify(chain[i].publicKey)
+                    } else {
+                        chain[i].verify(chain[i + 1].publicKey)
+                    }
+                } catch (e: NoSuchAlgorithmException) {
+                    Snackbar.make(view, "NoSuchAlgorithmException", Snackbar.LENGTH_SHORT).show()
+                    Timber.d("NoSuchAlgorithmException")
+                } catch (e: InvalidKeyException) {
+                    Snackbar.make(view, "InvalidKeyException", Snackbar.LENGTH_SHORT).show()
+                    Timber.d("InvalidKeyException")
+                } catch (e: NoSuchProviderException) {
+                    Snackbar.make(view, "NoSuchProviderException", Snackbar.LENGTH_SHORT).show()
+                    Timber.d("NoSuchProviderException")
+                } catch (e: SignatureException) {
+                    Snackbar.make(view, "SignatureException", Snackbar.LENGTH_SHORT).show()
+                    Timber.d("SignatureException")
+                } catch (e: CertificateException) {
+                    Snackbar.make(view, "CertificateException", Snackbar.LENGTH_SHORT).show()
+                    Timber.d("CertificateException")
                 }
             }
 
@@ -222,11 +279,37 @@ class KeyStoreActivity : AppCompatActivity() {
 
             key_view.text = builder.toString()
         }
+
+        fab4.setOnClickListener { view ->
+            Snackbar.make(view, "Sending attestation chain to server", Snackbar.LENGTH_LONG).show()
+
+            val attestationCert = store.getCertificateChain(RSA_KEY_ALIAS)
+
+            val certList: List<String> = attestationCert?.let {
+                val certList = mutableListOf<String>()
+                for (i in it) {
+                    certList.add(i.encoded.toBase64())
+                }
+                certList
+            } ?: listOf()
+
+            // send to server
+            launch {
+                try {
+                    val res = service.sendCertificateChainAsync(NetworkService.SendCertificateRequest(certList)).await()
+                    key_view.text = res.verified.toString()
+                } catch (e: ConnectException) {
+                    e.printStackTrace()
+                    Toast.makeText(this@KeyStoreActivity, String.format("Failed to connect to server : %s", SERVER_URL), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        job.cancel()
         disposer.clear()
     }
 

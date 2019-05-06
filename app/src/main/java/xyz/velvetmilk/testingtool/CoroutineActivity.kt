@@ -128,9 +128,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             @UseExperimental(kotlinx.coroutines.ObsoleteCoroutinesApi::class)
             channel.debounce(1000)
                 .consumeEach {
-                    launch(Dispatchers.Main) {
-                        log_view.text = it
-                    }
+                    log_view.text = it
                 }
         }
 
@@ -212,9 +210,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             delay(600)
             logBuilder.appendln("after delay")
 
-            launch(Dispatchers.Main) {
-                log_view.text = logBuilder.toString()
-            }
+            log_view.text = logBuilder.toString()
         }
     }
 
@@ -234,9 +230,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
             logBuilder.appendln("after single thread call")
 
-            launch(Dispatchers.Main) {
-                log_view.text = logBuilder.toString()
-            }
+            log_view.text = logBuilder.toString()
         }
     }
 

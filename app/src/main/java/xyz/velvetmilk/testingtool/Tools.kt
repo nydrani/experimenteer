@@ -3,11 +3,11 @@ package xyz.velvetmilk.testingtool
 import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
+import android.util.Base64
 import android.util.TypedValue
 import android.view.View
 import io.reactivex.Observable
 import java.lang.StringBuilder
-import java.nio.charset.Charset
 
 
 fun dpToPx(context: Context, valueInDp: Float): Float {
@@ -29,6 +29,22 @@ fun String?.toByteArrayUTF8(): ByteArray {
     }
 
     return toByteArray(Charsets.UTF_8)
+}
+
+fun ByteArray?.toBase64(): String {
+    if (this == null) {
+        return "null"
+    }
+
+    return Base64.encodeToString(this, Base64.DEFAULT)
+}
+
+fun String?.fromBase64(): ByteArray {
+    if (this == null) {
+        return byteArrayOf()
+    }
+
+    return Base64.decode(this, Base64.DEFAULT)
 }
 
 fun ByteArray?.toByteString(): String {
