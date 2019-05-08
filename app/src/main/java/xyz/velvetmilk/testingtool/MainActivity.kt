@@ -66,40 +66,44 @@ class MainActivity : AppCompatActivity() {
                     startActivity(AppBarLayoutTestActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_attestation -> {
+                    startActivity(AttestationActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_collapsing_toolbar -> {
                     startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_connectivity -> {
+                    startActivity(ConnectivityActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_constraint_barrier -> {
                     startActivity(ConstraintBarrierActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_coroutine -> {
+                    startActivity(CoroutineActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_focusable -> {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_coroutine -> {
-                    startActivity(CoroutineActivity.buildIntent(this))
+                R.id.nav_keystore -> {
+                    startActivity(KeyStoreActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_native -> {
                     startActivity(NativeActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_opensles -> {
-                    startActivity(OpenSLESActivity.buildIntent(this))
-                    true
-                }
                 R.id.nav_nfc -> {
                     startActivity(NFCActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_attestation -> {
-                    startActivity(AttestationActivity.buildIntent(this))
-                    true
-                }
-                R.id.nav_keystore -> {
-                    startActivity(KeyStoreActivity.buildIntent(this))
+                R.id.nav_opensles -> {
+                    startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
                 else -> false

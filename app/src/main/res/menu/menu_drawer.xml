@@ -1,35 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="HardcodedText">
+
     <group>
+
         <item
             android:id="@+id/nav_appbar_layout"
             android:title="Appbar layout activity"/>
-        <item
-            android:id="@+id/nav_collapsing_toolbar"
-            android:title="Collapsing toolbar activity"/>
-        <item
-            android:id="@+id/nav_constraint_barrier"
-            android:title="Constraint barrier activity"/>
-        <item
-            android:id="@+id/nav_focusable"
-            android:title="Focusable activity"/>
-        <item
-            android:id="@+id/nav_coroutine"
-            android:title="Coroutine activity"/>
-        <item
-            android:id="@+id/nav_native"
-            android:title="Native activity"/>
-        <item
-            android:id="@+id/nav_opensles"
-            android:title="OpenSLES activity"/>
-        <item
-            android:id="@+id/nav_nfc"
-            android:title="NFC activity"/>
+
         <item
             android:id="@+id/nav_attestation"
             android:title="Attestation activity"/>
+
+        <item
+            android:id="@+id/nav_collapsing_toolbar"
+            android:title="Collapsing toolbar activity"/>
+
+        <item
+            android:id="@+id/nav_connectivity"
+            android:title="Connectivity activity"/>
+
+        <item
+            android:id="@+id/nav_constraint_barrier"
+            android:title="Constraint barrier activity"/>
+
+        <item
+            android:id="@+id/nav_coroutine"
+            android:title="Coroutine activity"/>
+
+        <item
+            android:id="@+id/nav_focusable"
+            android:title="Focusable activity"/>
+
         <item
             android:id="@+id/nav_keystore"
             android:title="Keystore activity"/>
+
+        <item
+            android:id="@+id/nav_native"
+            android:title="Native activity"/>
+
+        <item
+            android:id="@+id/nav_nfc"
+            android:title="NFC activity"/>
+
+        <item
+            android:id="@+id/nav_opensles"
+            android:title="OpenSLES activity"/>
+
     </group>
+
 </menu>

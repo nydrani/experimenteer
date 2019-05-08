@@ -61,6 +61,19 @@ class OpenSLESActivity : AppCompatActivity() {
 
             playRecording()
         }
+
+        // Some random byte buffer test code
+        val byteBuffer = ByteBuffer.allocate(100)
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
+        byteBuffer.put(1)
+        byteBuffer.put(2)
+        byteBuffer.put(3)
+        byteBuffer.put(4)
+
+        val byteArraySize = 4
+
+        Timber.d("arrayOffset: %d", byteBuffer.arrayOffset())
+        Timber.d("byteArray: %s", byteBuffer.array().toRawString(byteArraySize, byteBuffer.arrayOffset()))
     }
 
     override fun onDestroy() {

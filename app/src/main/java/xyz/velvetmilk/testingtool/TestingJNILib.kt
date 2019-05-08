@@ -1,8 +1,6 @@
 package xyz.velvetmilk.testingtool
 
-/**
- * @author Victor Zhang
- */
+
 class TestingJNILib {
 
     init {

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_native.*
 
+
 class NativeActivity : AppCompatActivity() {
 
     companion object {

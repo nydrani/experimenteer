@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
 
     <application
@@ -27,16 +28,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".AttestationActivity"/>
         <activity android:name=".AppBarLayoutTestActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
+        <activity android:name=".ConnectivityActivity"/>
         <activity android:name=".ConstraintBarrierActivity"/>
-        <activity android:name=".FocusableActivity"/>
         <activity android:name=".CoroutineActivity"/>
-        <activity android:name=".NativeActivity"/>
-        <activity android:name=".OpenSLESActivity"/>
-        <activity android:name=".NFCActivity"/>
-        <activity android:name=".AttestationActivity"/>
+        <activity android:name=".FocusableActivity"/>
         <activity android:name=".KeyStoreActivity"/>
+        <activity android:name=".NativeActivity"/>
+        <activity android:name=".NFCActivity"/>
+        <activity android:name=".OpenSLESActivity"/>
     </application>
 
 </manifest>

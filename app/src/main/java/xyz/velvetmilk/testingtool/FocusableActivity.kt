@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_focusable.*
 import timber.log.Timber
 
+
 class FocusableActivity : AppCompatActivity() {
 
     companion object {

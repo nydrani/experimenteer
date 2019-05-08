@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttestationActivity">
+    tools:context=".ConnectivityActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -28,53 +28,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/network_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-        </LinearLayout>
+            android:text="\?"
+            android:textAppearance="?attr/textAppearanceBody2"/>
 
     </androidx.core.widget.NestedScrollView>
 
@@ -96,6 +56,36 @@
         android:layout_margin="16dp"
         app:srcCompat="@mipmap/ic_launcher_round"
         app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="bottom|center_horizontal"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:layout_anchor="@+id/scroll_view"
         app:layout_anchorGravity="bottom"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="end"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="center_horizontal"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

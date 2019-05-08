@@ -18,10 +18,9 @@ import kotlinx.coroutines.channels.*
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
+
 
 class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
@@ -141,19 +140,6 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
                 log_view2.text = it
             }
             .addTo(disposer)
-
-        // Some random byte buffer test code
-        val byteBuffer = ByteBuffer.allocate(100)
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
-        byteBuffer.put(1)
-        byteBuffer.put(2)
-        byteBuffer.put(3)
-        byteBuffer.put(4)
-
-        val byteArraySize = 4
-
-        Timber.d("arrayOffset: %d", byteBuffer.arrayOffset())
-        Timber.d("byteArray: %s", byteBuffer.array().toRawString(byteArraySize, byteBuffer.arrayOffset()))
     }
 
     override fun onDestroy() {
