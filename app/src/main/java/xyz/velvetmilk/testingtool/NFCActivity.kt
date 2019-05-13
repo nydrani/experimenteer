@@ -29,6 +29,7 @@ class NFCActivity : AppCompatActivity() {
     }
 
 
+    private var count = 0
     private var nfcAdapter: NfcAdapter? = null
     private val disposer = CompositeDisposable()
 
@@ -49,13 +50,17 @@ class NFCActivity : AppCompatActivity() {
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Turning on NFC read mode", Snackbar.LENGTH_SHORT).show()
+            count++
 
             // enable nfc
             nfcAdapter?.let {
                 if (it.isEnabled) {
                     it.enableReaderMode(this,
                         { tag ->
-                            Snackbar.make(view, "NFC read something", Snackbar.LENGTH_LONG).show()
+                            GlobalScope.launch(Dispatchers.Main) {
+                                Snackbar.make(view, "NFC read something", Snackbar.LENGTH_LONG).show()
+                                Snackbar.make(view, "Count: " + count.toString(), Snackbar.LENGTH_LONG).show()
+                            }
 
                             val stringBuilder = StringBuilder()
                             for (tech in tag.techList) {

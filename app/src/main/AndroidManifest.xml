@@ -31,6 +31,7 @@
 
         <activity android:name=".AttestationActivity"/>
         <activity android:name=".AppBarLayoutTestActivity"/>
+        <activity android:name=".BaseActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
         <activity android:name=".ConnectivityActivity"/>
         <activity android:name=".ConstraintBarrierActivity"/>
@@ -40,6 +41,7 @@
         <activity android:name=".NativeActivity"/>
         <activity android:name=".NFCActivity"/>
         <activity android:name=".OpenSLESActivity"/>
+        <activity android:name=".TimeActivity"/>
     </application>
 
 </manifest>

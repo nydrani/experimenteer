@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(AttestationActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_base -> {
+                    startActivity(BaseActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_collapsing_toolbar -> {
                     startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
                     true
@@ -104,6 +108,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_opensles -> {
                     startActivity(OpenSLESActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_time -> {
+                    startActivity(TimeActivity.buildIntent(this))
                     true
                 }
                 else -> false
