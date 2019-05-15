@@ -55,5 +55,4 @@ class TimeActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
-
 }

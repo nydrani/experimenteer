@@ -19,9 +19,7 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.DataOutputStream
-import java.io.File
 import java.io.FileReader
-import java.util.*
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
@@ -44,6 +42,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     private val disposer = CompositeDisposable()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_attestation)
@@ -55,7 +54,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
         fab.setOnClickListener {
             launch(Dispatchers.IO) {
-                val attestResult = attestSafetyNet().await()
+                val attestResult = attestSafetyNetAsync().await()
                 launch(Dispatchers.Main) {
                     log_view.text = attestResult
                 }
@@ -115,7 +114,8 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun attestSafetyNet(): Deferred<String> {
+
+    private fun attestSafetyNetAsync(): Deferred<String> {
         val completableDeferred = CompletableDeferred<String>()
         SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey)
             .addOnSuccessListener {

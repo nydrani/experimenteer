@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private val logger = LoggerFactory.getLogger(MainActivity::class.java)
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

@@ -22,6 +22,7 @@ class NativeActivity : AppCompatActivity() {
     private val testingJNILib = TestingJNILib()
     private val disposer = CompositeDisposable()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_native)

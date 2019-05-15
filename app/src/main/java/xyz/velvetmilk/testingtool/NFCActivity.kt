@@ -28,10 +28,10 @@ class NFCActivity : AppCompatActivity() {
         }
     }
 
-
     private var count = 0
     private var nfcAdapter: NfcAdapter? = null
     private val disposer = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,7 +115,6 @@ class NFCActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

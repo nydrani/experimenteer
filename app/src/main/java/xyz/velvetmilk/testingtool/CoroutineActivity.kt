@@ -15,6 +15,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.*
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
@@ -39,6 +40,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
     @UseExperimental(kotlinx.coroutines.ObsoleteCoroutinesApi::class)
     private val singleThreadedContext = newSingleThreadContext("singleThreadBaby")
 
+    @UseExperimental(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private val broadcastChannel: BroadcastChannel<String> = BroadcastChannel(Channel.CONFLATED)
     private val channel: Channel<String> = Channel()
     private val subject: Subject<String> = PublishSubject.create()
 
@@ -107,7 +110,6 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             }
         }
 
-
         Timber.d("onCreate thread: %s", Thread.currentThread().name)
         launch {
             Timber.d("launch thread: %s", Thread.currentThread().name)
@@ -124,11 +126,18 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
         // load hot channel for debouncing clicks
         launch {
-            @UseExperimental(kotlinx.coroutines.ObsoleteCoroutinesApi::class)
-            channel.debounce(1000)
-                .consumeEach {
-                    log_view.text = it
-                }
+            val debounced = channel.debounce(1000)
+            for (item in debounced) {
+                log_view.text = item
+            }
+        }
+
+        // using flow to debounce clicks
+        launch {
+            @UseExperimental(kotlinx.coroutines.FlowPreview::class)
+            broadcastChannel.asFlow().debounce(1000).collect {
+                log_view3.text = it
+            }
         }
 
         // load hot?? or cold?? for debouncing clicks
@@ -161,6 +170,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
         return super.onOptionsItemSelected(item)
     }
+
 
     private suspend fun doSomethingSuspend(index: Int): Int {
         return withContext(singleThreadedContext) {
@@ -223,6 +233,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
     private fun click() {
         debounceBuilder.append("x")
 
+        @UseExperimental(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+        broadcastChannel.offer(debounceBuilder.toString())
         channel.offer(debounceBuilder.toString())
         subject.onNext(debounceBuilder.toString())
     }

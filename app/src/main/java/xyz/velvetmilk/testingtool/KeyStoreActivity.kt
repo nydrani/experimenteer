@@ -123,15 +123,14 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-
     private lateinit var service: NetworkService
     private lateinit var store: KeyStore
     private lateinit var keyPairGenerator: KeyPairGenerator
     private lateinit var keyFactory: KeyFactory
     private lateinit var secureRoot: X509Certificate
 
-
     private val disposer = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -323,6 +322,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 
         return super.onOptionsItemSelected(item)
     }
+
 
     private fun parseAuthorisationList(list: ASN1Sequence): String {
         val builder = StringBuilder()

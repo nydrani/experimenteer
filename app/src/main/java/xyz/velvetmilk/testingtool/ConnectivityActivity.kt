@@ -40,7 +40,6 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
     private val builder = StringBuilder()
     private lateinit var connectivityManager: ConnectivityManager
 
-
     private val connectivityCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {
             Timber.d("onAvailable | %s", network.toString())
