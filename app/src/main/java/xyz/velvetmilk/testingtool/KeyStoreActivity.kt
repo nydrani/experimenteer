@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import android.security.keystore.KeyInfo
-import android.widget.Toast
 import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.*
@@ -29,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 import timber.log.Timber
-import java.net.ConnectException
+import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException
 import java.util.*
@@ -155,13 +154,13 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             .setDigests(KeyProperties.DIGEST_SHA1)
             .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-            .setAttestationChallenge("yeet".toByteArrayUTF8())
+            .setAttestationChallenge("yeet".fromHexStringUTF8())
             .setKeySize(2048)
             .build()
         keyPairGenerator.initialize(rsaSpec)
 
         secureRoot = CertificateFactory.getInstance("X.509")
-            .generateCertificate(ByteArrayInputStream(GOOGLE_ROOT_CERTIFICATE.toByteArrayUTF8())) as X509Certificate
+            .generateCertificate(ByteArrayInputStream(GOOGLE_ROOT_CERTIFICATE.fromHexStringUTF8())) as X509Certificate
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Generating RSA Asymmetric key", Snackbar.LENGTH_LONG).show()
@@ -297,9 +296,8 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
                 try {
                     val res = service.sendCertificateChainAsync(NetworkService.SendCertificateRequest(certList)).await()
                     key_view.text = res.verified.toString()
-                } catch (e: ConnectException) {
+                } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(this@KeyStoreActivity, String.format("Failed to connect to server : %s", SERVER_URL), Toast.LENGTH_SHORT).show()
                 }
             }
         }

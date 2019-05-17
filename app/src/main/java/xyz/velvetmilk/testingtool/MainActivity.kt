@@ -6,11 +6,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_main.*
 import org.slf4j.LoggerFactory
 import timber.log.Timber
@@ -22,9 +19,7 @@ class MainActivity : AppCompatActivity() {
         private val TAG = MainActivity::class.java.simpleName
     }
 
-    private lateinit var adapter: TestAdapter
     private val disposer = CompositeDisposable()
-
     private val logger = LoggerFactory.getLogger(MainActivity::class.java)
 
 
@@ -44,21 +39,6 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, R.string.test_message, Toast.LENGTH_SHORT).show()
                     }
                     .show()
-
-            // add item to adapter
-            adapter.addItem(java.util.UUID.randomUUID().toString())
-        }
-
-        fab.setOnLongClickListener {
-            Snackbar.make(it, "Clearing messages", Snackbar.LENGTH_LONG)
-                .setAction(R.string.test_action) {
-                    Toast.makeText(this, "Gottem", Toast.LENGTH_SHORT).show()
-                }
-                .show()
-
-            // clear list of messages
-            adapter.updateItems(listOf())
-            true
         }
 
         nav_view.setNavigationItemSelectedListener {
@@ -99,6 +79,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(KeyStoreActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_material-> {
+                    startActivity(MaterialActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_native -> {
                     startActivity(NativeActivity.buildIntent(this))
                     true
@@ -118,17 +102,6 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        adapter = TestAdapter()
-        adapter.setHasStableIds(true)
-
-        recycler_view.adapter = adapter
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
-        adapter.viewClickSubject.subscribe {
-            Timber.d(it.second.toString())
-        }.addTo(disposer)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -43,6 +43,10 @@
             android:title="Keystore activity"/>
 
         <item
+            android:id="@+id/nav_material"
+            android:title="Material activity"/>
+
+        <item
             android:id="@+id/nav_native"
             android:title="Native activity"/>
 

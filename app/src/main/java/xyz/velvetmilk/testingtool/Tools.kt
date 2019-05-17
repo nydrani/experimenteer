@@ -23,7 +23,7 @@ fun ByteArray?.toHexStringUTF8(): String {
     return String(this, Charsets.UTF_8)
 }
 
-fun String?.toByteArrayUTF8(): ByteArray {
+fun String?.fromHexStringUTF8(): ByteArray {
     if (this == null) {
         return byteArrayOf()
     }

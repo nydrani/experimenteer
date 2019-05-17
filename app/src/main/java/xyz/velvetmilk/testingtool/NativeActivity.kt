@@ -34,7 +34,7 @@ class NativeActivity : AppCompatActivity() {
         }
 
         fab2.setOnClickListener {
-            native_view.text = testingJNILib.nativeByteArray("cool string".toByteArrayUTF8())
+            native_view.text = testingJNILib.nativeByteArray("cool string".fromHexStringUTF8())
         }
 
         fab3.setOnClickListener {
