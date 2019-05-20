@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(BaseActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_crypto -> {
+                    startActivity(CryptoActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_collapsing_toolbar -> {
                     startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
                     true
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(KeyStoreActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_material-> {
+                R.id.nav_material -> {
                     startActivity(MaterialActivity.buildIntent(this))
                     true
                 }

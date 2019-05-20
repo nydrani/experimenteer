@@ -110,7 +110,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         private const val VERIFIED_BOOT_STATE_INDEX = 2
         private const val VERIFIED_BOOT_STATE_HASH = 3
 
-        private const val SERVER_URL = "http://192.168.0.68:3000/"
+        private const val SERVER_URL = "http://192.168.105.14:3000/"
 
 
         fun buildIntent(context: Context): Intent {
@@ -151,7 +151,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA)
         keyFactory = KeyFactory.getInstance(KeyProperties.KEY_ALGORITHM_RSA)
         val rsaSpec = KeyGenParameterSpec.Builder(RSA_KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
-            .setDigests(KeyProperties.DIGEST_SHA1)
+            .setDigests(KeyProperties.DIGEST_SHA256)
             .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
             .setAttestationChallenge("yeet".fromHexStringUTF8())

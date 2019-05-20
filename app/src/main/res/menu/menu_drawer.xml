@@ -19,6 +19,10 @@
             android:title="Base activity"/>
 
         <item
+            android:id="@+id/nav_crypto"
+            android:title="Crypto activity"/>
+
+        <item
             android:id="@+id/nav_collapsing_toolbar"
             android:title="Collapsing toolbar activity"/>
 
