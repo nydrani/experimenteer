@@ -41,6 +41,7 @@
         <activity android:name=".KeyStoreActivity"/>
         <activity android:name=".MaterialActivity"/>
         <activity android:name=".NativeActivity"/>
+        <activity android:name=".NetworkActivity"/>
         <activity android:name=".NFCActivity"/>
         <activity android:name=".OpenSLESActivity"/>
         <activity android:name=".TimeActivity"/>

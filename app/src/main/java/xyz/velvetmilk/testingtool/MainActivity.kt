@@ -91,6 +91,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(NativeActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_network -> {
+                    startActivity(NetworkActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_nfc -> {
                     startActivity(NFCActivity.buildIntent(this))
                     true

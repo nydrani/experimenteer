@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
+
 // NOTE: This runner runs in the background limited by its scope and scope of the ui
 // NOTE: it looks like the scope of the UI thread exists until the application context dies
 class BackgroundCoroutineRunner : CoroutineScope {

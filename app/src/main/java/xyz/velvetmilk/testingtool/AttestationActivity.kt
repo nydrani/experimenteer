@@ -23,6 +23,7 @@ import java.io.FileReader
 import java.util.regex.Pattern
 import kotlin.coroutines.CoroutineContext
 
+
 class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

@@ -55,6 +55,10 @@
             android:title="Native activity"/>
 
         <item
+            android:id="@+id/nav_network"
+            android:title="Network activity"/>
+
+        <item
             android:id="@+id/nav_nfc"
             android:title="NFC activity"/>
 

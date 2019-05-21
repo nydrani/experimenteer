@@ -14,6 +14,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_appbarlayout.*
 import timber.log.Timber
 
+
 class AppBarLayoutTestActivity : AppCompatActivity() {
 
     companion object {
