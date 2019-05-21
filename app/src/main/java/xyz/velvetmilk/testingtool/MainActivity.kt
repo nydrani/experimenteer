@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_socket -> {
+                    startActivity(SocketActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_time -> {
                     startActivity(TimeActivity.buildIntent(this))
                     true

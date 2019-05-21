@@ -67,6 +67,10 @@
             android:title="OpenSLES activity"/>
 
         <item
+            android:id="@+id/nav_socket"
+            android:title="Socket activity"/>
+
+        <item
             android:id="@+id/nav_time"
             android:title="Time activity"/>
 
