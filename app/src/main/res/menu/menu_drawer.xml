@@ -67,6 +67,10 @@
             android:title="OpenSLES activity"/>
 
         <item
+            android:id="@+id/nav_secure_socket"
+            android:title="Secure socket activity"/>
+
+        <item
             android:id="@+id/nav_socket"
             android:title="Socket activity"/>
 

@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_secure_socket -> {
+                    startActivity(SecureSocketActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_socket -> {
                     startActivity(SocketActivity.buildIntent(this))
                     true
