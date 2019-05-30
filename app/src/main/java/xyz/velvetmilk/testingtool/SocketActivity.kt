@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import timber.log.Timber
+import java.io.IOException
 import java.net.*
 import kotlin.coroutines.CoroutineContext
 
@@ -101,16 +102,32 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
 
     private fun pingServer() {
         timer = Instant.now()
-        connectedSocket.getOutputStream().write(42)
+        try {
+            connectedSocket.outputStream.write(42)
+        } catch (e: SocketException) {
+        } catch (e: IOException) {
+        }
     }
 
     private fun checkAliveClient() {
-        acceptedSocket.getOutputStream().write(88)
+        try {
+            acceptedSocket.outputStream.write(88)
+        } catch (e: SocketException) {
+        } catch (e: IOException) {
+        }
     }
 
     private fun parseServerSocketData(socket: Socket) {
         do {
-            val data = socket.getInputStream().read()
+            val data: Int
+            try {
+                data = socket.getInputStream().read()
+            } catch (e: SocketException) {
+                break
+            } catch (e: IOException) {
+                break
+            }
+
             Timber.d(data.toString())
             if (data == 44) {
                 // got a alive message
@@ -120,14 +137,26 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
             }
             if (data == 42) {
                 // got a ping packet, send pong
-                socket.getOutputStream().write(24)
+                try {
+                    socket.getOutputStream().write(24)
+                } catch (e: SocketException) {
+                } catch (e: IOException) {
+                }
             }
         } while (data != -1)
     }
 
     private fun parseClientSocketData(socket: Socket) {
         do {
-            val data = socket.getInputStream().read()
+            val data: Int
+            try {
+                data = socket.getInputStream().read()
+            } catch (e: SocketException) {
+                break
+            } catch (e: IOException) {
+                break
+            }
+
             Timber.d(data.toString())
             if (data == 24) {
                 // got a pong message
@@ -137,7 +166,11 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
             }
             if (data == 88) {
                 // got a alive packet, send yes i am alive packet
-                socket.getOutputStream().write(44)
+                try {
+                    socket.getOutputStream().write(44)
+                } catch (e: SocketException) {
+                } catch (e: IOException) {
+                }
             }
         } while (data != -1)
     }
