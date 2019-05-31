@@ -20,14 +20,21 @@ class TestingApp : Application() {
         backgroundRunner = BackgroundCoroutineRunner()
         backgroundRunner.init()
 
-        for (prov in Security.getProviders()) {
-            Timber.d(prov.name)
-        }
+
+        listProviders()
     }
 
     override fun onTerminate() {
         super.onTerminate()
 
         backgroundRunner.deinit()
+    }
+
+
+    private fun listProviders() {
+        for (prov in Security.getProviders()) {
+            Timber.d(prov.name)
+            Timber.d(prov.info)
+        }
     }
 }

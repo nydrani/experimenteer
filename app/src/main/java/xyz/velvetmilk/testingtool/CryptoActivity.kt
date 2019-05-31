@@ -33,7 +33,6 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         private const val SERVER_KEY_ALIAS = "serverCert"
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
         private const val ANDROID_KEYSTORE_PROVIDER = "AndroidKeyStore"
-        private const val BC_KEYSTORE_PROVIDER = "BC"
 
         private const val SERVER_URL = "http://192.168.105.14:3000/"
 
@@ -101,7 +100,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         service = retrofit.create(NetworkService::class.java)
 
         store = KeyStore.getInstance(KEYSTORE_TYPE).apply { this.load(null) }
-        certificateFactory = CertificateFactory.getInstance("X.509", BC_KEYSTORE_PROVIDER)
+        certificateFactory = CertificateFactory.getInstance("X.509")
         keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEYSTORE_PROVIDER)
 
 

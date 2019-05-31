@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_opensles.*
 import timber.log.Timber
 import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 import java.io.*
 import java.nio.ByteBuffer
@@ -32,10 +33,8 @@ class OpenSLESActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Setup OpenSLES
-        EavesJNILib.createEngine()
-        EavesJNILib.createAudioRecorder()
-        EavesJNILib.createAudioPlayer()
+        // Need audio permissions for this screen
+        initEavesEngineWithPermissionCheck()
 
         // Setup click listeners
         start_recording_button.setOnClickListener {
@@ -99,6 +98,19 @@ class OpenSLESActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    @OnPermissionDenied(Manifest.permission.RECORD_AUDIO)
+    fun onAudioDenied() {
+        finish()
+    }
+
+    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
+    fun initEavesEngine() {
+        // Setup OpenSLES
+        EavesJNILib.createEngine()
+        EavesJNILib.createAudioRecorder()
+        EavesJNILib.createAudioPlayer()
+    }
 
     @NeedsPermission(Manifest.permission.RECORD_AUDIO)
     fun startRecording() {
