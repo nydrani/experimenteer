@@ -78,4 +78,30 @@
         app:layout_anchor="@+id/scroll_view"
         app:layout_anchorGravity="top|end"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="88dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        app:layout_anchor="@+id/fab"
+        app:layout_anchorGravity="bottom|end"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="88dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        app:layout_anchor="@+id/fab2"
+        app:layout_anchorGravity="bottom|center_horizontal"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

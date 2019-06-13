@@ -13,6 +13,8 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.POST
@@ -21,6 +23,10 @@ import java.io.IOException
 import java.security.*
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
+import java.security.spec.MGF1ParameterSpec
+import javax.crypto.Cipher
+import javax.crypto.spec.OAEPParameterSpec
+import javax.crypto.spec.PSource
 import kotlin.coroutines.CoroutineContext
 
 
@@ -29,6 +35,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
     companion object {
         private val TAG = CryptoActivity::class.java.simpleName
         private const val RSA_SIGNATURE_ALGORITHM = "SHA256withRSA/PSS"
+        private const val RSA_CIPHER_ALGORITHM = "RSA/ECB/OAEPwithSHA-256andMGF1Padding"
         private const val RSA_KEY_ALIAS = "RSAbabey"
         private const val SERVER_KEY_ALIAS = "serverCert"
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
@@ -80,6 +87,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var genJob: Job
     private var signature: ByteArray = byteArrayOf()
+    private var encrypted: ByteArray = byteArrayOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,14 +113,18 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
 
         // generate a certificate on background thread
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.Default) {
             val cert = certificateFactory.generateCertificate(ByteArrayInputStream(SERVER_CERTIFICATE.toByteArray(Charsets.UTF_8)))
             store.setCertificateEntry(SERVER_KEY_ALIAS, cert)
         }
 
         // generate a keypair on background thread
-        launch(Dispatchers.IO) {
-            val rsaSpec = KeyGenParameterSpec.Builder(RSA_KEY_ALIAS, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
+        launch(Dispatchers.Default) {
+            val rsaSpec = KeyGenParameterSpec.Builder(RSA_KEY_ALIAS, KeyProperties.PURPOSE_SIGN or
+                    KeyProperties.PURPOSE_VERIFY or
+                    KeyProperties.PURPOSE_ENCRYPT or
+                    KeyProperties.PURPOSE_DECRYPT)
+
                 .setDigests(KeyProperties.DIGEST_SHA256)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
@@ -128,13 +140,13 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
 
         fab.setOnClickListener {
-            val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-            val privateKey: PrivateKey = entry.privateKey
-
             if (::genJob.isInitialized) {
                 genJob.cancel()
             }
-            genJob = launch(Dispatchers.IO) {
+            genJob = launch(Dispatchers.Default) {
+                val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                val privateKey: PrivateKey = entry.privateKey
+
                 // create signature
                 val signInstance = Signature.getInstance(RSA_SIGNATURE_ALGORITHM)
                 signInstance.initSign(privateKey)
@@ -148,36 +160,83 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
-            val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
-            val certificate: Certificate = entry.certificate
-
             if (::genJob.isInitialized) {
                 genJob.cancel()
             }
-            genJob = launch(Dispatchers.IO) {
+            genJob = launch(Dispatchers.Default) {
+                val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                val certificate: Certificate = entry.certificate
+
                 // verify signature
+                val currentTime = Instant.now()
                 val verifyInstance = Signature.getInstance(RSA_SIGNATURE_ALGORITHM)
                 verifyInstance.initVerify(certificate)
                 verifyInstance.update(42)
 
                 val res = verifyInstance.verify(signature)
                 launch(Dispatchers.Main) {
-                    crypto_view.text = res.toString()
+                    crypto_view.text = res.toString() + " | " + Duration.between(currentTime, Instant.now()).toMillis().toString()
+                }
+            }
+        }
+
+        fab5.setOnClickListener {
+            if (::genJob.isInitialized) {
+                genJob.cancel()
+            }
+            genJob = launch(Dispatchers.Default) {
+                val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                val certificate: Certificate = entry.certificate
+
+                // encrypt data
+                val cipherInstance = Cipher.getInstance(RSA_CIPHER_ALGORITHM)
+                // https://issuetracker.google.com/issues/36708951#comment15
+                // https://issuetracker.google.com/issues/37075898#comment7
+                val sp = OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA1, PSource.PSpecified.DEFAULT)
+                cipherInstance.init(Cipher.ENCRYPT_MODE, certificate.publicKey, sp)
+                cipherInstance.update(byteArrayOf(42))
+
+                encrypted = cipherInstance.doFinal()
+                launch(Dispatchers.Main) {
+                    crypto_view.text = encrypted.toBase64()
+                }
+            }
+        }
+
+        fab6.setOnClickListener {
+            if (::genJob.isInitialized) {
+                genJob.cancel()
+            }
+            genJob = launch(Dispatchers.Default) {
+                val entry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
+                val privateKey: PrivateKey = entry.privateKey
+
+                // decrypt data
+                val currentTime = Instant.now()
+                val cipherInstance = Cipher.getInstance(RSA_CIPHER_ALGORITHM)
+                cipherInstance.init(Cipher.DECRYPT_MODE, privateKey)
+                cipherInstance.update(encrypted)
+
+                val res = cipherInstance.doFinal()
+                launch(Dispatchers.Main) {
+                    crypto_view.text = res.toByteString() + " | " + Duration.between(currentTime, Instant.now()).toMillis().toString()
                 }
             }
         }
 
         fab3.setOnClickListener {
-            val entry = store.getEntry(SERVER_KEY_ALIAS, null) as KeyStore.TrustedCertificateEntry
-            val certificate: Certificate = entry.trustedCertificate
-
             if (::genJob.isInitialized) {
                 genJob.cancel()
             }
-            genJob = launch(Dispatchers.IO) {
+            genJob = launch(Dispatchers.Default) {
+                val entry = store.getEntry(SERVER_KEY_ALIAS, null) as KeyStore.TrustedCertificateEntry
+                val certificate: Certificate = entry.trustedCertificate
+
                 try {
                     // verify signature from server
-                    val sig = service.getSignatureAsync().await().signature.fromBase64()
+                    val sig = withContext(Dispatchers.IO) {
+                        service.getSignatureAsync().await().signature.fromBase64()
+                    }
 
                     // verify signature
                     val verifyInstance = Signature.getInstance(RSA_SIGNATURE_ALGORITHM)

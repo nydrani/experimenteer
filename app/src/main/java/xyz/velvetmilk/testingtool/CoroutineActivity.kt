@@ -110,6 +110,24 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
             }
         }
 
+        fab6.setOnClickListener {
+            Snackbar.make(it, "Spammer", Snackbar.LENGTH_SHORT).show()
+            launch(Dispatchers.Default) {
+                val curTime = Instant.now()
+                val builder = StringBuilder()
+                var res = Math.random()
+                for (i in 1..10000000) {
+                    res = Math.atan(res)
+                    res = Math.tan(res)
+                }
+                builder.appendln(res)
+                launch(Dispatchers.Main) {
+                    log_view2.text = ChronoUnit.MILLIS.between(curTime, Instant.now()).toString()
+                    log_view3.text = builder.toString()
+                }
+            }
+        }
+
         Timber.d("onCreate thread: %s", Thread.currentThread().name)
         launch {
             Timber.d("launch thread: %s", Thread.currentThread().name)
