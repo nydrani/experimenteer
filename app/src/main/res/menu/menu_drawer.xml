@@ -11,6 +11,10 @@
             android:title="Appbar layout activity"/>
 
         <item
+            android:id="@+id/nav_animation"
+            android:title="Animation activity"/>
+
+        <item
             android:id="@+id/nav_attestation"
             android:title="Attestation activity"/>
 

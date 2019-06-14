@@ -29,14 +29,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AttestationActivity"/>
+        <activity android:name=".AnimationActivity"/>
         <activity android:name=".AppBarLayoutTestActivity"/>
+        <activity android:name=".AttestationActivity"/>
         <activity android:name=".BaseActivity"/>
-        <activity android:name=".CryptoActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
         <activity android:name=".ConnectivityActivity"/>
         <activity android:name=".ConstraintBarrierActivity"/>
         <activity android:name=".CoroutineActivity"/>
+        <activity android:name=".CryptoActivity"/>
         <activity android:name=".FocusableActivity"/>
         <activity android:name=".KeyStoreActivity"/>
         <activity android:name=".MaterialActivity"/>

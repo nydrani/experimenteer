@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_animation -> {
+                    startActivity(AnimationActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_appbar_layout -> {
                     startActivity(AppBarLayoutTestActivity.buildIntent(this))
                     true
@@ -53,10 +57,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_base -> {
                     startActivity(BaseActivity.buildIntent(this))
-                    true
-                }
-                R.id.nav_crypto -> {
-                    startActivity(CryptoActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_collapsing_toolbar -> {
@@ -73,6 +73,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_coroutine -> {
                     startActivity(CoroutineActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_crypto -> {
+                    startActivity(CryptoActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_focusable -> {
