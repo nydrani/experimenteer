@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -44,6 +45,41 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_menu"
             android:tint="#000000"/>
+
+        <FrameLayout
+            android:id="@+id/processing_container"
+            android:layout_width="192dp"
+            android:layout_height="192dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ring_bg_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_ring_background"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ring_inner_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_ring_inner"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ring_outer_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_ring_outer"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/ring_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Processing\nPlease wait&#8230;"
+                android:textColor="#E57626"
+                android:textAppearance="?attr/textAppearanceBody2"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 

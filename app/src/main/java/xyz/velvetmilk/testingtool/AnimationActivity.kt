@@ -27,6 +27,8 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private var opaque = true
+
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -54,6 +56,28 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
         }
 
         ValueAnimator.ofFloat(0f, 360f).apply {
+            duration = 1600
+            addUpdateListener {
+                ring_inner_view.rotation = it.animatedValue as Float
+            }
+            interpolator = LinearInterpolator()
+            repeatMode = ValueAnimator.RESTART
+            repeatCount = Animation.INFINITE
+            start()
+        }
+
+        ValueAnimator.ofFloat(0f, 360f).apply {
+            duration = 4000
+            addUpdateListener {
+                ring_outer_view.rotation = it.animatedValue as Float
+            }
+            interpolator = LinearInterpolator()
+            repeatMode = ValueAnimator.RESTART
+            repeatCount = Animation.INFINITE
+            reverse()
+        }
+
+        ValueAnimator.ofFloat(0f, 360f).apply {
             duration = 1000
             addUpdateListener {
                 image_view.rotation = it.animatedValue as Float
@@ -63,8 +87,15 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
             start()
         }
 
+
         fab.setOnClickListener {
-            base_view.text = Random.nextInt().toString()
+            if (opaque) {
+                processing_container.animate().alpha(0.0f).duration = 1000
+                opaque = false
+            } else {
+                processing_container.animate().alpha(1.0f).duration = 1000
+                opaque = true
+            }
         }
     }
 
