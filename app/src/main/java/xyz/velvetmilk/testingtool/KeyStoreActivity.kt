@@ -167,7 +167,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 
             disposer.clear()
             Observable.fromCallable { keyPairGenerator.genKeyPair() }
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     key_view.text = it.public.encoded.toHexStringUTF8()
@@ -183,6 +183,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             // verify certificate chain
             for (i in chain.indices) {
                 Timber.d(chain[i].encoded.toBase64())
+                Timber.d((chain[i] as X509Certificate).tbsCertificate.toHexStringUTF8())
                 builder.appendln(chain[i].toString())
                 try {
                     if (i == chain.size - 1) {
@@ -207,10 +208,30 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
                     Timber.d("CertificateException")
                 }
             }
+            Timber.d(secureRoot.tbsCertificate.toHexStringUTF8())
 
             if (Arrays.equals((chain.last() as X509Certificate).tbsCertificate, secureRoot.tbsCertificate)) {
                 builder.appendln("Final cert is from Google")
             }
+
+            val rootList = listOf(chain.last() as X509Certificate, secureRoot)
+
+            builder.appendln()
+            for (item in rootList) {
+                builder.appendln(item.basicConstraints)
+                builder.appendln(item.issuerDN.name)
+                builder.appendln(item.issuerUniqueID)
+                builder.appendln(item.issuerX500Principal.name)
+                builder.appendln(item.serialNumber)
+                builder.appendln(item.sigAlgName)
+                builder.appendln(item.sigAlgOID)
+                builder.appendln(item.subjectDN.name)
+                builder.appendln(item.subjectUniqueID)
+                builder.appendln(item.version)
+                builder.appendln(item.tbsCertificate.toHexStringUTF8())
+            }
+            builder.appendln()
+
 
             // check that key is inside secure hardware
             val privEntry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
