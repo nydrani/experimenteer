@@ -20,6 +20,40 @@
         <item name="textAppearanceOverline">@style/TextAppearance.AppTheme.Overline</item>
         <item name="textAppearanceSubtitle1">@style/TextAppearance.AppTheme.Subtitle1</item>
         <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.Subtitle2</item>
+
+        <item name="android:windowAnimationStyle">@style/Animation.TestAnimations</item>
+    </style>
+
+    <!-- Standard animations for a full-screen window or activity. -->
+    <style name="Animation.TestAnimations" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
+        <!--<item name="taskOpenEnterAnimation">@anim/task_open_enter</item>-->
+        <!--<item name="taskOpenExitAnimation">@anim/task_open_exit</item>-->
+        <!--<item name="launchTaskBehindTargetAnimation">@anim/launch_task_behind_target</item>-->
+        <!--<item name="launchTaskBehindSourceAnimation">@anim/launch_task_behind_source</item>-->
+        <!--<item name="taskCloseEnterAnimation">@anim/task_close_enter</item>-->
+        <!--<item name="taskCloseExitAnimation">@anim/task_close_exit</item>-->
+        <!--<item name="taskToFrontEnterAnimation">@anim/task_open_enter</item>-->
+        <!--<item name="taskToFrontExitAnimation">@anim/task_open_exit</item>-->
+        <!--<item name="taskToBackEnterAnimation">@anim/task_close_enter</item>-->
+        <!--<item name="taskToBackExitAnimation">@anim/task_close_exit</item>-->
+        <!--<item name="wallpaperOpenEnterAnimation">@anim/wallpaper_open_enter</item>-->
+        <!--<item name="wallpaperOpenExitAnimation">@anim/wallpaper_open_exit</item>-->
+        <!--<item name="wallpaperCloseEnterAnimation">@anim/wallpaper_close_enter</item>-->
+        <!--<item name="wallpaperCloseExitAnimation">@anim/wallpaper_close_exit</item>-->
+        <!--<item name="wallpaperIntraOpenEnterAnimation">@anim/wallpaper_intra_open_enter</item>-->
+        <!--<item name="wallpaperIntraOpenExitAnimation">@anim/wallpaper_intra_open_exit</item>-->
+        <!--<item name="wallpaperIntraCloseEnterAnimation">@anim/wallpaper_intra_close_enter</item>-->
+        <!--<item name="wallpaperIntraCloseExitAnimation">@anim/wallpaper_intra_close_exit</item>-->
+        <!--<item name="fragmentOpenEnterAnimation">@animator/fragment_open_enter</item>-->
+        <!--<item name="fragmentOpenExitAnimation">@animator/fragment_open_exit</item>-->
+        <!--<item name="fragmentCloseEnterAnimation">@animator/fragment_close_enter</item>-->
+        <!--<item name="fragmentCloseExitAnimation">@animator/fragment_close_exit</item>-->
+        <!--<item name="fragmentFadeEnterAnimation">@animator/fragment_fade_enter</item>-->
+        <!--<item name="fragmentFadeExitAnimation">@animator/fragment_fade_exit</item>-->
     </style>
 
     <style name="ThemeOverlay.AppTheme" parent="ThemeOverlay.MaterialComponents"/>

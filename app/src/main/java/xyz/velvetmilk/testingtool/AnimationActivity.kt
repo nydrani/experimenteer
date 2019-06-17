@@ -155,12 +155,6 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    override fun finish() {
-        super.finish()
-
-        overridePendingTransition(0, R.anim.fade_out)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
