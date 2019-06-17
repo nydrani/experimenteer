@@ -82,6 +82,10 @@
             android:id="@+id/nav_time"
             android:title="Time activity"/>
 
+        <item
+            android:id="@+id/nav_transition"
+            android:title="Transition activity"/>
+
     </group>
 
 </menu>

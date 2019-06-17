@@ -22,6 +22,7 @@
         <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.Subtitle2</item>
 
         <item name="android:windowAnimationStyle">@style/Animation.TestAnimations</item>
+        <!--<item name="android:windowActivityTransitions">true</item>-->
     </style>
 
     <!-- Standard animations for a full-screen window or activity. -->

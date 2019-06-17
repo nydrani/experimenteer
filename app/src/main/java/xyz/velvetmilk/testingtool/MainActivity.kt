@@ -119,6 +119,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(TimeActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_transition -> {
+                    startActivity(TransitionActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }
