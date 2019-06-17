@@ -5,16 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.addListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_animation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 
 
 class AnimationActivity : AppCompatActivity(), CoroutineScope {
@@ -28,6 +30,8 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private var opaque = true
+    private var content = true
+    private var animationFinished = true
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -87,7 +91,6 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
             start()
         }
 
-
         fab.setOnClickListener {
             if (opaque) {
                 processing_container.animate().alpha(0.0f).duration = 1000
@@ -96,7 +99,66 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
                 processing_container.animate().alpha(1.0f).duration = 1000
                 opaque = true
             }
+
+            val cx = image2_view.width / 2
+            val cy = image2_view.height / 2
+            val initialRadius = Math.hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+            if (opaque) {
+                val anim = ViewAnimationUtils.createCircularReveal(image2_view, cx, cy, initialRadius, 0f)
+                anim.addListener(onEnd = {
+                    image2_view.visibility = View.INVISIBLE
+                })
+                anim.start()
+            } else {
+                val anim = ViewAnimationUtils.createCircularReveal(image2_view, cx, cy, 0f, initialRadius)
+                anim.addListener(onStart = {
+                    image2_view.visibility = View.VISIBLE
+                })
+                anim.start()
+            }
         }
+
+        fab2.setOnClickListener {
+            // early exit if animation is still running
+            if (!animationFinished) {
+                return@setOnClickListener
+            }
+
+            val cx = fab2.x.toInt() + fab2.width / 2
+            val cy = fab2.y.toInt() - fab2.height / 2
+
+            val mx = Math.max(cx.toDouble(), (content_container.width - cx).toDouble())
+            val my = Math.max(cy.toDouble(), (content_container.height - cy).toDouble())
+            val initialRadius = Math.hypot(mx, my).toFloat()
+
+            if (content) {
+                val anim = ViewAnimationUtils.createCircularReveal(animation_container, cx, cy, initialRadius, 0f)
+                anim.addListener(onEnd = {
+                    animation_container.visibility = View.INVISIBLE
+                    animationFinished = true
+                    content = false
+                })
+                anim.start()
+            } else {
+                val anim = ViewAnimationUtils.createCircularReveal(animation_container, cx, cy, 0f, initialRadius)
+                anim.addListener(onStart = {
+                    animation_container.visibility = View.VISIBLE
+                }, onEnd = {
+                    animationFinished = true
+                    content = true
+                })
+                anim.start()
+            }
+
+            animationFinished = false
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+
+        overridePendingTransition(0, R.anim.fade_out)
     }
 
     override fun onDestroy() {

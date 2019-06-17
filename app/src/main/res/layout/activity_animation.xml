@@ -22,66 +22,89 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/base_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="\?"
-            android:textAppearance="?attr/textAppearanceBody2"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_menu"
-            android:tint="#000000"/>
-
         <FrameLayout
-            android:id="@+id/processing_container"
-            android:layout_width="192dp"
-            android:layout_height="192dp">
+            android:id="@+id/button_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"/>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ring_bg_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_ring_background"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ring_inner_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_ring_inner"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ring_outer_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_ring_outer"/>
+        <LinearLayout
+            android:id="@+id/animation_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@color/colorWhite">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/ring_text"
+                android:id="@+id/base_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Processing\nPlease wait&#8230;"
-                android:textColor="#E57626"
+                android:text="\?"
                 android:textAppearance="?attr/textAppearanceBody2"/>
 
-        </FrameLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu"
+                android:tint="#000000"/>
 
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/processing_container"
+                android:layout_width="192dp"
+                android:layout_height="192dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ring_bg_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_ring_background"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ring_inner_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_ring_inner"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ring_outer_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_ring_outer"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/ring_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Processing\nPlease wait&#8230;"
+                    android:textColor="#E57626"
+                    android:textAppearance="?attr/textAppearanceBody2"/>
+
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image2_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu"
+                android:visibility="invisible"
+                android:tint="#ff0000"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         style="@style/Widget.MaterialComponents.FloatingActionButton"
@@ -92,5 +115,15 @@
         app:srcCompat="@drawable/ic_launcher_foreground"
         app:layout_anchor="@+id/content_container"
         app:layout_anchorGravity="bottom|end"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        app:layout_anchor="@+id/content_container"
+        app:layout_anchorGravity="bottom"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
