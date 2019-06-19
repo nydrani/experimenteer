@@ -99,3 +99,12 @@ fun keyboardCheckObservable(activity: Activity): Observable<Boolean> {
         }
     }.distinctUntilChanged()
 }
+
+fun getRandomString(length: Int) : String {
+    val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"
+    return (1..length)
+        .map {
+            allowedChars.random()
+        }
+        .joinToString("")
+}

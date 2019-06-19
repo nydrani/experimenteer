@@ -49,6 +49,7 @@
         <activity android:name=".SocketActivity"/>
         <activity android:name=".TimeActivity"/>
         <activity android:name=".TransitionActivity"/>
+        <activity android:name=".TransitionTargetActivity"/>
     </application>
 
 </manifest>
