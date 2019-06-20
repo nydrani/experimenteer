@@ -7,7 +7,6 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.View
 import io.reactivex.Observable
-import java.lang.StringBuilder
 
 
 fun dpToPx(context: Context, valueInDp: Float): Float {

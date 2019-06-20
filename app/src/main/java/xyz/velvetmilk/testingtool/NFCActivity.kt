@@ -8,15 +8,14 @@ import android.nfc.tech.NfcA
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_nfc.*
-import timber.log.Timber
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import xyz.velvetmilk.testingtool.tools.toByteString
-import java.lang.StringBuilder
 
 
 class NFCActivity : AppCompatActivity() {

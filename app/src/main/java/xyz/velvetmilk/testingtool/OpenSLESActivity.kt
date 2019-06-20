@@ -8,10 +8,10 @@ import android.os.Environment
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_opensles.*
-import timber.log.Timber
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
+import timber.log.Timber
 import xyz.velvetmilk.testingtool.jni.EavesJNILib
 import xyz.velvetmilk.testingtool.tools.toRawString
 import java.io.*
