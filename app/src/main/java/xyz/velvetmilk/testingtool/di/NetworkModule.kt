@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import xyz.velvetmilk.testingtool.net.RawClient
+import xyz.velvetmilk.testingtool.net.RawServer
 
 @Module
 class NetworkModule {
@@ -14,5 +16,17 @@ class NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor())
             .build()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideInsecureServer(): RawServer {
+        return RawServer()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideInsecureClient(): RawClient {
+        return RawClient()
     }
 }

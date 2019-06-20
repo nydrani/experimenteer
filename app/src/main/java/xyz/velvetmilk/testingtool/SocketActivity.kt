@@ -10,15 +10,11 @@ import kotlinx.android.synthetic.main.activity_socket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import timber.log.Timber
-import java.io.IOException
-import java.net.InetAddress
-import java.net.ServerSocket
-import java.net.Socket
-import java.net.SocketException
+import xyz.velvetmilk.testingtool.di.ActivityModule
+import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import xyz.velvetmilk.testingtool.net.RawClient
+import xyz.velvetmilk.testingtool.net.RawServer
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 
@@ -32,15 +28,15 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    @Inject
+    lateinit var rawServer: RawServer
+    @Inject
+    lateinit var rawClient: RawClient
+
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    private lateinit var serverSocket: ServerSocket
-    private lateinit var acceptedSocket: Socket
-    private lateinit var connectedSocket: Socket
-    private lateinit var timer: Instant
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,44 +45,32 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // dagger injection
+        DaggerActivityComponent.factory()
+            .create((application as TestingApp).appComponent, ActivityModule(this))
+            .inject(this)
+
         job = Job()
         disposer = CompositeDisposable()
 
-
-        // load server socket in background thread
-        launch(Dispatchers.IO) {
-            // ponger
-            serverSocket = ServerSocket(55555)
-            acceptedSocket = serverSocket.accept()
-            parseServerSocketData(acceptedSocket)
-        }
-
-        // load client socket in background thread
-        launch(Dispatchers.IO) {
-            // pinger
-            connectedSocket = Socket(InetAddress.getLocalHost(), 55555)
-            parseClientSocketData(connectedSocket)
-        }
+        // setup server and client
+        rawServer.initialise(55555)
+        rawClient.initialise(55555)
 
         fab.setOnClickListener {
-            launch(Dispatchers.IO) {
-                pingServer()
-            }
+            rawClient.pingServer()
         }
 
         fab2.setOnClickListener {
-            launch(Dispatchers.IO) {
-                checkAliveClient()
-            }
+            rawServer.checkAliveClient()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        connectedSocket.close()
-        acceptedSocket.close()
-        serverSocket.close()
+        rawServer.deinitialise()
+        rawClient.deinitialise()
 
         job.cancel()
         disposer.clear()
@@ -101,80 +85,5 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun pingServer() {
-        timer = Instant.now()
-        try {
-            connectedSocket.outputStream.write(42)
-        } catch (e: SocketException) {
-        } catch (e: IOException) {
-        }
-    }
-
-    private fun checkAliveClient() {
-        try {
-            acceptedSocket.outputStream.write(88)
-        } catch (e: SocketException) {
-        } catch (e: IOException) {
-        }
-    }
-
-    private fun parseServerSocketData(socket: Socket) {
-        do {
-            val data: Int
-            try {
-                data = socket.getInputStream().read()
-            } catch (e: SocketException) {
-                break
-            } catch (e: IOException) {
-                break
-            }
-
-            Timber.d(data.toString())
-            if (data == 44) {
-                // got a alive message
-                launch(Dispatchers.Main) {
-                    socket_view.text = "Client is alive"
-                }
-            }
-            if (data == 42) {
-                // got a ping packet, send pong
-                try {
-                    socket.getOutputStream().write(24)
-                } catch (e: SocketException) {
-                } catch (e: IOException) {
-                }
-            }
-        } while (data != -1)
-    }
-
-    private fun parseClientSocketData(socket: Socket) {
-        do {
-            val data: Int
-            try {
-                data = socket.getInputStream().read()
-            } catch (e: SocketException) {
-                break
-            } catch (e: IOException) {
-                break
-            }
-
-            Timber.d(data.toString())
-            if (data == 24) {
-                // got a pong message
-                launch(Dispatchers.Main) {
-                    socket_view.text = Duration.between(timer, Instant.now()).toMillis().toString()
-                }
-            }
-            if (data == 88) {
-                // got a alive packet, send yes i am alive packet
-                try {
-                    socket.getOutputStream().write(44)
-                } catch (e: SocketException) {
-                } catch (e: IOException) {
-                }
-            }
-        } while (data != -1)
     }
 }
