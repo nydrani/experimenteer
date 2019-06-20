@@ -23,7 +23,7 @@ import kotlin.coroutines.CoroutineContext
 class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = ConnectivityActivity::class.java.simpleName
+        private val TAG = ConnectivityActivity::class.simpleName
         private const val TEST_HOST_NAME = "airpayapp.com.au"
         private const val TEST_PORT = 443
 
@@ -171,8 +171,8 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

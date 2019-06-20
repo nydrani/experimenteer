@@ -32,7 +32,7 @@ import kotlin.coroutines.CoroutineContext
 class SecureSocketActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = SecureSocketActivity::class.java.simpleName
+        private val TAG = SecureSocketActivity::class.simpleName
 
         private const val ALIAS_CERT = "ALIAS_CERT"
         private const val ALIAS_KEY = "ALIAS_KEY"
@@ -98,8 +98,8 @@ class SecureSocketActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

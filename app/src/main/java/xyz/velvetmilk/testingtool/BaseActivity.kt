@@ -17,7 +17,7 @@ import kotlin.random.Random
 class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = BaseActivity::class.java.simpleName
+        private val TAG = BaseActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, BaseActivity::class.java)
@@ -51,8 +51,8 @@ class BaseActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

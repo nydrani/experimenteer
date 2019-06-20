@@ -21,7 +21,7 @@ import java.lang.StringBuilder
 class NFCActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = NFCActivity::class.java.simpleName
+        private val TAG = NFCActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, NFCActivity::class.java)
@@ -124,8 +124,8 @@ class NFCActivity : AppCompatActivity() {
         nfcAdapter?.disableReaderMode(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

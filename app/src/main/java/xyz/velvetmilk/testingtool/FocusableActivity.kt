@@ -15,7 +15,7 @@ import timber.log.Timber
 class FocusableActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = FocusableActivity::class.java.simpleName
+        private val TAG = FocusableActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, FocusableActivity::class.java)
@@ -46,8 +46,8 @@ class FocusableActivity : AppCompatActivity() {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

@@ -26,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = CoroutineActivity::class.java.simpleName
+        private val TAG = CoroutineActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, CoroutineActivity::class.java)
@@ -178,8 +178,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

@@ -4,25 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_material.*
-import kotlinx.coroutines.*
-import timber.log.Timber
+import kotlinx.android.synthetic.main.activity_dagger.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.di.ActivityModule
+import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 
 
-class MaterialActivity : AppCompatActivity(), CoroutineScope {
+class DaggerActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = MaterialActivity::class.simpleName
+        private val TAG = DaggerActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
-            return Intent(context, MaterialActivity::class.java)
+            return Intent(context, DaggerActivity::class.java)
         }
     }
+
+    @Inject lateinit var appCounter: ApplicationCounter
+    @Inject lateinit var activityCounter: ActivityCounter
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -32,34 +37,23 @@ class MaterialActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_material)
+        setContentView(R.layout.activity_dagger)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // dagger injection
+        DaggerActivityComponent.factory()
+            .create((application as TestingApp).appComponent, ActivityModule(this))
+            .inject(this)
 
         job = Job()
         disposer = CompositeDisposable()
 
-        val tempUnits = arrayOf("Celcius", "Kelvin", "Fahrenheit")
-        val adapter = ArrayAdapter(
-            this,
-            R.layout.item_dropdown_menu_popup,
-            tempUnits)
-
-        dropdown_text.setAdapter(adapter)
-        dropdown_text.keyListener = null
-        dropdown_text.setText(tempUnits[0], false)
-
-        dropdown_text.setOnItemClickListener { _, _, position, id ->
-            Timber.d("onItemClick")
-            Timber.d(position.toString())
-            Timber.d(id.toString())
-        }
-        dropdown_text.setOnDismissListener {
-            currentFocus?.clearFocus()
-        }
-
         fab.setOnClickListener {
-            base_view.text = Random.nextInt().toString()
+            appCounter.incrementCounter()
+            activityCounter.incrementCounter()
+
+            base_view.text = String.format("AppCounter: %d | ActivityCounter: %d\n", appCounter.counter, activityCounter.counter)
         }
     }
 

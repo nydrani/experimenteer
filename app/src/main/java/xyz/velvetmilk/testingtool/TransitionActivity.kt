@@ -22,7 +22,7 @@ import kotlin.coroutines.CoroutineContext
 class TransitionActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = TransitionActivity::class.java.simpleName
+        private val TAG = TransitionActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, TransitionActivity::class.java)

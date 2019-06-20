@@ -16,7 +16,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = MainActivity::class.java.simpleName
+        private val TAG = MainActivity::class.simpleName
     }
 
     private val disposer = CompositeDisposable()
@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_crypto -> {
                     startActivity(CryptoActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_dagger -> {
+                    startActivity(DaggerActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_focusable -> {

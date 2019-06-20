@@ -38,6 +38,7 @@
         <activity android:name=".ConstraintBarrierActivity"/>
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".CryptoActivity"/>
+        <activity android:name=".DaggerActivity"/>
         <activity android:name=".FocusableActivity"/>
         <activity android:name=".KeyStoreActivity"/>
         <activity android:name=".MaterialActivity"/>

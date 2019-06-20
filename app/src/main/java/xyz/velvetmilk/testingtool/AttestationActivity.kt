@@ -27,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = AttestationActivity::class.java.simpleName
+        private val TAG = AttestationActivity::class.simpleName
         private const val apiKey = "***REMOVED***"
 
 
@@ -104,8 +104,8 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

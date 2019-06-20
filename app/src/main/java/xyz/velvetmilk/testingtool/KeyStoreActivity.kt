@@ -60,7 +60,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 
 
     companion object {
-        private val TAG = KeyStoreActivity::class.java.simpleName
+        private val TAG = KeyStoreActivity::class.simpleName
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
         private const val RSA_KEY_ALIAS = "RSAbabey"
         private const val GOOGLE_ROOT_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n" +
@@ -331,8 +331,8 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

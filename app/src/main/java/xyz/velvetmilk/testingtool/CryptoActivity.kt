@@ -33,7 +33,7 @@ import kotlin.coroutines.CoroutineContext
 class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = CryptoActivity::class.java.simpleName
+        private val TAG = CryptoActivity::class.simpleName
         private const val RSA_SIGNATURE_ALGORITHM = "SHA256withRSA/PSS"
         private const val RSA_CIPHER_ALGORITHM = "RSA/ECB/OAEPwithSHA-256andMGF1Padding"
         private const val RSA_KEY_ALIAS = "RSAbabey"
@@ -269,8 +269,8 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

@@ -7,12 +7,12 @@
     <group>
 
         <item
-            android:id="@+id/nav_appbar_layout"
-            android:title="Appbar layout activity"/>
-
-        <item
             android:id="@+id/nav_animation"
             android:title="Animation activity"/>
+
+        <item
+            android:id="@+id/nav_appbar_layout"
+            android:title="Appbar layout activity"/>
 
         <item
             android:id="@+id/nav_attestation"
@@ -21,10 +21,6 @@
         <item
             android:id="@+id/nav_base"
             android:title="Base activity"/>
-
-        <item
-            android:id="@+id/nav_crypto"
-            android:title="Crypto activity"/>
 
         <item
             android:id="@+id/nav_collapsing_toolbar"
@@ -41,6 +37,14 @@
         <item
             android:id="@+id/nav_coroutine"
             android:title="Coroutine activity"/>
+
+        <item
+            android:id="@+id/nav_crypto"
+            android:title="Crypto activity"/>
+
+        <item
+            android:id="@+id/nav_dagger"
+            android:title="Dagger activity"/>
 
         <item
             android:id="@+id/nav_focusable"

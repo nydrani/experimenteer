@@ -87,8 +87,8 @@ class OpenSLESActivity : AppCompatActivity() {
         onRequestPermissionsResult(requestCode, grantResults)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

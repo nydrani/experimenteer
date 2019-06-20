@@ -14,7 +14,7 @@ import org.threeten.bp.temporal.ChronoUnit
 class TimeActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = TimeActivity::class.java.simpleName
+        private val TAG = TimeActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, TimeActivity::class.java)
@@ -49,8 +49,8 @@ class TimeActivity : AppCompatActivity() {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

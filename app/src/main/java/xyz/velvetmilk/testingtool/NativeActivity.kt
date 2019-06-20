@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_native.*
 class NativeActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = NativeActivity::class.java.simpleName
+        private val TAG = NativeActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, NativeActivity::class.java)
@@ -48,8 +48,8 @@ class NativeActivity : AppCompatActivity() {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

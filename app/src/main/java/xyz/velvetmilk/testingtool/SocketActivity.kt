@@ -22,7 +22,7 @@ import kotlin.coroutines.CoroutineContext
 class SocketActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = SocketActivity::class.java.simpleName
+        private val TAG = SocketActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, SocketActivity::class.java)
@@ -89,8 +89,8 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

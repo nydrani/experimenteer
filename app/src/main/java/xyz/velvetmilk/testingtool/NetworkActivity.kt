@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = NetworkActivity::class.java.simpleName
+        private val TAG = NetworkActivity::class.simpleName
         private const val SERVER_URL = "http://192.168.105.14:3000/"
 
         fun buildIntent(context: Context): Intent {
@@ -80,8 +80,8 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         disposer.clear()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

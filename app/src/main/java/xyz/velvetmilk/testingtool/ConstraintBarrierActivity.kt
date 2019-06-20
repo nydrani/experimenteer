@@ -28,8 +28,8 @@ class ConstraintBarrierActivity : AppCompatActivity() {
         textView3.text = getString(R.string.format_string3, "hello", "there")
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true
