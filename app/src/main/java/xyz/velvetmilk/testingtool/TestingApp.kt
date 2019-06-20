@@ -7,6 +7,7 @@ import xyz.velvetmilk.testingtool.di.ApplicationComponent
 import xyz.velvetmilk.testingtool.di.ApplicationModule
 import xyz.velvetmilk.testingtool.di.DaggerApplicationComponent
 import xyz.velvetmilk.testingtool.di.NetworkModule
+import xyz.velvetmilk.testingtool.services.BackgroundCoroutineRunner
 import java.security.Security
 
 

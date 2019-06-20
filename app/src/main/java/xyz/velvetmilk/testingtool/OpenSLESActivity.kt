@@ -12,6 +12,8 @@ import timber.log.Timber
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
+import xyz.velvetmilk.testingtool.jni.EavesJNILib
+import xyz.velvetmilk.testingtool.tools.toRawString
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

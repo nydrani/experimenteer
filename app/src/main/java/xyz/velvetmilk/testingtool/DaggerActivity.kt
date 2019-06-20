@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import xyz.velvetmilk.testingtool.services.ActivityCounter
+import xyz.velvetmilk.testingtool.services.ApplicationCounter
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 

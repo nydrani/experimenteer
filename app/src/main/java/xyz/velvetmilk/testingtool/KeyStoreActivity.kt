@@ -28,6 +28,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.tools.fromHexStringUTF8
+import xyz.velvetmilk.testingtool.tools.toBase64
+import xyz.velvetmilk.testingtool.tools.toHexStringUTF8
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException

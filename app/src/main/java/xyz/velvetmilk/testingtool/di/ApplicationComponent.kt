@@ -3,7 +3,7 @@ package xyz.velvetmilk.testingtool.di
 import dagger.BindsInstance
 import dagger.Component
 import okhttp3.OkHttpClient
-import xyz.velvetmilk.testingtool.ApplicationCounter
+import xyz.velvetmilk.testingtool.services.ApplicationCounter
 
 @ApplicationScope
 @Component(modules = [ApplicationModule::class, NetworkModule::class])

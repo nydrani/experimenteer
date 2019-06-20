@@ -26,7 +26,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior=".CustomBehavior">
+        app:layout_behavior=".views.CustomBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:layout_height="100dp"
                 android:text="Hello World!"/>
 
-            <xyz.velvetmilk.testingtool.MaxHeightRecyclerView
+            <xyz.velvetmilk.testingtool.views.MaxHeightRecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

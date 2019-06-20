@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_transition.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.tools.getRandomString
 import kotlin.coroutines.CoroutineContext
 
 

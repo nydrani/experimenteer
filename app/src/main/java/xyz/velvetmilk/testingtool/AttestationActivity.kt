@@ -17,6 +17,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_attestation.*
 import kotlinx.coroutines.*
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.jni.AttestationJNILib
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.FileReader

@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.tools
 
 import android.app.Activity
 import android.content.Context

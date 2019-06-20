@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import xyz.velvetmilk.testingtool.tools.toByteString
 import java.lang.StringBuilder
 
 

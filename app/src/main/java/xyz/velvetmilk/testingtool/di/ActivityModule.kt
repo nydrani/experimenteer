@@ -3,7 +3,7 @@ package xyz.velvetmilk.testingtool.di
 import android.app.Activity
 import dagger.Module
 import dagger.Provides
-import xyz.velvetmilk.testingtool.ActivityCounter
+import xyz.velvetmilk.testingtool.services.ActivityCounter
 
 @Module
 class ActivityModule(private val activity: Activity) {

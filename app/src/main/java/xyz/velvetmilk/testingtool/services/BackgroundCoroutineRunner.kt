@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.services
 
 import kotlinx.coroutines.*
 import timber.log.Timber

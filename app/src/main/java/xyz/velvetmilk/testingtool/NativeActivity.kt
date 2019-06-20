@@ -7,6 +7,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_native.*
+import xyz.velvetmilk.testingtool.jni.TestingJNILib
+import xyz.velvetmilk.testingtool.tools.fromHexStringUTF8
+import xyz.velvetmilk.testingtool.tools.toHexStringUTF8
 
 
 class NativeActivity : AppCompatActivity() {

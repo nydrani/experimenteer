@@ -13,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_appbarlayout.*
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.views.TestAdapter
 
 
 class AppBarLayoutTestActivity : AppCompatActivity() {

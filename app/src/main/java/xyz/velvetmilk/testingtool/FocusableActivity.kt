@@ -3,13 +3,13 @@ package xyz.velvetmilk.testingtool
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_focusable.*
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.tools.keyboardCheckObservable
 
 
 class FocusableActivity : AppCompatActivity() {

@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import xyz.velvetmilk.testingtool.ApplicationCounter
+import xyz.velvetmilk.testingtool.services.ApplicationCounter
 
 @Module
 class ApplicationModule(private val application: Application) {

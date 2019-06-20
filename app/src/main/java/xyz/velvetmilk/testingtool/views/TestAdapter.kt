@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.views
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.item_test.view.*
+import xyz.velvetmilk.testingtool.R
 
 
 class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,13 +27,18 @@ class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return TestViewHolder(
-                LayoutInflater.from(parent.context)
-                        .inflate(R.layout.item_test, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_test, parent, false)
         )
     }
 
     fun updateItems(newItems: List<String>) {
-        val diffResult = DiffUtil.calculateDiff(TestDiffUtilCallback(items, newItems))
+        val diffResult = DiffUtil.calculateDiff(
+            TestDiffUtilCallback(
+                items,
+                newItems
+            )
+        )
 
         items.clear()
         items.addAll(newItems)
@@ -42,7 +48,12 @@ class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun addItem(string: String) {
         val newItems = items.toList() + string
-        val diffResult = DiffUtil.calculateDiff(TestDiffUtilCallback(items, newItems))
+        val diffResult = DiffUtil.calculateDiff(
+            TestDiffUtilCallback(
+                items,
+                newItems
+            )
+        )
 
         items.add(string)
 

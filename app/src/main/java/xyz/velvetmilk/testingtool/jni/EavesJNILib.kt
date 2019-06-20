@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.jni
 
 
 class EavesJNILib {

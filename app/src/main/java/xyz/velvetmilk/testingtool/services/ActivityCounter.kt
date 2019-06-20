@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.services
 
 import timber.log.Timber
 

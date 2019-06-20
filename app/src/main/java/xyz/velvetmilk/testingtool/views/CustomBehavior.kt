@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.views
 
 import android.content.Context
 import android.util.AttributeSet
