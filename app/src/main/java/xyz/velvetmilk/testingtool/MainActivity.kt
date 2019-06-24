@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.slf4j.LoggerFactory
 import timber.log.Timber
 
-
 class MainActivity : AppCompatActivity() {
 
     companion object {

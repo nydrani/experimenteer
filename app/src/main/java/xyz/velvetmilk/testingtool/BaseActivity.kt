@@ -13,7 +13,6 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
-
 class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

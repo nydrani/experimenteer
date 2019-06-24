@@ -1,6 +1,5 @@
 package xyz.velvetmilk.testingtool.jni
 
-
 class TestingJNILib {
 
     init {

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_collapsingtoolbarlayout.*
 
-
 class CollapsingToolbarLayoutTestActivity : AppCompatActivity() {
 
     companion object {

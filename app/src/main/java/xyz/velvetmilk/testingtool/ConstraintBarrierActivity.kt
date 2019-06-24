@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_constraint_barrier.*
 
-
 class ConstraintBarrierActivity : AppCompatActivity() {
 
     companion object {

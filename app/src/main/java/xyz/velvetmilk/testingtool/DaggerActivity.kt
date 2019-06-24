@@ -17,7 +17,6 @@ import xyz.velvetmilk.testingtool.services.ApplicationCounter
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-
 class DaggerActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

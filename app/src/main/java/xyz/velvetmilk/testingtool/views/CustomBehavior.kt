@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import com.google.android.material.appbar.AppBarLayout
 import java.util.*
 
-
 class CustomBehavior : CoordinatorLayout.Behavior<View> {
 
     constructor() : super()

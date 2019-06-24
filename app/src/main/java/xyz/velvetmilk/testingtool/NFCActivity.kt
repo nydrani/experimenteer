@@ -5,6 +5,7 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.tech.IsoDep
 import android.nfc.tech.NfcA
+import android.nfc.tech.NfcB
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.tools.toByteString
-
 
 class NFCActivity : AppCompatActivity() {
 
@@ -54,17 +54,21 @@ class NFCActivity : AppCompatActivity() {
 
             // enable nfc
             nfcAdapter?.let {
-                if (it.isEnabled) {
-                    it.enableReaderMode(this,
-                        { tag ->
-                            GlobalScope.launch(Dispatchers.Main) {
-                                Snackbar.make(view, "NFC read something", Snackbar.LENGTH_LONG).show()
-                                Snackbar.make(view, "Count: " + count.toString(), Snackbar.LENGTH_LONG).show()
-                            }
+                if (!it.isEnabled) {
+                    return@let
+                }
 
-                            val stringBuilder = StringBuilder()
-                            for (tech in tag.techList) {
-                                if (tech == NfcA::class.java.name) {
+                it.enableReaderMode(this,
+                    { tag ->
+                        GlobalScope.launch(Dispatchers.Main) {
+                            Snackbar.make(view, "NFC read something", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(view, String.format("Count: %d", count), Snackbar.LENGTH_LONG).show()
+                        }
+
+                        val stringBuilder = StringBuilder()
+                        for (tech in tag.techList) {
+                            when (tech) {
+                                NfcA::class.java.name -> {
                                     val nfcA = NfcA.get(tag)
                                     nfcA.connect()
 
@@ -75,7 +79,20 @@ class NFCActivity : AppCompatActivity() {
                                     stringBuilder.appendln(nfcA.sak.toString())
 
                                     nfcA.close()
-                                } else if (tech == IsoDep::class.java.name) {
+                                }
+                                NfcB::class.java.name -> {
+                                    val nfcB = NfcB.get(tag)
+                                    nfcB.connect()
+
+                                    stringBuilder.appendln("NFC-B")
+                                    stringBuilder.appendln(nfcB.isConnected)
+                                    stringBuilder.appendln(nfcB.applicationData.toByteString())
+                                    stringBuilder.appendln(nfcB.maxTransceiveLength)
+                                    stringBuilder.appendln(nfcB.protocolInfo.toByteString())
+
+                                    nfcB.close()
+                                }
+                                IsoDep::class.java.name -> {
                                     val nfcIso = IsoDep.get(tag)
                                     nfcIso.connect()
 
@@ -86,21 +103,22 @@ class NFCActivity : AppCompatActivity() {
                                     stringBuilder.appendln(nfcIso.hiLayerResponse.toByteString())
                                     stringBuilder.appendln(nfcIso.isExtendedLengthApduSupported)
                                     stringBuilder.appendln(nfcIso.maxTransceiveLength)
+                                    stringBuilder.appendln(nfcIso.timeout)
 
                                     nfcIso.close()
                                 }
                             }
+                        }
 
-                            Timber.d(stringBuilder.toString())
+                        Timber.d(stringBuilder.toString())
 
-                            GlobalScope.launch(Dispatchers.Main) {
-                                nfc_view.text = stringBuilder.toString()
-                            }
-                        },
-                        NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK or NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS or
-                                NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B,
-                        null)
-                }
+                        GlobalScope.launch(Dispatchers.Main) {
+                            nfc_view.text = stringBuilder.toString()
+                        }
+                    },
+                    NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK or NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS or
+                            NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or NfcAdapter.FLAG_READER_NFC_B,
+                    null)
             }
         }
 

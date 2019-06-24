@@ -32,7 +32,6 @@ import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 import kotlin.coroutines.CoroutineContext
 
-
 class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

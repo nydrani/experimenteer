@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_network.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,7 +19,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
-
 
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
 

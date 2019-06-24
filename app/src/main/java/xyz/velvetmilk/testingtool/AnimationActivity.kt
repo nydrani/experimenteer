@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-
 class AnimationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

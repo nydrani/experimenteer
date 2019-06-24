@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import xyz.velvetmilk.testingtool.tools.getRandomString
 import kotlin.coroutines.CoroutineContext
 
-
 class TransitionTargetActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
@@ -28,7 +27,6 @@ class TransitionTargetActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, TransitionTargetActivity::class.java)
         }
     }
-
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job

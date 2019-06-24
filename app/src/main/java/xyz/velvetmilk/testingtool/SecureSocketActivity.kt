@@ -7,22 +7,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_secure_socket.*
-import kotlinx.coroutines.*
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
 import xyz.velvetmilk.testingtool.net.SSLManager
 import xyz.velvetmilk.testingtool.net.SecureClient
 import xyz.velvetmilk.testingtool.net.SecureServer
-import java.io.IOException
-import java.net.ServerSocket
-import java.net.Socket
-import java.net.SocketException
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
-
 
 class SecureSocketActivity : AppCompatActivity(), CoroutineScope {
 

@@ -18,7 +18,6 @@ import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-
 @RuntimePermissions
 class OpenSLESActivity : AppCompatActivity() {
 

@@ -22,7 +22,6 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.coroutines.CoroutineContext
 
-
 class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

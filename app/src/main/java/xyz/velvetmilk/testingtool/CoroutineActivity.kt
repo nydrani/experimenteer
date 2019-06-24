@@ -24,7 +24,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
-
 class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

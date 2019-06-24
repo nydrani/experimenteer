@@ -15,7 +15,6 @@ import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
-
 class MaterialActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {

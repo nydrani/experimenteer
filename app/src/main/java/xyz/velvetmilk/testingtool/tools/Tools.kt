@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.View
 import io.reactivex.Observable
 
-
 fun dpToPx(context: Context, valueInDp: Float): Float {
     val metrics = context.resources.displayMetrics
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics)

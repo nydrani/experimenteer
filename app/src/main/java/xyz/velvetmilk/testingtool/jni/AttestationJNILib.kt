@@ -1,6 +1,5 @@
 package xyz.velvetmilk.testingtool.jni
 
-
 /**
  * @author Victor Zhang
  */

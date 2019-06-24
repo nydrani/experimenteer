@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.activity_time.*
 import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoUnit
 
-
 class TimeActivity : AppCompatActivity() {
 
     companion object {
@@ -22,6 +21,7 @@ class TimeActivity : AppCompatActivity() {
     }
 
     private val disposer = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +37,7 @@ class TimeActivity : AppCompatActivity() {
         stringBuilder.appendln(ZonedDateTime.now())
         stringBuilder.appendln(LocalTime.now())
         stringBuilder.appendln(LocalDate.of(2019, 6, 1))
-        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 6, 7), LocalDate.now()))
-        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 6, 6), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 6, 1), LocalDate.now()))
 
         time_view.text = String.format("%s", stringBuilder)
     }

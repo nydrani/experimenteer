@@ -10,7 +10,6 @@ import xyz.velvetmilk.testingtool.di.NetworkModule
 import xyz.velvetmilk.testingtool.services.BackgroundCoroutineRunner
 import java.security.Security
 
-
 class TestingApp : Application() {
 
     companion object {
@@ -21,6 +20,7 @@ class TestingApp : Application() {
         private set
 
     private lateinit var backgroundRunner: BackgroundCoroutineRunner
+
 
     override fun onCreate() {
         super.onCreate()

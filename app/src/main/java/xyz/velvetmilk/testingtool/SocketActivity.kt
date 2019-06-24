@@ -10,14 +10,12 @@ import kotlinx.android.synthetic.main.activity_socket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
 import xyz.velvetmilk.testingtool.net.RawClient
 import xyz.velvetmilk.testingtool.net.RawServer
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
-
 
 class SocketActivity : AppCompatActivity(), CoroutineScope {
 

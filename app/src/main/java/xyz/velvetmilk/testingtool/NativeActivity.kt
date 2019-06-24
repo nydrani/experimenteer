@@ -11,7 +11,6 @@ import xyz.velvetmilk.testingtool.jni.TestingJNILib
 import xyz.velvetmilk.testingtool.tools.fromHexStringUTF8
 import xyz.velvetmilk.testingtool.tools.toHexStringUTF8
 
-
 class NativeActivity : AppCompatActivity() {
 
     companion object {

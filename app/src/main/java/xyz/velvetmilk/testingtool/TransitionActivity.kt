@@ -19,7 +19,6 @@ import kotlinx.coroutines.Job
 import xyz.velvetmilk.testingtool.tools.getRandomString
 import kotlin.coroutines.CoroutineContext
 
-
 class TransitionActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
@@ -29,7 +28,6 @@ class TransitionActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, TransitionActivity::class.java)
         }
     }
-
 
     private var count = 0
     private var transitioned = false

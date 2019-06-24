@@ -16,7 +16,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_keystore.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import org.spongycastle.asn1.*
 import retrofit2.Retrofit
@@ -35,7 +38,6 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.*
 import kotlin.coroutines.CoroutineContext
-
 
 class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 

@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_focusable.*
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.tools.keyboardCheckObservable
 
-
 class FocusableActivity : AppCompatActivity() {
 
     companion object {
