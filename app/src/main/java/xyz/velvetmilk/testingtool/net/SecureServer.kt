@@ -7,9 +7,10 @@ import java.net.BindException
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class RawServer : CoroutineScope {
+class SecureServer @Inject constructor(private val sslManager: SSLManager) : CoroutineScope {
     private lateinit var serverSocket: ServerSocket
     private lateinit var acceptedSocket: Socket
 
@@ -44,7 +45,9 @@ class RawServer : CoroutineScope {
         job = Job()
 
         launch(errorHandler) {
-            serverSocket = ServerSocket(port)
+            // ponger
+            val sslContext = sslManager.createSSLContext()
+            serverSocket = sslContext.serverSocketFactory.createServerSocket(port)
             acceptedSocket = serverSocket.accept()
             parseServerSocketData()
         }

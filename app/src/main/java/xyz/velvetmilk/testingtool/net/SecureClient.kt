@@ -9,9 +9,10 @@ import java.net.BindException
 import java.net.InetAddress
 import java.net.Socket
 import java.net.SocketException
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class RawClient : CoroutineScope {
+class SecureClient @Inject constructor(private val sslManager: SSLManager) : CoroutineScope {
     private lateinit var clientSocket: Socket
     private lateinit var timer: Instant
 
@@ -45,7 +46,8 @@ class RawClient : CoroutineScope {
         // load client socket in background thread
         launch(errorHandler) {
             // pinger
-            clientSocket = Socket(InetAddress.getLocalHost(), port)
+            val sslContext = sslManager.createSSLContext()
+            clientSocket = sslContext.socketFactory.createSocket(InetAddress.getLocalHost(), port)
             parseClientSocketData()
         }
     }

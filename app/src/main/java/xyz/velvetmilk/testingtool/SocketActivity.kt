@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_socket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
 import xyz.velvetmilk.testingtool.net.RawClient
@@ -54,8 +55,8 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         // setup server and client
-        rawServer.initialise(55555)
-        rawClient.initialise(55555)
+        rawServer.initialise(44444)
+        rawClient.initialise(44444)
 
         fab.setOnClickListener {
             rawClient.pingServer()
@@ -69,8 +70,8 @@ class SocketActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
 
-        rawServer.deinitialise()
         rawClient.deinitialise()
+        rawServer.deinitialise()
 
         job.cancel()
         disposer.clear()

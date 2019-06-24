@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_network.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 import retrofit2.http.POST
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
@@ -33,7 +33,10 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         data class TestResponse(val message: String)
 
         @POST("test")
-        fun testAsync(): Deferred<TestResponse>
+        suspend fun testPost(): TestResponse
+
+        @GET("test")
+        suspend fun testGet(): TestResponse
     }
 
     private lateinit var service: NetworkService
@@ -56,7 +59,6 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
             .client(OkHttpClient())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
         service = retrofit.create(NetworkService::class.java)
@@ -64,7 +66,18 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         fab.setOnClickListener {
             launch {
                 try {
-                    network_view.text = service.testAsync().await().message
+                    network_view.text = service.testGet().message
+                } catch (e: IOException) {
+                    // io exception
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        fab2.setOnClickListener {
+            launch {
+                try {
+                    network_view.text = service.testPost().message
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()

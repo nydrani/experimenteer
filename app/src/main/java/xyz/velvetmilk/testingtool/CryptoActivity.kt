@@ -8,7 +8,6 @@ import android.security.keystore.KeyProperties
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
@@ -74,7 +73,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         data class GetSignatureResponse(val signature: String)
 
         @POST("get-signature")
-        fun getSignatureAsync(): Deferred<GetSignatureResponse>
+        suspend fun getSignature(): GetSignatureResponse
     }
 
     private lateinit var disposer: CompositeDisposable
@@ -106,7 +105,6 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
             .client(OkHttpClient())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
         service = retrofit.create(NetworkService::class.java)
@@ -239,7 +237,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
                 try {
                     // verify signature from server
                     val sig = withContext(Dispatchers.IO) {
-                        service.getSignatureAsync().await().signature.fromBase64()
+                        service.getSignature().signature.fromBase64()
                     }
 
                     // verify signature

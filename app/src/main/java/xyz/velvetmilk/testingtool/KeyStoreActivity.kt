@@ -10,7 +10,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -58,7 +57,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         data class SendCertificateResponse(val verified: Boolean)
 
         @POST("certificate-chain")
-        fun sendCertificateChainAsync(@Body body: SendCertificateRequest): Deferred<SendCertificateResponse>
+        suspend fun sendCertificateChain(@Body body: SendCertificateRequest): SendCertificateResponse
     }
 
 
@@ -145,7 +144,6 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
             .client(OkHttpClient())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
         service = retrofit.create(NetworkService::class.java)
@@ -318,7 +316,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             // send to server
             launch {
                 try {
-                    val res = service.sendCertificateChainAsync(NetworkService.SendCertificateRequest(certList)).await()
+                    val res = service.sendCertificateChain(NetworkService.SendCertificateRequest(certList))
                     key_view.text = res.verified.toString()
                 } catch (e: IOException) {
                     e.printStackTrace()
