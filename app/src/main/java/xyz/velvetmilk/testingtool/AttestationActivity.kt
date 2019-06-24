@@ -22,6 +22,7 @@ import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.FileReader
 import java.util.regex.Pattern
+import java.util.stream.Collectors
 import kotlin.coroutines.CoroutineContext
 
 class AttestationActivity : AppCompatActivity(), CoroutineScope {
@@ -52,41 +53,27 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
         job = Job()
 
-
         fab.setOnClickListener {
+            val builder = StringBuilder()
+
             launch(Dispatchers.IO) {
                 val attestResult = attestSafetyNetAsync().await()
+                builder.appendln(attestResult)
                 launch(Dispatchers.Main) {
-                    log_view.text = attestResult
+                    log_view.text = builder.toString()
                 }
             }
 
-            launch(Dispatchers.IO) {
-                val res = attestRootbeer()
-                launch(Dispatchers.Main) {
-                    log_view2.text = res.toString()
-                }
-            }
+            builder.appendln(String.format("Rootbeer: %s", attestRootbeer()))
+            builder.appendln(String.format("File stat: %b", attestCustomMagiskFileStat()))
+            builder.appendln(String.format("UDS name check: %b", attestCustomMagiskUDS()))
+            builder.appendln(String.format("Native file stat: %b", attestNativeFileStat()))
+            builder.appendln(String.format("System mounts: %b", attestCustomSystemMounts()))
+            builder.appendln(String.format("Native change directory: %b", attestNativeChangeDirectory()))
+            builder.appendln(String.format("Native make directory: %b", attestNativeMakeDirectory()))
 
-            launch(Dispatchers.IO) {
-                val res = attestCustomMagiskFileStat()
-                launch(Dispatchers.Main) {
-                    log_view3.text = String.format("File stat: %b", res)
-                }
-            }
-
-            launch(Dispatchers.IO) {
-                val res = attestCustomMagiskUDS()
-                launch(Dispatchers.Main) {
-                    log_view4.text = String.format("UDS name check: %b", res)
-                }
-            }
-
-            launch(Dispatchers.IO) {
-                val res = attestCustomMagiskNativeFileStat()
-                launch(Dispatchers.Main) {
-                    log_view5.text = String.format("Native file stat: %b", res)
-                }
+            launch(Dispatchers.Main) {
+                log_view.text = builder.toString()
             }
         }
 
@@ -165,9 +152,9 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         for (file in magiskFiles) {
             try {
                 val stat = Os.stat(file)
-                Timber.d(OsConstants.S_ISREG(stat.st_mode).toString())
+                Timber.d(String.format("File stat found: %s", OsConstants.S_ISREG(stat.st_mode)))
             } catch (e: ErrnoException) {
-                Timber.d(OsConstants.errnoName(e.errno))
+                Timber.e(String.format("File stat error: %s", OsConstants.errnoName(e.errno)))
             }
         }
 
@@ -175,6 +162,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
     }
 
     // NOTE: Magisk v19.0 Uses custom UDS names of length 32 prepended by an @ symbol
+    // NOTE: This shouldnt work on android Q (no longer have read permissions to /proc/net)
     // regex expression should be [a-zA-Z0-9] (no spaces, no special characters)
     // e.g. @DFlakjl32slkfdjv23kjhfkjgho2vBDH
     private fun attestCustomMagiskUDS(): Boolean {
@@ -195,8 +183,22 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         return false
     }
 
-    private fun attestCustomMagiskNativeFileStat(): Boolean {
+    private fun attestCustomSystemMounts(): Boolean {
+        BufferedReader(FileReader("/proc/mounts")).use { reader ->
+            return reader.lines().parallel().collect(Collectors.joining()).contains("magisk", true)
+        }
+    }
+
+    private fun attestNativeFileStat(): Boolean {
         return attestationJNILib.nativeFileStat()
+    }
+
+    private fun attestNativeChangeDirectory(): Boolean {
+        return attestationJNILib.changeDirectory()
+    }
+
+    private fun attestNativeMakeDirectory(): Boolean {
+        return attestationJNILib.makeDirectory()
     }
 
     private fun suExec(strCommand: String) {

@@ -46,6 +46,7 @@
         <activity android:name=".NetworkActivity"/>
         <activity android:name=".NFCActivity"/>
         <activity android:name=".OpenSLESActivity"/>
+        <activity android:name=".RippleActivity"/>
         <activity android:name=".SecureSocketActivity"/>
         <activity android:name=".SocketActivity"/>
         <activity android:name=".TimeActivity"/>

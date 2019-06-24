@@ -42,38 +42,6 @@
                 android:text="\?"
                 android:textAppearance="?attr/textAppearanceBody2"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/log_view5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="\?"
-                android:textAppearance="?attr/textAppearanceBody2"/>
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

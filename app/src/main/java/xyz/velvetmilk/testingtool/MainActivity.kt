@@ -110,6 +110,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(OpenSLESActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_ripple -> {
+                    startActivity(RippleActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_secure_socket -> {
                     startActivity(SecureSocketActivity.buildIntent(this))
                     true

@@ -10,4 +10,6 @@ class AttestationJNILib {
     }
 
     external fun nativeFileStat(): Boolean
+    external fun changeDirectory(): Boolean
+    external fun makeDirectory(): Boolean
 }
