@@ -3,9 +3,7 @@ package xyz.velvetmilk.testingtool
 import android.content.Context
 import android.content.Intent
 import android.nfc.NfcAdapter
-import android.nfc.tech.IsoDep
-import android.nfc.tech.NfcA
-import android.nfc.tech.NfcB
+import android.nfc.tech.*
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -77,6 +75,7 @@ class NFCActivity : AppCompatActivity() {
                                     stringBuilder.appendln(nfcA.atqa.toByteString())
                                     stringBuilder.appendln(nfcA.maxTransceiveLength.toString())
                                     stringBuilder.appendln(nfcA.sak.toString())
+                                    stringBuilder.appendln(nfcA.timeout)
 
                                     nfcA.close()
                                 }
@@ -92,6 +91,31 @@ class NFCActivity : AppCompatActivity() {
 
                                     nfcB.close()
                                 }
+                                NfcF::class.java.name -> {
+                                    val nfcF = NfcF.get(tag)
+                                    nfcF.connect()
+
+                                    stringBuilder.appendln("NFC-F")
+                                    stringBuilder.appendln(nfcF.isConnected)
+                                    stringBuilder.appendln(nfcF.manufacturer.toByteString())
+                                    stringBuilder.appendln(nfcF.maxTransceiveLength)
+                                    stringBuilder.appendln(nfcF.systemCode.toByteString())
+                                    stringBuilder.appendln(nfcF.timeout)
+
+                                    nfcF.close()
+                                }
+                                NfcV::class.java.name -> {
+                                    val nfcV = NfcV.get(tag)
+                                    nfcV.connect()
+
+                                    stringBuilder.appendln("NFC-V")
+                                    stringBuilder.appendln(nfcV.isConnected)
+                                    stringBuilder.appendln(nfcV.dsfId)
+                                    stringBuilder.appendln(nfcV.maxTransceiveLength)
+                                    stringBuilder.appendln(nfcV.responseFlags)
+
+                                    nfcV.close()
+                                }
                                 IsoDep::class.java.name -> {
                                     val nfcIso = IsoDep.get(tag)
                                     nfcIso.connect()
@@ -106,6 +130,24 @@ class NFCActivity : AppCompatActivity() {
                                     stringBuilder.appendln(nfcIso.timeout)
 
                                     nfcIso.close()
+                                }
+                                Ndef::class.java.name -> {
+                                    val ndef = Ndef.get(tag)
+                                    ndef.connect()
+
+                                    stringBuilder.appendln()
+                                    stringBuilder.appendln("NFC-NDEF")
+                                    stringBuilder.appendln(ndef.isConnected)
+                                    stringBuilder.appendln(ndef.cachedNdefMessage.toByteArray())
+                                    stringBuilder.appendln(ndef.isWritable)
+                                    stringBuilder.appendln(ndef.maxSize)
+                                    stringBuilder.appendln(ndef.type)
+                                    stringBuilder.appendln(ndef.canMakeReadOnly())
+
+                                    ndef.close()
+                                }
+                                else -> {
+                                    Timber.e(String.format("Unknown tag: %s", tech))
                                 }
                             }
                         }
