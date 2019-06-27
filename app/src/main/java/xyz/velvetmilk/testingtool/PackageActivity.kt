@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_package.*
@@ -20,59 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 
 class PackageActivity : AppCompatActivity(), CoroutineScope {
-
-//    inner class FileWalker {
-//        fun walk(root: String): List<File> {
-//            return walk(File(root))
-//        }
-//
-//        fun walk(root: File): List<File> {
-//            val list = root.listFiles()
-//            val folderList = mutableListOf<File>()
-//
-//            if (list == null) {
-//                return folderList
-//            }
-//
-//            for (f in list) {
-//                if (f.isDirectory) {
-//                    folderList.addAll(walk(f))
-//                } else {
-//                    folderList.add(f)
-//                }
-//            }
-//
-//            return folderList
-//        }
-//    }
-
-    inner class GrepWalker : DirectoryWalker<String>() {
-
-        fun grep(startDirectory: String): List<String> {
-            return grep(File(startDirectory))
-        }
-
-        fun grep(startDirectory: File): List<String> {
-            val results = mutableListOf<String>()
-            walk(startDirectory, results)
-            return results
-        }
-
-        override fun handleFile(file: File, depth: Int, results: MutableCollection<String>?) {
-            launch(Dispatchers.Main) {
-                Toast.makeText(this@PackageActivity, "Looking at: " + file.absoluteFile + " | " + file.length(), Toast.LENGTH_SHORT).show()
-            }
-
-            FileUtils.lineIterator(file, "UTF-8").use {
-                while (it.hasNext()) {
-                    val line = it.nextLine()
-                    if (line.matches("magisk".toRegex())) {
-                        results?.add(file.absolutePath)
-                    }
-                }
-            }
-        }
-    }
 
     inner class SizeWalker : DirectoryWalker<Pair<String, Long>>() {
 
@@ -239,15 +185,14 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
 
-
             base_view.text = builder.toString()
         }
 
         fab2.setOnClickListener {
             launch(Dispatchers.Default) {
                 allFiles.clear()
-                for (directory in packageLocations) {
-                    withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                    for (directory in packageLocations) {
                         val files = SizeWalker().size(directory)
                         allFiles.addAll(files)
                     }
@@ -255,7 +200,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 allFiles.sortBy { it.second }
 
                 launch(Dispatchers.Main) {
-                    base_view.text = allFiles.toString() + "\n" + allFiles.size.toString()
+                    base_view.text = String.format("%s\n%d", allFiles.toString(), allFiles.size)
                     progress_bar.max = allFiles.lastIndex
                 }
             }
