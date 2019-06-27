@@ -1,12 +1,17 @@
 package xyz.velvetmilk.testingtool
 
 import android.app.Application
+import android.widget.Toast
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.jakewharton.threetenabp.AndroidThreeTen
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ApplicationComponent
 import xyz.velvetmilk.testingtool.di.ApplicationModule
 import xyz.velvetmilk.testingtool.di.DaggerApplicationComponent
 import xyz.velvetmilk.testingtool.di.NetworkModule
+import xyz.velvetmilk.testingtool.jni.SignalJNILib
 import xyz.velvetmilk.testingtool.services.BackgroundCoroutineRunner
 import java.security.Security
 
@@ -21,6 +26,11 @@ class TestingApp : Application() {
 
     private lateinit var backgroundRunner: BackgroundCoroutineRunner
 
+    internal val signalJNILib = SignalJNILib()
+
+    init {
+        signalJNILib.setupSignalHandler()
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -36,6 +46,41 @@ class TestingApp : Application() {
         appComponent = DaggerApplicationComponent
             .factory()
             .create(ApplicationModule(this), NetworkModule())
+
+        // Process lifecycle observer (single processed app only)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+            /*
+            override fun onCreate(owner: LifecycleOwner) {
+                super.onCreate(owner)
+            }
+
+            override fun onDestroy(owner: LifecycleOwner) {
+                super.onDestroy(owner)
+            }
+
+            override fun onPause(owner: LifecycleOwner) {
+                super.onPause(owner)
+            }
+
+            override fun onResume(owner: LifecycleOwner) {
+                super.onResume(owner)
+            }
+            */
+
+            override fun onStart(owner: LifecycleOwner) {
+                super.onStart(owner)
+
+                Timber.d("Entered foreground")
+                Toast.makeText(applicationContext, "Entered foreground", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStop(owner: LifecycleOwner) {
+                super.onStop(owner)
+
+                Timber.d("Entered background")
+                Toast.makeText(applicationContext, "Entered background", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         listProviders()
     }

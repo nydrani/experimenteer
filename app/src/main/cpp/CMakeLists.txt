@@ -22,6 +22,10 @@ add_library(attestation
         SHARED
         attestationlib.cpp)
 
+add_library(signal
+        SHARED
+        signallib.cpp)
+
 target_link_libraries(testing
         log
         android)
@@ -32,5 +36,9 @@ target_link_libraries(eaves
         OpenSLES)
 
 target_link_libraries(attestation
+        log
+        android)
+
+target_link_libraries(signal
         log
         android)

@@ -75,12 +75,20 @@
             android:title="OpenSLES activity"/>
 
         <item
+            android:id="@+id/nav_package"
+            android:title="Package activity"/>
+
+        <item
             android:id="@+id/nav_ripple"
             android:title="Ripple activity"/>
 
         <item
             android:id="@+id/nav_secure_socket"
             android:title="Secure socket activity"/>
+
+        <item
+            android:id="@+id/nav_signal"
+            android:title="Signal activity"/>
 
         <item
             android:id="@+id/nav_socket"
