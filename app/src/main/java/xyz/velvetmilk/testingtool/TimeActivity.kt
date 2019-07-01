@@ -37,7 +37,14 @@ class TimeActivity : AppCompatActivity() {
         stringBuilder.appendln(ZonedDateTime.now())
         stringBuilder.appendln(LocalTime.now())
         stringBuilder.appendln(LocalDate.of(2019, 6, 1))
-        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 6, 1), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 7, 1), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDate.of(2019, 7, 2), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 1, 0, 0, 0), LocalDateTime.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 2, 0, 0, 0), LocalDateTime.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 3, 0, 0, 0), LocalDateTime.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 1, 0, 0, 0).toLocalDate(), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 2, 0, 0, 0).toLocalDate(), LocalDate.now()))
+        stringBuilder.appendln(ChronoUnit.DAYS.between(LocalDateTime.of(2019, 7, 3, 0, 0, 0).toLocalDate(), LocalDate.now()))
 
         time_view.text = String.format("%s", stringBuilder)
     }

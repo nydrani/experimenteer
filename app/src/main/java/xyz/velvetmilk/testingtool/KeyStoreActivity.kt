@@ -213,10 +213,6 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             }
             Timber.d(secureRoot.tbsCertificate.toHexStringUTF8())
 
-            if (Arrays.equals((chain.last() as X509Certificate).tbsCertificate, secureRoot.tbsCertificate)) {
-                builder.appendln("Final cert is from Google")
-            }
-
             val rootList = listOf(chain.last() as X509Certificate, secureRoot)
 
             builder.appendln()
@@ -235,6 +231,9 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             }
             builder.appendln()
 
+            if (Arrays.equals((chain.last() as X509Certificate).tbsCertificate, secureRoot.tbsCertificate)) {
+                builder.appendln("Final cert is from Google")
+            }
 
             // check that key is inside secure hardware
             val privEntry = store.getEntry(RSA_KEY_ALIAS, null) as KeyStore.PrivateKeyEntry
@@ -348,15 +347,16 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
 
     private fun parseAuthorisationList(list: ASN1Sequence): String {
         val builder = StringBuilder()
-        builder.append("[ ")
-
-        val usefulTags = listOf(702, 704, 705, 706, 718, 719)
+        builder.appendln("[ ")
 
         val intSetList = listOf(1, 5, 6)
         val intList = listOf(2, 3, 10, 200, 400, 401, 402, 504, 505, 701, 702, 705, 706, 718, 719)
         val nullList = listOf(303, 503, 506, 507, 508, 509, 600)
         val octetStringList = listOf(601, 709, 710, 711, 712, 713, 714, 715, 716, 717)
         val rootOfTrustTag = 704
+
+        val usefulTags = listOf(702, 704, 705, 706, 718, 719)
+
         for (i in usefulTags) {
             for (j in list) {
                 if ((j as ASN1TaggedObject).tagNo != i) {
@@ -398,7 +398,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             }
         }
 
-        builder.append(" ]")
+        builder.appendln(" ]")
         return builder.toString()
     }
 }

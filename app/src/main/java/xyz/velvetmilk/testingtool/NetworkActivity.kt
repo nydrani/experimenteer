@@ -19,12 +19,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
+import okhttp3.CertificatePinner
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = NetworkActivity::class.simpleName
-        private const val SERVER_URL = "http://192.168.105.14:3000/"
+        private const val SERVER_URL = "https://test.shield.airpayapp.com.au/"
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, NetworkActivity::class.java)
@@ -39,6 +41,9 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
         @GET("test")
         suspend fun testGet(): TestResponse
+
+        @GET("")
+        suspend fun homeGet(): String
     }
 
     private lateinit var service: NetworkService
@@ -58,9 +63,20 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
+        val certificatePinner = CertificatePinner.Builder()
+            .add("test.shield.airpayapp.com.au", "sha256/LK+SR338fYlYypXGIS3BQLBvgKKdC7gdn8PFf4vm6ps=")
+            .add("test.shield.airpayapp.com.au", "sha256/RkhWTcfJAQN/YxOR12VkPo+PhmIoSfWd/JVkg44einY=")
+            .add("test.shield.airpayapp.com.au", "sha256/x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=")
+            .build()
+
+        val okHttpClient = OkHttpClient.Builder()
+            .certificatePinner(certificatePinner)
+            .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
-            .client(OkHttpClient())
+            .client(okHttpClient)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
         service = retrofit.create(NetworkService::class.java)
@@ -68,7 +84,7 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         fab.setOnClickListener {
             launch {
                 try {
-                    network_view.text = service.testGet().message
+                    network_view.text = service.homeGet()
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()
