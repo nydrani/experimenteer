@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(AnimationActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_antidebugging -> {
+                    startActivity(AntiDebuggingActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_appbar_layout -> {
                     startActivity(AppBarLayoutTestActivity.buildIntent(this))
                     true
@@ -84,6 +88,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_focusable -> {
                     startActivity(FocusableActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_info -> {
+                    startActivity(InfoActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_keystore -> {

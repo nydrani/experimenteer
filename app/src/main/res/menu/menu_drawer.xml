@@ -11,6 +11,10 @@
             android:title="Animation activity"/>
 
         <item
+            android:id="@+id/nav_antidebugging"
+            android:title="Anti-debugging activity"/>
+
+        <item
             android:id="@+id/nav_appbar_layout"
             android:title="Appbar layout activity"/>
 
@@ -49,6 +53,10 @@
         <item
             android:id="@+id/nav_focusable"
             android:title="Focusable activity"/>
+
+        <item
+            android:id="@+id/nav_info"
+            android:title="Info activity"/>
 
         <item
             android:id="@+id/nav_keystore"

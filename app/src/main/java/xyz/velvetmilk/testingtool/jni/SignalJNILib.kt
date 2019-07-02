@@ -9,6 +9,5 @@ class SignalJNILib {
         System.loadLibrary("signal")
     }
 
-    fun load() {}
     external fun setupSignalHandler(): Boolean
 }

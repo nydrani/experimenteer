@@ -26,6 +26,10 @@ add_library(signal
         SHARED
         signallib.cpp)
 
+add_library(antidebugging
+        SHARED
+        antidebugginglib.cpp)
+
 target_link_libraries(testing
         log
         android)
@@ -40,5 +44,9 @@ target_link_libraries(attestation
         android)
 
 target_link_libraries(signal
+        log
+        android)
+
+target_link_libraries(antidebugging
         log
         android)

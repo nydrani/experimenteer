@@ -32,6 +32,7 @@ class TestingApp : Application() {
         signalJNILib.setupSignalHandler()
     }
 
+
     override fun onCreate() {
         super.onCreate()
 
@@ -39,6 +40,7 @@ class TestingApp : Application() {
 
         AndroidThreeTen.init(this)
         Timber.plant(Timber.DebugTree())
+
         backgroundRunner = BackgroundCoroutineRunner()
         backgroundRunner.init()
 
@@ -47,8 +49,7 @@ class TestingApp : Application() {
             .factory()
             .create(ApplicationModule(this), NetworkModule())
 
-        // Process lifecycle observer (single processed app only)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+        val lifecycleObserver = object : DefaultLifecycleObserver {
             /*
             override fun onCreate(owner: LifecycleOwner) {
                 super.onCreate(owner)
@@ -80,7 +81,12 @@ class TestingApp : Application() {
                 Timber.d("Entered background")
                 Toast.makeText(applicationContext, "Entered background", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+
+        // Process lifecycle observer (single processed app only)
+        // NOTE: it doesnt add multiple of the same observer
+        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleObserver)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleObserver)
 
         listProviders()
     }
