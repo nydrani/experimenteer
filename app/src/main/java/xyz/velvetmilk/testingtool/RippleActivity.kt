@@ -40,7 +40,7 @@ class RippleActivity : AppCompatActivity(), CoroutineScope {
         fab.setOnClickListener {
             launch {
                 ripple_view.background.state = intArrayOf(android.R.attr.state_pressed, android.R.attr.state_enabled)
-                delay(100)
+                delay(1000)
                 ripple_view.background.state = intArrayOf()
             }
         }

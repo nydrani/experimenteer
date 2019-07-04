@@ -42,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_actor -> {
+                    startActivity(ActorActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_animation -> {
                     startActivity(AnimationActivity.buildIntent(this))
                     true
@@ -136,6 +140,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_socket -> {
                     startActivity(SocketActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_telephony -> {
+                    startActivity(TelephonyActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_time -> {

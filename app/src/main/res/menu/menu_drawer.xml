@@ -7,6 +7,10 @@
     <group>
 
         <item
+            android:id="@+id/nav_actor"
+            android:title="Actor activity"/>
+
+        <item
             android:id="@+id/nav_animation"
             android:title="Animation activity"/>
 
@@ -101,6 +105,10 @@
         <item
             android:id="@+id/nav_socket"
             android:title="Socket activity"/>
+
+        <item
+            android:id="@+id/nav_telephony"
+            android:title="Telephony activity"/>
 
         <item
             android:id="@+id/nav_time"

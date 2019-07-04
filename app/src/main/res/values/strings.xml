@@ -6,4 +6,6 @@
     <string name="format_string1">%1$s what</string>
     <string name="format_string2">%1$s what??</string>
     <string name="format_string3">%1$s %2$s what??</string>
+
+    <string name="dex_sha256_base64">something</string>
 </resources>

@@ -4,6 +4,14 @@ import android.app.ActivityManager
 import java.io.BufferedReader
 import java.io.FileReader
 import java.lang.NumberFormatException
+import android.content.Context
+import java.io.IOException
+import java.security.DigestInputStream
+import java.security.MessageDigest
+import java.util.zip.ZipFile
+import android.telephony.TelephonyManager
+import xyz.velvetmilk.testingtool.R
+
 
 class AntiDebugging {
     companion object {
@@ -95,6 +103,28 @@ class AntiDebugging {
             } else {
                 ActivityManager.isRunningInTestHarness()
             }
+        }
+
+        fun isOperatorNameAndroid(context: Context): Boolean {
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val operatorName = telephonyManager.networkOperatorName
+            return operatorName == "android"
+        }
+
+        @Throws(IOException::class)
+        fun sha256Check(context: Context): Boolean {
+            // required dex crc value stored as a text string.
+            // it could be any invisible layout element
+            val dexHash = context.getString(R.string.dex_sha256_base64)
+
+            val zf = ZipFile(context.packageCodePath)
+            val ze = zf.getEntry("classes.dex")
+            val inputStream = zf.getInputStream(ze)
+
+            val digest = MessageDigest.getInstance("SHA-256")
+            val dis = DigestInputStream(inputStream, digest)
+
+            return dis.messageDigest.digest().toBase64() == dexHash
         }
     }
 }
