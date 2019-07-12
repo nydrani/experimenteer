@@ -1,20 +1,25 @@
 package xyz.velvetmilk.testingtool.tools
 
 import android.app.ActivityManager
-import java.io.BufferedReader
-import java.io.FileReader
 import java.lang.NumberFormatException
 import android.content.Context
-import java.io.IOException
+import android.content.SharedPreferences
 import java.security.DigestInputStream
 import java.security.MessageDigest
 import java.util.zip.ZipFile
 import android.telephony.TelephonyManager
 import xyz.velvetmilk.testingtool.R
+import javax.crypto.Mac
+import javax.crypto.SecretKey
+import com.google.gson.reflect.TypeToken
+import com.google.gson.Gson
+import java.io.*
 
 
 class AntiDebugging {
     companion object {
+        private const val PREFERENCE_HMACSHA256_KEY = "PREFERENCE_HMACSHA256_KEY"
+
         private val known_numbers = arrayOf(
             "15555215554", // Default emulator phone numbers + VirusTotal
             "15555215556",
@@ -125,6 +130,46 @@ class AntiDebugging {
             val dis = DigestInputStream(inputStream, digest)
 
             return dis.messageDigest.digest().toBase64() == dexHash
+        }
+
+        @Throws(IOException::class)
+        fun hmacsha256Check(key: SecretKey, sharedPreferences: SharedPreferences): Boolean {
+            val hmacValue = sharedPreferences.getString(PREFERENCE_HMACSHA256_KEY, null)
+            // early exit if hmac doesnt exist
+            hmacValue ?: return false
+
+            val origMap = sharedPreferences.all
+
+            val gson = Gson()
+            val json = gson.toJson(origMap)
+            val mapCopy: MutableMap<String, Any> = gson.fromJson(json, object : TypeToken<Map<String, Any>>() {}.type) as MutableMap<String, Any>
+            mapCopy.remove(PREFERENCE_HMACSHA256_KEY)
+
+            val bos = ByteArrayOutputStream()
+            val oos = ObjectOutputStream(bos)
+            oos.writeObject(mapCopy)
+            val mapBytes = bos.toByteArray()
+
+            val mac = Mac.getInstance("HmacSHA256")
+            mac.init(key)
+            val preferencesMac = mac.doFinal(mapBytes)
+
+            return hmacValue.fromBase64().contentEquals(preferencesMac)
+        }
+
+        @Throws(IOException::class)
+        fun hmacsha256Generate(key: SecretKey, sharedPreferences: SharedPreferences) {
+            val bos = ByteArrayOutputStream()
+            val oos = ObjectOutputStream(bos)
+
+            oos.writeObject(sharedPreferences.all)
+            val mapBytes = bos.toByteArray()
+
+            val mac = Mac.getInstance("HmacSHA256")
+            mac.init(key)
+            val preferencesMac = mac.doFinal(mapBytes)
+
+            sharedPreferences.edit().putString(PREFERENCE_HMACSHA256_KEY, preferencesMac.toBase64()).apply()
         }
     }
 }

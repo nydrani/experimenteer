@@ -11,6 +11,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import xyz.velvetmilk.testingtool.jni.AntiDebuggingJNILib
+import java.io.IOException
+import java.util.zip.ZipFile
 import kotlin.coroutines.CoroutineContext
 
 class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
@@ -40,6 +42,19 @@ class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
 
         job = Job()
         disposer = CompositeDisposable()
+
+        try {
+            val stringBuilder = StringBuilder()
+            val zf = ZipFile(packageCodePath)
+            for (entry in zf.entries()) {
+                if (entry.name.contains(".so") || entry.name.contains(".dex")) {
+                    stringBuilder.appendln(entry.name)
+                }
+            }
+            base_view.text = stringBuilder.toString()
+        } catch (e: IOException) {
+            base_view.text = e.localizedMessage
+        }
 
         fab.setOnClickListener {
             val stringBuilder = StringBuilder()

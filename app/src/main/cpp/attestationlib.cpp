@@ -184,6 +184,28 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_checkMemoryMap(JNIEnv* env, jobject obj) {
+    char buf[BUFSIZ];
+
+    FILE* pipe = fopen("/proc/self/maps", "re");
+
+    if (pipe == nullptr) {
+        LOGE("cant open /proc/self/maps\n");
+        return static_cast<jboolean>(false);
+    }
+
+    while (fgets(buf, BUFSIZ, pipe) != nullptr) {
+        if (strstr(buf, "frida") || strstr(buf, "xposed") || strstr(buf, "Xposed") || strstr(buf, "substrate")) {
+            fclose(pipe);
+            return static_cast<jboolean>(true);
+        }
+    }
+
+    fclose(pipe);
+
+    return static_cast<jboolean>(false);
+}
+
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callPOpen(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;

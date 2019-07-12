@@ -16,6 +16,7 @@ class AttestationJNILib {
     external fun accessDirectory(): Boolean
     external fun lstatDirectory(): Boolean
     external fun getEnvironVariables(): Boolean
+    external fun checkMemoryMap(): Boolean
     external fun callPOpen(): Boolean
     external fun callDmesg(): Boolean
     external fun callSystemSh(): Boolean

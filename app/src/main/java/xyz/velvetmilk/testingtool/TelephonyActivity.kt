@@ -132,6 +132,13 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
                 } catch (e: SecurityException) {
                     stringBuilder.appendln("Android O: No read phone permissions")
                 }
+            } else {
+                // imei
+                try {
+                    stringBuilder.appendln(telephonyManager.deviceId)
+                } catch (e: SecurityException) {
+                    stringBuilder.appendln("Android O: No read phone permissions")
+                }
             }
 
             // android P
@@ -146,6 +153,8 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
                 } catch (e: SecurityException) {
                     stringBuilder.appendln("Android P: No read phone permissions")
                 }
+            } else {
+                stringBuilder.appendln(telephonyManager.isTtyModeSupported)
             }
 
             // android Q

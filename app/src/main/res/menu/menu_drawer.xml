@@ -107,6 +107,10 @@
             android:title="Socket activity"/>
 
         <item
+            android:id="@+id/nav_subscription"
+            android:title="Subscription activity"/>
+
+        <item
             android:id="@+id/nav_telephony"
             android:title="Telephony activity"/>
 

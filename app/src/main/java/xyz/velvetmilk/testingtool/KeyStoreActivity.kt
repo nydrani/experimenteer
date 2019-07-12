@@ -172,9 +172,12 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
             Observable.fromCallable { keyPairGenerator.genKeyPair() }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     key_view.text = it.public.encoded.toHexStringUTF8()
-                }
+                }, {
+                    it.printStackTrace()
+                    key_view.text = it.localizedMessage
+                })
                 .addTo(disposer)
         }
 

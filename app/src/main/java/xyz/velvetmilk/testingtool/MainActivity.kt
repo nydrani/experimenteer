@@ -142,6 +142,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(SocketActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_subscription -> {
+                    startActivity(SubscriptionActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_telephony -> {
                     startActivity(TelephonyActivity.buildIntent(this))
                     true

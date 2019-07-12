@@ -56,6 +56,7 @@
         <activity android:name=".SecureSocketActivity"/>
         <activity android:name=".SignalActivity"/>
         <activity android:name=".SocketActivity"/>
+        <activity android:name=".SubscriptionActivity"/>
         <activity android:name=".TelephonyActivity"/>
         <activity android:name=".TimeActivity"/>
         <activity android:name=".TransitionActivity"/>

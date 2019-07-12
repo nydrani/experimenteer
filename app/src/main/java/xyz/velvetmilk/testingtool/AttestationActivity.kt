@@ -78,6 +78,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
             builder.appendln(String.format("Native access directory: %b", attestNativeAccessDirectory()))
             builder.appendln(String.format("Native lstat directory: %b", attestNativeLStatDirectory()))
             builder.appendln(String.format("Native get environ variables: %b", attestNativeGetEnvironVariables()))
+            builder.appendln(String.format("Native check memory map: %b", attestNativeCheckMemoryMap()))
             builder.appendln(String.format("Native call popen: %b", attestNativeCallPOpen()))
             builder.appendln(String.format("Native call dmesg: %b", attestNativeCallDmesg()))
             builder.appendln(String.format("Native call system sh: %b", attestNativeCallSystemSh()))
@@ -226,6 +227,10 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     private fun attestNativeLStatDirectory(): Boolean {
         return attestationJNILib.lstatDirectory()
+    }
+
+    private fun attestNativeCheckMemoryMap(): Boolean {
+        return attestationJNILib.checkMemoryMap()
     }
 
     private fun attestNativeGetEnvironVariables(): Boolean {
