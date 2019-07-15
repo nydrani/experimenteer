@@ -144,6 +144,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
 
         fab.setOnClickListener {
             val count = AtomicInteger(0)
+            val completedCount = AtomicInteger(0)
             val builder = StringBuffer()
 
             launch(Dispatchers.Default) {
@@ -153,10 +154,6 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                     }
                     Timber.d("LETS GO: " + allFiles[i].first)
                     count.incrementAndGet()
-
-                    launch(Dispatchers.Main) {
-                        progress_bar.progress = i
-                    }
 
                     launch(Dispatchers.IO) {
                         val file = File(allFiles[i].first)
@@ -168,24 +165,24 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                                 if (line.contains("magisk")) {
                                     results.add(line)
                                     found = true
+                                    break
                                 }
                             }
 
                             if (found) {
                                 builder.appendln(file.absolutePath + " | " + found.toString())
-                                builder.appendln(results.toString())
+//                                builder.appendln(results.joinToString("\n"))
                             }
                         }
                         count.decrementAndGet()
 
                         launch(Dispatchers.Main) {
+                            progress_bar.progress = completedCount.incrementAndGet()
                             base_view.text = builder.toString()
                         }
                     }
                 }
             }
-
-            base_view.text = builder.toString()
         }
 
         fab2.setOnClickListener {
@@ -196,6 +193,11 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                         val files = SizeWalker().size(directory)
                         allFiles.addAll(files)
                     }
+                }
+                allFiles.removeAll {
+                    // remove apk which is larger than 10mb (check all base.apk strings)
+                    // TODO: decompile and read the manifest file
+                    !it.first.endsWith(".apk") || it.second > 1024L * 1024L * 10L
                 }
                 allFiles.sortBy { it.second }
 
