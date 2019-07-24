@@ -20,6 +20,7 @@ import retrofit2.http.POST
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 import okhttp3.CertificatePinner
+import retrofit2.HttpException
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
@@ -36,13 +37,13 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
     interface NetworkService {
         data class TestResponse(val message: String)
 
-        @POST("test")
+        @POST("/test")
         suspend fun testPost(): TestResponse
 
-        @GET("test")
+        @GET("/test")
         suspend fun testGet(): TestResponse
 
-        @GET("")
+        @GET("/")
         suspend fun homeGet(): String
     }
 
@@ -88,6 +89,9 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()
+                } catch (e: HttpException) {
+                    // http exception
+                    e.printStackTrace()
                 }
             }
         }
@@ -98,6 +102,9 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
                     network_view.text = service.testPost().message
                 } catch (e: IOException) {
                     // io exception
+                    e.printStackTrace()
+                } catch (e: HttpException) {
+                    // http exception
                     e.printStackTrace()
                 }
             }

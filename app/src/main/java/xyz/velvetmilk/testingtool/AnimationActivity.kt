@@ -13,9 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_animation.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class AnimationActivity : AppCompatActivity(), CoroutineScope {
@@ -151,6 +149,20 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
             }
 
             animationFinished = false
+        }
+
+        launch {
+            var on = true
+
+            while (true) {
+                if (on) {
+                    image3_view.setImageResource(R.drawable.ic_arrow_forward)
+                } else {
+                    image3_view.setImageResource(R.drawable.ic_arrow_back)
+                }
+                on = !on
+                delay(200)
+            }
         }
     }
 

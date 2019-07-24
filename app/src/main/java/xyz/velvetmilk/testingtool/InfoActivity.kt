@@ -3,8 +3,10 @@ package xyz.velvetmilk.testingtool
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Debug
 import android.provider.Settings
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -81,7 +83,12 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 stringBuilder.appendln("===== Fingerprinted Parititons =====")
                 for (partition in android.os.Build.getFingerprintedPartitions()) {
-                    stringBuilder.appendln(String.format("BUILDTIMEMILLIS: %d", Instant.ofEpochMilli(partition.buildTimeMillis)))
+                    stringBuilder.appendln(
+                        String.format(
+                            "BUILDTIMEMILLIS: %d",
+                            Instant.ofEpochMilli(partition.buildTimeMillis)
+                        )
+                    )
                     stringBuilder.appendln(String.format("FINGERPRINT: %s", partition.fingerprint))
                     stringBuilder.appendln(String.format("NAME: %s", partition.name))
                 }
@@ -100,6 +107,17 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
 
             stringBuilder.appendln(Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
 
+
+            base_view.text = stringBuilder.toString()
+        }
+
+        fab2.setOnClickListener {
+            val stringBuilder = StringBuilder()
+
+            stringBuilder.appendln(BuildConfig.DEBUG)
+            stringBuilder.appendln((applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE)
+            stringBuilder.appendln(Debug.isDebuggerConnected())
+            stringBuilder.appendln(detectDebuggingViaTiming())
 
             base_view.text = stringBuilder.toString()
         }
@@ -128,5 +146,17 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
         }
+    }
+
+    // TODO probably need to scatter this across places
+    private fun detectDebuggingViaTiming(): Boolean {
+        val start = Debug.threadCpuTimeNanos()
+
+        for (i in 0..999999)
+            continue
+
+        val stop = Debug.threadCpuTimeNanos()
+
+        return (stop - start > 10000000)
     }
 }

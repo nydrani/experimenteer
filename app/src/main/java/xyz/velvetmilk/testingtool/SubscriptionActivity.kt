@@ -79,9 +79,11 @@ class SubscriptionActivity : AppCompatActivity(), CoroutineScope {
             try {
                 for (i in 0..maxSubscriptions) {
                     val info = subscriptionManager.getActiveSubscriptionInfo(i)
-                    stringBuilder.appendln(info.subscriptionId)
-                    stringBuilder.appendln(info.simSlotIndex)
-                    stringBuilder.appendln(info.number)
+                    info?.let {
+                        stringBuilder.appendln(it.subscriptionId)
+                        stringBuilder.appendln(it.simSlotIndex)
+                        stringBuilder.appendln(it.number)
+                    }
                 }
                 stringBuilder.appendln(subscriptionManager.activeSubscriptionInfoCount)
 //                stringBuilder.appendln(subscriptionManager.getActiveSubscriptionInfoForSimSlotIndex())

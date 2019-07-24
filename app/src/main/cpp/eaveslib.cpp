@@ -25,10 +25,16 @@ static SLRecordItf recorderRecord = nullptr;
 static SLAndroidSimpleBufferQueueItf recorderBufferQueue = nullptr;
 
 // global ints for recorder
-// 5 seconds of recorded audio at 44.1 kHz stereo, 16-bit signed little endian (2channel)
+// 10 seconds of recorded audio at 44.1 kHz stereo, 16-bit signed little endian (2channel)
+#define RECORDED_SECONDS 10
 #define BITS_PER_DECISECOND (4410 * 2)
 #define BITS_PER_SECOND (BITS_PER_DECISECOND * 10)
-#define RECORDER_FRAMES (BITS_PER_SECOND * 5)
+#define RECORDER_FRAMES (BITS_PER_SECOND * RECORDED_SECONDS)
+//constexpr uint8_t recordedSeconds = 10;
+//constexpr uint16_t bitsPerDecisecond = 4410 * 2;
+//constexpr uint32_t bitsPerSecond = bitsPerDecisecond * 10;
+//constexpr uint32_t recorderFrames = bitsPerSecond * recordedSeconds;
+
 static int16_t recorderBuffer[RECORDER_FRAMES];
 static int32_t recorderSize = 0;
 
