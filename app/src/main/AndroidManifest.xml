@@ -52,6 +52,7 @@
         <activity android:name=".NFCActivity"/>
         <activity android:name=".OpenSLESActivity"/>
         <activity android:name=".PackageActivity"/>
+        <activity android:name=".PlayServicesActivity"/>
         <activity android:name=".RippleActivity"/>
         <activity android:name=".SecureSocketActivity"/>
         <activity android:name=".SignalActivity"/>

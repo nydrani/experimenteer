@@ -126,6 +126,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(PackageActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_play_services -> {
+                    startActivity(PlayServicesActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_ripple -> {
                     startActivity(RippleActivity.buildIntent(this))
                     true
