@@ -32,20 +32,20 @@ class NetworkModule {
 
     @Provides
     @ApplicationScope
-    fun provideSecureClient(sslManager: SSLManager): SecureClient {
+    fun provideSecureClient(sslManager: SslManager): SecureClient {
         return SecureClient(sslManager)
     }
 
 
     @Provides
     @ApplicationScope
-    fun provideSecureServer(sslManager: SSLManager): SecureServer {
+    fun provideSecureServer(sslManager: SslManager): SecureServer {
         return SecureServer(sslManager)
     }
 
     @Provides
     @ApplicationScope
-    fun provideSSLManager(): SSLManager {
-        return SSLManager()
+    fun provideSSLManager(): SslManager {
+        return SslManager()
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_signal.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import xyz.velvetmilk.testingtool.jni.SignalJNILib
+import xyz.velvetmilk.testingtool.jni.SignalJniLib
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
@@ -24,7 +24,7 @@ class SignalActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private lateinit var signalJNILib: SignalJNILib
+    private lateinit var signalJniLib: SignalJniLib
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
@@ -40,7 +40,7 @@ class SignalActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
-        signalJNILib = (application as TestingApp).signalJNILib
+        signalJniLib = (application as TestingApp).signalJNILib
 
         fab.setOnClickListener {
             base_view.text = Random.nextInt().toString()

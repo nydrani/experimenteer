@@ -3,7 +3,7 @@ package xyz.velvetmilk.testingtool.jni
 /**
  * @author Victor Zhang
  */
-class AntiDebuggingJNILib {
+class AntiDebuggingJniLib {
 
     init {
         System.loadLibrary("antidebugging")

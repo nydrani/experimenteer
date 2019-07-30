@@ -3,7 +3,7 @@ package xyz.velvetmilk.testingtool.jni
 /**
  * @author Victor Zhang
  */
-class AttestationJNILib {
+class AttestationJniLib {
 
     init {
         System.loadLibrary("attestation")

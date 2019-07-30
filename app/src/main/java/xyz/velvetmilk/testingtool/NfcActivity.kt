@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.tools.toByteString
 
-class NFCActivity : AppCompatActivity() {
+class NfcActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = NFCActivity::class.simpleName
+        private val TAG = NfcActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
-            return Intent(context, NFCActivity::class.java)
+            return Intent(context, NfcActivity::class.java)
         }
     }
 

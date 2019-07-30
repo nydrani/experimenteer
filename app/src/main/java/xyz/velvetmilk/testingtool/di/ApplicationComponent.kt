@@ -21,5 +21,5 @@ interface ApplicationComponent {
     val rawServer: RawServer
     val secureClient: SecureClient
     val secureServer: SecureServer
-    val sslManager: SSLManager
+    val sslManager: SslManager
 }

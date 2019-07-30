@@ -1,6 +1,6 @@
 package xyz.velvetmilk.testingtool.jni
 
-class EavesJNILib {
+class EavesJniLib {
 
     companion object {
         init {

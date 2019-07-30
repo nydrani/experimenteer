@@ -13,7 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
-import xyz.velvetmilk.testingtool.net.SSLManager
+import xyz.velvetmilk.testingtool.net.SslManager
 import xyz.velvetmilk.testingtool.net.SecureClient
 import xyz.velvetmilk.testingtool.net.SecureServer
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class SecureSocketActivity : AppCompatActivity(), CoroutineScope {
     }
 
     @Inject
-    lateinit var sslManager: SSLManager
+    lateinit var sslManager: SslManager
     @Inject
     lateinit var secureServer: SecureServer
     @Inject

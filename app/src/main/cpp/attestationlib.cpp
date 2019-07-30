@@ -72,7 +72,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_nativeFileStat(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_nativeFileStat(JNIEnv* env, jobject obj) {
     struct stat file_info = {};
 
     const char *fname_list[2];
@@ -91,7 +91,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_makeDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_makeDirectory(JNIEnv* env, jobject obj) {
     const char *fname_list[2];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin/su";
@@ -107,7 +107,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_changeDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_changeDirectory(JNIEnv* env, jobject obj) {
     const char *fname = "/sbin/magisk";
 
     if (chdir(fname) == 0) {
@@ -119,7 +119,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_openDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_openDirectory(JNIEnv* env, jobject obj) {
     const char *fname_list[2];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin";
@@ -137,7 +137,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_accessDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_accessDirectory(JNIEnv* env, jobject obj) {
     const char *fname_list[3];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin/su";
@@ -156,7 +156,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_lstatDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_lstatDirectory(JNIEnv* env, jobject obj) {
     const char *fname_list[3];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin/su";
@@ -176,7 +176,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_getEnvironVariables(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_getEnvironVariables(JNIEnv* env, jobject obj) {
     for (char **env_item = environ; *env_item != nullptr; ++env_item) {
         LOGA("%s\n", *env_item);
     }
@@ -184,7 +184,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_checkMemoryMap(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_checkMemoryMap(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
 
     FILE* pipe = fopen("/proc/self/maps", "re");
@@ -206,7 +206,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callPOpen(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callPOpen(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
 
@@ -227,7 +227,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(size != 0);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callProcessList(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callProcessList(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
 
@@ -248,7 +248,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(size != 0);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callDmesg(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callDmesg(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
 
@@ -273,7 +273,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callSystemSh(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callSystemSh(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
 
@@ -294,7 +294,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_callFork(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callFork(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
     int status;
@@ -337,7 +337,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_openProcDirectory(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_openProcDirectory(JNIEnv* env, jobject obj) {
     const char *fname = "/proc/self";
 
     DIR* opened = opendir(fname);
@@ -355,7 +355,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib
     return static_cast<jboolean>(true);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJNILib_checkSystemProperties(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_checkSystemProperties(JNIEnv* env, jobject obj) {
     const char* const ANDROID_OS_BUILD_TAGS = "ro.build.tags";
     const char* const ANDROID_OS_BUILD_FINGERPRINT = "ro.build.fingerprint";
     const char* const ANDROID_OS_BUILD_SELINUX = "ro.build.selinux";

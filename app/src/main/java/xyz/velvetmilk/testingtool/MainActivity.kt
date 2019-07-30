@@ -94,6 +94,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_gps -> {
+                    startActivity(GpsActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_info -> {
                     startActivity(InfoActivity.buildIntent(this))
                     true
@@ -115,11 +119,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_nfc -> {
-                    startActivity(NFCActivity.buildIntent(this))
+                    startActivity(NfcActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_opensles -> {
-                    startActivity(OpenSLESActivity.buildIntent(this))
+                    startActivity(OpenSlesActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_package -> {

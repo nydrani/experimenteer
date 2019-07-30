@@ -15,8 +15,8 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.Gson
 import java.io.*
 
-
 class AntiDebugging {
+
     companion object {
         private const val PREFERENCE_HMACSHA256_KEY = "PREFERENCE_HMACSHA256_KEY"
 

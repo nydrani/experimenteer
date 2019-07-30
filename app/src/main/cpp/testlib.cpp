@@ -22,12 +22,12 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJNILib_nativeString(JNIEnv* env, jobject obj) {
+JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeString(JNIEnv* env, jobject obj) {
     std::string hello = "(string) Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
 
-JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJNILib_nativeByteArray(JNIEnv* env, jobject obj, jbyteArray byteArray) {
+JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeByteArray(JNIEnv* env, jobject obj, jbyteArray byteArray) {
     auto arrayLen = static_cast<u_int32_t>(env->GetArrayLength(byteArray));
 
     jbyte buffer[arrayLen];
@@ -41,7 +41,7 @@ JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJNILib_nati
     return string;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJNILib_nativeToByteArray(JNIEnv* env, jobject obj, jstring string) {
+JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeToByteArray(JNIEnv* env, jobject obj, jstring string) {
     auto strLength = static_cast<u_int32_t>(env->GetStringUTFLength(string));
 
     char buffer[strLength];

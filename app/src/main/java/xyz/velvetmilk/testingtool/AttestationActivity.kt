@@ -17,7 +17,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_attestation.*
 import kotlinx.coroutines.*
 import timber.log.Timber
-import xyz.velvetmilk.testingtool.jni.AttestationJNILib
+import xyz.velvetmilk.testingtool.jni.AttestationJniLib
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.FileReader
@@ -25,8 +25,6 @@ import java.io.InputStreamReader
 import java.util.regex.Pattern
 import java.util.stream.Collectors
 import kotlin.coroutines.CoroutineContext
-import java.lang.Compiler.command
-
 
 
 class AttestationActivity : AppCompatActivity(), CoroutineScope {
@@ -41,7 +39,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private val attestationJNILib = AttestationJNILib()
+    private val attestationJNILib = AttestationJniLib()
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job

@@ -11,7 +11,7 @@ import xyz.velvetmilk.testingtool.di.ApplicationComponent
 import xyz.velvetmilk.testingtool.di.ApplicationModule
 import xyz.velvetmilk.testingtool.di.DaggerApplicationComponent
 import xyz.velvetmilk.testingtool.di.NetworkModule
-import xyz.velvetmilk.testingtool.jni.SignalJNILib
+import xyz.velvetmilk.testingtool.jni.SignalJniLib
 import xyz.velvetmilk.testingtool.services.BackgroundCoroutineRunner
 import java.security.Security
 
@@ -26,7 +26,7 @@ class TestingApp : Application() {
 
     private lateinit var backgroundRunner: BackgroundCoroutineRunner
 
-    internal val signalJNILib = SignalJNILib()
+    internal val signalJNILib = SignalJniLib()
 
     init {
         signalJNILib.setupSignalHandler()

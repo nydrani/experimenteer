@@ -18,10 +18,10 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
-class SSLManager {
+class SslManager {
 
     companion object {
-        private val TAG = SSLManager::class.simpleName
+        private val TAG = SslManager::class.simpleName
 
         private const val ALIAS_CERT = "ALIAS_CERT"
         private const val ALIAS_KEY = "ALIAS_KEY"

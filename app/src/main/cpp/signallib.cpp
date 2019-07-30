@@ -44,7 +44,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_SignalJNILib_setupSignalHandler(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_SignalJniLib_setupSignalHandler(JNIEnv* env, jobject obj) {
     struct sigaction sa = {};
 
     sigset_t all_signals;

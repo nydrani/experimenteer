@@ -12,7 +12,7 @@ import java.net.SocketException
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class SecureClient @Inject constructor(private val sslManager: SSLManager) : CoroutineScope {
+class SecureClient @Inject constructor(private val sslManager: SslManager) : CoroutineScope {
     private lateinit var clientSocket: Socket
     private lateinit var timer: Instant
 

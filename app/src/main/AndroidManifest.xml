@@ -5,10 +5,10 @@
     package="xyz.velvetmilk.testingtool">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.NFC" />
 
@@ -44,13 +44,14 @@
         <activity android:name=".CryptoActivity"/>
         <activity android:name=".DaggerActivity"/>
         <activity android:name=".FocusableActivity"/>
+        <activity android:name=".GpsActivity"/>
         <activity android:name=".InfoActivity"/>
         <activity android:name=".KeyStoreActivity"/>
         <activity android:name=".MaterialActivity"/>
         <activity android:name=".NativeActivity"/>
         <activity android:name=".NetworkActivity"/>
-        <activity android:name=".NFCActivity"/>
-        <activity android:name=".OpenSLESActivity"/>
+        <activity android:name=".NfcActivity"/>
+        <activity android:name=".OpenSlesActivity"/>
         <activity android:name=".PackageActivity"/>
         <activity android:name=".PlayServicesActivity"/>
         <activity android:name=".RippleActivity"/>

@@ -59,6 +59,10 @@
             android:title="Focusable activity"/>
 
         <item
+            android:id="@+id/nav_gps"
+            android:title="GPS activity"/>
+
+        <item
             android:id="@+id/nav_info"
             android:title="Info activity"/>
 

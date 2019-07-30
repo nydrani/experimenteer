@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_antidebugging.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import xyz.velvetmilk.testingtool.jni.AntiDebuggingJNILib
+import xyz.velvetmilk.testingtool.jni.AntiDebuggingJniLib
 import java.io.IOException
 import java.util.zip.ZipFile
 import kotlin.coroutines.CoroutineContext
@@ -25,7 +25,7 @@ class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private val antiDebuggingJNILib = AntiDebuggingJNILib()
+    private val antiDebuggingJNILib = AntiDebuggingJniLib()
 
 
     private lateinit var disposer: CompositeDisposable

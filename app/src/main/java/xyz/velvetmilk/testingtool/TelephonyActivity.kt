@@ -1,10 +1,8 @@
 package xyz.velvetmilk.testingtool
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import android.telephony.TelephonyManager
-import kotlinx.coroutines.launch
+import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 
 @SuppressLint("HardwareIds")
 class TelephonyActivity : AppCompatActivity(), CoroutineScope {
@@ -44,7 +42,7 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         // Request permissions
-        requestPermissions()
+        PermissionsHelper.requestPermissions(this, PermissionsHelper.telephonyPermissions)
 
 
         fab.setOnClickListener {
@@ -200,15 +198,5 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun requestPermissions() {
-        val permissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
-        for (permission in permissions) {
-            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(permissions, 0)
-                break
-            }
-        }
     }
 }

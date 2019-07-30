@@ -1,29 +1,25 @@
 package xyz.velvetmilk.testingtool
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_opensles.*
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.OnPermissionDenied
-import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
-import xyz.velvetmilk.testingtool.jni.EavesJNILib
+import xyz.velvetmilk.testingtool.jni.EavesJniLib
+import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 import xyz.velvetmilk.testingtool.tools.toRawString
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-@RuntimePermissions
-class OpenSLESActivity : AppCompatActivity() {
+class OpenSlesActivity : AppCompatActivity() {
 
     companion object {
         fun buildIntent(context: Context): Intent {
-            return Intent(context, OpenSLESActivity::class.java)
+            return Intent(context, OpenSlesActivity::class.java)
         }
     }
 
@@ -35,25 +31,27 @@ class OpenSLESActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Need audio permissions for this screen
-        initEavesEngineWithPermissionCheck()
+        if (PermissionsHelper.checkAndRequestPermissions(this, PermissionsHelper.openSlesPermissions)) {
+            initEavesEngine()
+        }
 
         // Setup click listeners
         start_recording_button.setOnClickListener {
             Timber.d("start recording")
 
-            startRecordingWithPermissionCheck()
+            startRecording()
         }
 
         stop_recording_button.setOnClickListener {
             Timber.d("stop receive")
 
-            stopRecordingWithPermissionCheck()
+            stopRecording()
         }
 
         store_button.setOnClickListener {
             Timber.d("store recording")
 
-            storeRecordingWithPermissionCheck()
+            storeRecording()
         }
 
         play_button.setOnClickListener {
@@ -79,13 +77,36 @@ class OpenSLESActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        EavesJNILib.shutdown()
+        EavesJniLib.shutdown()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            0 -> {
+                // if nothing granted
+                if (grantResults.isEmpty()) {
+                    finish()
+                    return
+                }
 
-        onRequestPermissionsResult(requestCode, grantResults)
+                // if not everything granted
+                for (result in grantResults) {
+                    if (result == PackageManager.PERMISSION_DENIED) {
+                        finish()
+                        return
+                    }
+                }
+
+                // what to do
+                initEavesEngine()
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -100,43 +121,30 @@ class OpenSLESActivity : AppCompatActivity() {
     }
 
 
-    @OnPermissionDenied(Manifest.permission.RECORD_AUDIO)
-    fun onAudioDenied() {
-        finish()
-    }
-
-    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
-    fun initEavesEngine() {
+    private fun initEavesEngine() {
         // Setup OpenSLES
-        EavesJNILib.createEngine()
-        EavesJNILib.createAudioRecorder()
-        EavesJNILib.createAudioPlayer()
+        EavesJniLib.createEngine()
+        EavesJniLib.createAudioRecorder()
+        EavesJniLib.createAudioPlayer()
     }
 
-    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
-    fun startRecording() {
-        EavesJNILib.startRecording()
+    private fun startRecording() {
+        EavesJniLib.startRecording()
     }
 
-    @NeedsPermission(Manifest.permission.RECORD_AUDIO)
-    fun stopRecording() {
-        EavesJNILib.stopRecording()
+    private fun stopRecording() {
+        EavesJniLib.stopRecording()
     }
 
     private fun playRecording() {
-        EavesJNILib.startPlaying()
+        EavesJniLib.startPlaying()
     }
 
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    fun storeRecording() {
+    private fun storeRecording() {
         // obtain pcm bytearray data from ndk
-        val pcmBytes: ByteArray = EavesJNILib.getRecordingData()
+        val pcmBytes: ByteArray = EavesJniLib.getRecordingData()
 
-        val sampleDir = File(Environment.getExternalStorageDirectory(), "/OpenSLESRecording")
-        if (!sampleDir.exists()) {
-            sampleDir.mkdirs()
-            return
-        }
+        val sampleDir = getExternalFilesDir(null)
 
         // Write to file
         val audioFile: File

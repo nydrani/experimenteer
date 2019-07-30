@@ -1,6 +1,6 @@
 package xyz.velvetmilk.testingtool.jni
 
-class TestingJNILib {
+class TestingJniLib {
 
     init {
         System.loadLibrary("testing")

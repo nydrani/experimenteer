@@ -1,10 +1,8 @@
 package xyz.velvetmilk.testingtool
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Debug
 import android.provider.Settings
@@ -16,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.threeten.bp.Instant
+import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 import kotlin.coroutines.CoroutineContext
 
 class InfoActivity : AppCompatActivity(), CoroutineScope {
@@ -45,7 +44,7 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         // grab permission for serial read
-        requestPhoneStatePermission()
+        PermissionsHelper.requestPermissions(this, PermissionsHelper.infoPermissions)
 
 
         fab.setOnClickListener {
@@ -85,7 +84,7 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
                 for (partition in android.os.Build.getFingerprintedPartitions()) {
                     stringBuilder.appendln(
                         String.format(
-                            "BUILDTIMEMILLIS: %d",
+                            "BUILDTIMEMILLIS: %s",
                             Instant.ofEpochMilli(partition.buildTimeMillis)
                         )
                     )
@@ -141,12 +140,6 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun requestPhoneStatePermission() {
-        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
-        }
-    }
 
     // TODO probably need to scatter this across places
     private fun detectDebuggingViaTiming(): Boolean {

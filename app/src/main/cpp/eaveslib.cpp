@@ -92,7 +92,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 // create the engine and output mix objects
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_createEngine(JNIEnv* env, jclass clazz)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_createEngine(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -125,7 +125,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_createEng
 
 // create audio recorder: recorder is not in fast path
 // like to avoid excessive re-sampling while playing back from Hello & Android clip
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_createAudioRecorder(JNIEnv* env, jclass clazz)
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_createAudioRecorder(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -182,7 +182,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_creat
 
 // create audio recorder: recorder is not in fast path
 // like to avoid excessive re-sampling while playing back from Hello & Android clip
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_createAudioPlayer(JNIEnv* env, jclass clazz)
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_createAudioPlayer(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -236,7 +236,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_creat
 }
 
 // set the recording state for the audio recorder
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_startPlaying(JNIEnv* env, jclass clazz)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_startPlaying(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -260,7 +260,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_startPlay
 }
 
 // set the recording state for the audio recorder
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_startRecording(JNIEnv* env, jclass clazz)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_startRecording(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -296,7 +296,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_startReco
 }
 
 // set the recording state for the audio recorder
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_stopRecording(JNIEnv* env, jclass clazz)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_stopRecording(JNIEnv* env, jclass clazz)
 {
     SLresult result;
 
@@ -322,7 +322,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_stopRecor
 }
 
 // set the recording state for the audio recorder
-JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_getRecordingData(JNIEnv* env, jclass clazz)
+JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_getRecordingData(JNIEnv* env, jclass clazz)
 {
     jbyteArray array = env->NewByteArray(recorderSize);
     env->SetByteArrayRegion(array, 0, recorderSize, reinterpret_cast<const jbyte*>(recorderBuffer));
@@ -331,7 +331,7 @@ JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_get
 }
 
 // shut down the native audio system
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJNILib_shutdown(JNIEnv* env, jclass clazz)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_EavesJniLib_shutdown(JNIEnv* env, jclass clazz)
 {
     // destroy audio recorder object, and invalidate all associated interfaces
     if (recorderObject != nullptr) {
