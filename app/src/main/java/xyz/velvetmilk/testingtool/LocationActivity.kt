@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.ApiException
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_gps.*
+import kotlinx.android.synthetic.main.activity_location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,13 +21,13 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Tasks
 import org.threeten.bp.Instant
 
-class GpsActivity : AppCompatActivity(), CoroutineScope {
+class LocationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
-        private val TAG = GpsActivity::class.simpleName
+        private val TAG = LocationActivity::class.simpleName
 
         fun buildIntent(context: Context): Intent {
-            return Intent(context, GpsActivity::class.java)
+            return Intent(context, LocationActivity::class.java)
         }
     }
 
@@ -36,10 +35,12 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
     private val locationRequest = LocationRequest.create()
     private val locationCallback = object : LocationCallback() {
         override fun onLocationAvailability(locationAvailability: LocationAvailability) {
-            Timber.d(locationAvailability.isLocationAvailable.toString())
+            Timber.d("onLocationAvailability")
         }
 
         override fun onLocationResult(locationResult: LocationResult) {
+            Timber.d("onLocationResult")
+
             val location = locationResult.lastLocation
             val stringBuilder = StringBuilder()
 
@@ -58,6 +59,9 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
     init {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.numUpdates = 1
+        locationRequest.maxWaitTime = 1000
+        locationRequest.interval = 900
+        locationRequest.fastestInterval = 150
     }
 
     private lateinit var disposer: CompositeDisposable
@@ -68,7 +72,7 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gps)
+        setContentView(R.layout.activity_location)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -111,13 +115,14 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
                     .addOnCanceledListener {
                         Timber.d("Cancelled")
                     }
+                    .continueWith {
+                        base_view.text = stringBuilder.toString()
+                    }
             } catch (e: SecurityException) {
                 // missing permissions
                 // whatever
                 stringBuilder.appendln("Missing location permissions")
             }
-
-            base_view.text = stringBuilder.toString()
         }
 
         fab2.setOnClickListener {
@@ -132,7 +137,7 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
                             return@addOnSuccessListener
                         }
 
-                        Timber.d(it.isLocationAvailable.toString())
+                        stringBuilder.appendln(it.isLocationAvailable)
                     }
                     .addOnFailureListener {
                         stringBuilder.appendln("Location availability failed")
@@ -162,7 +167,6 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
                         stringBuilder.appendln(String.format("Longitude: %f", it.longitude))
                         stringBuilder.appendln(String.format("Speed: %f", it.speed))
                         stringBuilder.appendln(String.format("Time: %s", Instant.ofEpochMilli(it.time)))
-
                     }
                     .addOnFailureListener {
                         stringBuilder.appendln("Last location failed")
@@ -171,13 +175,14 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
                     .addOnCanceledListener {
                         Timber.d("Cancelled")
                     }
+                    .continueWith {
+                        base_view.text = stringBuilder.toString()
+                    }
             } catch (e: SecurityException) {
                 // missing permissions
                 // whatever
                 stringBuilder.appendln("Missing location permissions")
             }
-
-            base_view.text = stringBuilder.toString()
         }
 
         fab3.setOnClickListener {
@@ -226,7 +231,7 @@ class GpsActivity : AppCompatActivity(), CoroutineScope {
 
     private fun requestSingleLocationUpdate() {
         try {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
                 .addOnSuccessListener {
                     Timber.d("Location update callback added")
                 }

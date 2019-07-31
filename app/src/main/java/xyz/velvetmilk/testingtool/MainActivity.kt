@@ -94,16 +94,16 @@ class MainActivity : AppCompatActivity() {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
-                R.id.nav_gps -> {
-                    startActivity(GpsActivity.buildIntent(this))
-                    true
-                }
                 R.id.nav_info -> {
                     startActivity(InfoActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_keystore -> {
                     startActivity(KeyStoreActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_location -> {
+                    startActivity(LocationActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_material -> {

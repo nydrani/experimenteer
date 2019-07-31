@@ -44,9 +44,9 @@
         <activity android:name=".CryptoActivity"/>
         <activity android:name=".DaggerActivity"/>
         <activity android:name=".FocusableActivity"/>
-        <activity android:name=".GpsActivity"/>
         <activity android:name=".InfoActivity"/>
         <activity android:name=".KeyStoreActivity"/>
+        <activity android:name=".LocationActivity"/>
         <activity android:name=".MaterialActivity"/>
         <activity android:name=".NativeActivity"/>
         <activity android:name=".NetworkActivity"/>
