@@ -107,6 +107,10 @@
             android:title="Secure socket activity"/>
 
         <item
+            android:id="@+id/nav_sensor"
+            android:title="Sensor activity"/>
+
+        <item
             android:id="@+id/nav_signal"
             android:title="Signal activity"/>
 

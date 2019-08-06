@@ -142,6 +142,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(SecureSocketActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_sensor -> {
+                    startActivity(SensorActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_signal -> {
                     startActivity(SignalActivity.buildIntent(this))
                     true

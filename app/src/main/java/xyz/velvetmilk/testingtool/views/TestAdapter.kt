@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_test.view.*
 import xyz.velvetmilk.testingtool.R
 
 class TestAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val viewClickSubject: Subject<Pair<View, Int>> = PublishSubject.create<Pair<View, Int>>()
+    val viewClickSubject: Subject<Pair<View, Int>> = PublishSubject.create()
     private val items: MutableList<String> = mutableListOf()
 
     override fun getItemCount(): Int {
