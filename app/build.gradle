@@ -92,9 +92,10 @@ dependencies {
 
     // Apache Commons IO
     implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.13'
 
     // Material design
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
 
     // Google Mobile Services (Play Services)
     implementation 'com.google.android.gms:play-services-safetynet:17.0.0'
@@ -123,9 +124,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
 
     // ReactiveX
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0-RC3'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.23.2'

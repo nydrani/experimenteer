@@ -18,7 +18,6 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
-
     // do nothing lol
 }
 
@@ -51,5 +50,23 @@ JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_n
     env->SetByteArrayRegion(array, 0, strLength, reinterpret_cast<const jbyte*>(buffer));
 
     return array;
+}
+
+JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeGrabSha256(JNIEnv* env, jobject obj, jstring string) {
+    auto strLength = static_cast<u_int32_t>(env->GetStringUTFLength(string));
+
+    char buffer[strLength];
+    env->GetStringUTFRegion(string, 0, strLength, buffer);
+
+    char command[] = "sha256sum ";
+    char command_buffer[strLength+sizeof(command)/sizeof(command[0])];
+
+    strcat(command_buffer, command);
+    strcat(command_buffer, buffer);
+
+    int result = system(command_buffer);
+    LOGA("%d\n", result);
+
+    return string;
 }
 }

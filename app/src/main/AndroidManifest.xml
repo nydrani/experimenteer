@@ -32,6 +32,7 @@
         </activity>
 
         <activity android:name=".ActorActivity"/>
+        <activity android:name=".AAudioActivity"/>
         <activity android:name=".AnimationActivity"/>
         <activity android:name=".AntiDebuggingActivity"/>
         <activity android:name=".AppBarLayoutTestActivity"/>
@@ -64,6 +65,7 @@
         <activity android:name=".TimeActivity"/>
         <activity android:name=".TransitionActivity"/>
         <activity android:name=".TransitionTargetActivity"/>
+        <activity android:name=".TrustedScreenActivity"/>
     </application>
 
 </manifest>

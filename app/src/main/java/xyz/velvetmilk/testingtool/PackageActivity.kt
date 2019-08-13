@@ -149,7 +149,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
 
             launch(Dispatchers.Default) {
                 for (i in allFiles.indices) {
-                    while (count.get() > 100) {
+                    while (count.get() > 10) {
                         delay(10)
                     }
                     Timber.d("LETS GO: " + allFiles[i].first)

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "hello there from android log")
         Timber.d("hello there from timber")
-        logger.warn("hello there from slf4j")
+        logger.debug("hello there from slf4j")
 
         fab.setOnClickListener {
             Snackbar.make(it, R.string.test_message, Snackbar.LENGTH_LONG)
@@ -42,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.nav_aaudio -> {
+                    startActivity(AAudioActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_actor -> {
                     startActivity(ActorActivity.buildIntent(this))
                     true
@@ -168,6 +172,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_transition -> {
                     startActivity(TransitionActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_trusted_screen -> {
+                    startActivity(TrustedScreenActivity.buildIntent(this))
                     true
                 }
                 else -> false

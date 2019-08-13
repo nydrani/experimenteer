@@ -7,9 +7,15 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_native.*
+import org.apache.commons.codec.binary.Hex
+import timber.log.Timber
 import xyz.velvetmilk.testingtool.jni.TestingJniLib
 import xyz.velvetmilk.testingtool.tools.fromHexStringUTF8
 import xyz.velvetmilk.testingtool.tools.toHexStringUTF8
+import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.security.MessageDigest
 
 class NativeActivity : AppCompatActivity() {
 
@@ -41,6 +47,21 @@ class NativeActivity : AppCompatActivity() {
 
         fab3.setOnClickListener {
             native_view.text = testingJNILib.nativeToByteArray("hello there").toHexStringUTF8()
+        }
+
+        fab4.setOnClickListener {
+            val stringBuilder = StringBuilder()
+            // grab the sha256 and show it off here
+            val file = File(applicationInfo.nativeLibraryDir, "libtesting.so")
+            val path = file.absolutePath
+
+            stringBuilder.appendln(testingJNILib.nativeGrabSha256(path))
+
+            val digest = MessageDigest.getInstance("SHA-256")
+            val hash = digest.digest(file.readBytes())
+
+            stringBuilder.appendln(Hex.encodeHexString(hash))
+            native_view.text = stringBuilder.toString()
         }
     }
 
