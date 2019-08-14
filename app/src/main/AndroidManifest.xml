@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:name=".TestingApp"
@@ -52,6 +53,7 @@
         <activity android:name=".NativeActivity"/>
         <activity android:name=".NetworkActivity"/>
         <activity android:name=".NfcActivity"/>
+        <activity android:name=".NotificationActivity"/>
         <activity android:name=".OpenSlesActivity"/>
         <activity android:name=".PackageActivity"/>
         <activity android:name=".PlayServicesActivity"/>

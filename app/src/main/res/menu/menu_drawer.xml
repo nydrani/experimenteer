@@ -91,6 +91,10 @@
             android:title="NFC activity"/>
 
         <item
+            android:id="@+id/nav_notification"
+            android:title="Notification activity"/>
+
+        <item
             android:id="@+id/nav_opensles"
             android:title="OpenSLES activity"/>
 

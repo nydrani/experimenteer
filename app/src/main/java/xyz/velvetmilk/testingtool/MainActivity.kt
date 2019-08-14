@@ -126,6 +126,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(NfcActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_notification -> {
+                    startActivity(NotificationActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_opensles -> {
                     startActivity(OpenSlesActivity.buildIntent(this))
                     true
