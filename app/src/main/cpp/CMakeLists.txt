@@ -30,6 +30,10 @@ add_library(antidebugging
         SHARED
         antidebugginglib.cpp)
 
+#add_library(testaaudio
+#        SHARED
+#        aaudiolib.cpp)
+
 target_link_libraries(testing
         log
         android)
@@ -50,3 +54,8 @@ target_link_libraries(signal
 target_link_libraries(antidebugging
         log
         android)
+
+#target_link_libraries(testaaudio
+#        log
+#        android
+#        aaudio)

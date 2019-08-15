@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.activity_aaudio.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.jni.AAudioJniLib
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 
 class AAudioActivity : AppCompatActivity(), CoroutineScope {
 
@@ -22,6 +22,8 @@ class AAudioActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, AAudioActivity::class.java)
         }
     }
+
+    private val aaudioJNILib = AAudioJniLib()
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -39,7 +41,11 @@ class AAudioActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         fab.setOnClickListener {
-            base_view.text = Random.nextInt().toString()
+            aaudioJNILib.createEngine()
+        }
+
+        fab2.setOnClickListener {
+            aaudioJNILib.shutdown()
         }
     }
 
