@@ -63,6 +63,10 @@ class NativeActivity : AppCompatActivity() {
             stringBuilder.appendln(Hex.encodeHexString(hash))
             native_view.text = stringBuilder.toString()
         }
+
+        fab5.setOnClickListener {
+            native_view.text = testingJNILib.nativeTestDlSym("ignored").toString()
+        }
     }
 
     override fun onDestroy() {

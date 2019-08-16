@@ -70,7 +70,7 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_AAudioJniLib_createEn
     AAudioStreamBuilder_delete(builder);
 }
 
-JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_AAudioJniLib_shutdown(JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_AAudioJniLib_shutdown(JNIEnv *env,  jobject obj)
 {
 }
 }

@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <android/log.h>
 #include <string>
+#include <dlfcn.h>
 
 
 #define LOG_TAG "libtest"
@@ -68,5 +69,30 @@ JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nati
     LOGA("%d\n", result);
 
     return string;
+}
+
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeTestDlSym(JNIEnv* env, jobject obj, jstring string) {
+    void *handle;
+    void (*func_dynamic_call)();
+
+    handle = dlopen("libantidebugging.so", RTLD_LAZY);
+    if (handle == nullptr) {
+        /* fail to load the library */
+        LOGA("Error: %s\n", dlerror());
+        return static_cast<jboolean>(false);
+    }
+
+    *(void**)(&func_dynamic_call) = dlsym(handle, "dynamic_test");
+    if (func_dynamic_call == nullptr) {
+        /* no such symbol */
+        LOGA("Error: %s\n", dlerror());
+        dlclose(handle);
+        return static_cast<jboolean>(false);
+    }
+
+    func_dynamic_call();
+    dlclose(handle);
+
+    return static_cast<jboolean>(true);
 }
 }

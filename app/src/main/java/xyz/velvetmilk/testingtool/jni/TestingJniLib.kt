@@ -13,4 +13,6 @@ class TestingJniLib {
     external fun nativeToByteArray(string: String): ByteArray
 
     external fun nativeGrabSha256(path: String): String
+
+    external fun nativeTestDlSym(path: String): Boolean
 }

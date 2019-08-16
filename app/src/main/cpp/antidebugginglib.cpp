@@ -109,11 +109,12 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingPTrace(JNIEnv *env, jobject obj) {
+JNIEXPORT jboolean JNICALL
+Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingPTrace(JNIEnv *env, jobject obj) {
     return static_cast<jboolean>(anti_debug());
 }
 
-JNIEXPORT jint Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingQEMU(JNIEnv* env, jobject jObject) {
+JNIEXPORT jint Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingQEMU(JNIEnv *env, jobject jObject) {
     int child_status;
     int status = 0;
 
@@ -157,5 +158,9 @@ JNIEXPORT jint Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebug
     }
 
     return status;
+}
+
+__attribute__ ((visibility ("default"))) void dynamic_test() {
+    LOGA("DYNAMICALLY CALLED\n");
 }
 }
