@@ -7,10 +7,6 @@
     <group>
 
         <item
-            android:id="@+id/nav_aaudio"
-            android:title="AAudio activity"/>
-
-        <item
             android:id="@+id/nav_actor"
             android:title="Actor activity"/>
 

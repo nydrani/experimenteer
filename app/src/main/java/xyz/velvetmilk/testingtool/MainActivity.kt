@@ -42,10 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.nav_aaudio -> {
-                    startActivity(AAudioActivity.buildIntent(this))
-                    true
-                }
                 R.id.nav_actor -> {
                     startActivity(ActorActivity.buildIntent(this))
                     true
