@@ -31,5 +31,9 @@ class MainActivity : AppCompatActivity() {
         fab2.setOnClickListener {
             aaudioJNILib.shutdown()
         }
+
+        button1.setOnClickListener {
+            aaudioJNILib.getState()
+        }
     }
 }

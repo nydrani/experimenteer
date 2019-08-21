@@ -8,4 +8,6 @@ class AAudioJniLib {
 
     external fun createEngine()
     external fun shutdown()
+
+    external fun getState()
 }
