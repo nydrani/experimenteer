@@ -7,9 +7,11 @@ import android.content.pm.PackageManager
 class PermissionsHelper {
 
     companion object {
+        val cameraPermissions = arrayOf(Manifest.permission.CAMERA)
         val infoPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE)
         val openSlesPermissions = arrayOf(Manifest.permission.RECORD_AUDIO)
         val telephonyPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val subscriptionPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
         val gpsPermissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
 
         private fun checkPermissions(activity: Activity, permissions: Array<String>): Boolean {
@@ -28,7 +30,7 @@ class PermissionsHelper {
 
         fun checkAndRequestPermissions(activity: Activity, permissions: Array<String>): Boolean {
             if (!checkPermissions(activity, permissions)) {
-                activity.requestPermissions(permissions, 0)
+                requestPermissions(activity, permissions)
                 return false
             }
 

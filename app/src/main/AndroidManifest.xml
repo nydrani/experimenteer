@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -37,6 +38,7 @@
         <activity android:name=".AntiDebuggingActivity"/>
         <activity android:name=".AppBarLayoutTestActivity"/>
         <activity android:name=".AttestationActivity"/>
+        <activity android:name=".BarcodeScannerActivity"/>
         <activity android:name=".BaseActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
         <activity android:name=".ConnectivityActivity"/>
@@ -67,6 +69,7 @@
         <activity android:name=".TransitionActivity"/>
         <activity android:name=".TransitionTargetActivity"/>
         <activity android:name=".TrustedScreenActivity"/>
+
     </application>
 
 </manifest>

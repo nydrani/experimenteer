@@ -5,7 +5,6 @@
 #include <SLES/OpenSLES_Android.h>
 #include <SLES/OpenSLES_AndroidConfiguration.h>
 
-
 #define LOG_TAG "libeaves"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 

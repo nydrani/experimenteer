@@ -4,7 +4,6 @@
 #include <string>
 #include <android/api-level.h>
 
-
 #define LOG_TAG "libaaudio"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 
@@ -97,5 +96,21 @@ JNIEXPORT void JNICALL Java_xyz_velvetmilk_aaudiotester_jni_AAudioJniLib_getStat
 {
     aaudio_stream_state_t state = AAudioStream_getState(stream);
     LOGA("AAudioStream_getState %s", AAudio_convertStreamStateToText(state));
+}
+
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_aaudiotester_jni_AAudioJniLib_play(JNIEnv *env, jobject obj)
+{
+    aaudio_stream_state_t state = AAudioStream_requestStart(stream);
+    // play start playing
+}
+
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_aaudiotester_jni_AAudioJniLib_pause(JNIEnv *env, jobject obj)
+{
+    aaudio_stream_state_t state = AAudioStream_requestPause(stream);
+}
+
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_aaudiotester_jni_AAudioJniLib_stop(JNIEnv *env, jobject obj)
+{
+    aaudio_stream_state_t state = AAudioStream_requestStop(stream);
 }
 }

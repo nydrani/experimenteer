@@ -10,4 +10,7 @@ class AAudioJniLib {
     external fun shutdown()
 
     external fun getState()
+    external fun play()
+    external fun pause()
+    external fun stop()
 }

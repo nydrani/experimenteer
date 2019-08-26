@@ -33,22 +33,49 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/base_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="\?"
-            android:textAppearance="?attr/textAppearanceBody2"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/base_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="\?"
+                android:textAppearance="?attr/textAppearanceBody2"/>
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button"
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="getState"
-            android:textAppearance="?attr/textAppearanceBody2"/>
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="getState"
+                android:textAppearance="?attr/textAppearanceBody2"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="play"
+                android:textAppearance="?attr/textAppearanceBody2"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="pause"
+                android:textAppearance="?attr/textAppearanceBody2"/>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="stop"
+                android:textAppearance="?attr/textAppearanceBody2"/>
 
         </LinearLayout>
 

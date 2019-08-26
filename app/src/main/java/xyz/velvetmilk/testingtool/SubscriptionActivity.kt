@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_subscription.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 import kotlin.coroutines.CoroutineContext
 
 class SubscriptionActivity : AppCompatActivity(), CoroutineScope {
@@ -41,7 +42,7 @@ class SubscriptionActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         // Request permissions
-        requestPermissions()
+        PermissionsHelper.requestPermissions(this, PermissionsHelper.subscriptionPermissions)
 
 
         fab.setOnClickListener {
@@ -139,15 +140,5 @@ class SubscriptionActivity : AppCompatActivity(), CoroutineScope {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun requestPermissions() {
-        val permissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
-        for (permission in permissions) {
-            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(permissions, 0)
-                break
-            }
-        }
     }
 }

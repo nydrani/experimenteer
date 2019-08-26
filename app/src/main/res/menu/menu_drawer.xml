@@ -27,6 +27,10 @@
             android:title="Attestation activity"/>
 
         <item
+            android:id="@+id/nav_barcode_scanner"
+            android:title="Barcode scanner activity"/>
+
+        <item
             android:id="@+id/nav_base"
             android:title="Base activity"/>
 
@@ -100,7 +104,7 @@
 
         <item
             android:id="@+id/nav_play_services"
-            android:title="Play Services activity"/>
+            android:title="Play services activity"/>
 
         <item
             android:id="@+id/nav_ripple"

@@ -11,3 +11,4 @@ captures
 .idea
 *.iml
 .externalNativeBuild
+*/.cxx

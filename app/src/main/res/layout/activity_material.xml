@@ -34,27 +34,36 @@
             android:padding="16dp"
             android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/base_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="\?"
-            android:textAppearance="?attr/textAppearanceBody2"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/base_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="\?"
+                android:textAppearance="?attr/textAppearanceBody2"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:id="@+id/dropdown_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/dropdown_text"
-            android:hint="hint_text">
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconGravity="textStart"/>
 
-            <AutoCompleteTextView
-                android:id="@+id/dropdown_text"
-                android:layout_width="192dp"
-                android:layout_height="wrap_content"/>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/dropdown_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/dropdown_text"
+                android:hint="hint_text">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/dropdown_text"
+                    android:layout_width="192dp"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

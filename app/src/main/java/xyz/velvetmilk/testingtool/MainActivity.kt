@@ -62,6 +62,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(AttestationActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_barcode_scanner -> {
+                    startActivity(BarcodeScannerActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_base -> {
                     startActivity(BaseActivity.buildIntent(this))
                     true

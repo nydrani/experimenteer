@@ -35,5 +35,17 @@ class MainActivity : AppCompatActivity() {
         button1.setOnClickListener {
             aaudioJNILib.getState()
         }
+
+        button2.setOnClickListener {
+            aaudioJNILib.play()
+        }
+
+        button3.setOnClickListener {
+            aaudioJNILib.pause()
+        }
+
+        button4.setOnClickListener {
+            aaudioJNILib.stop()
+        }
     }
 }
