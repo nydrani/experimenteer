@@ -23,6 +23,10 @@
 
         <item name="android:windowAnimationStyle">@style/Animation.TestAnimations</item>
         <!--<item name="android:windowActivityTransitions">true</item>-->
+
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+<!--        <item name="android:statusBarColor">@color/colorAccent</item>-->
     </style>
 
     <!-- Standard animations for a full-screen window or activity. -->

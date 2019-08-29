@@ -112,6 +112,5 @@ class BarcodeScannerActivity : AppCompatActivity(), CoroutineScope {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
         }
-
     }
 }

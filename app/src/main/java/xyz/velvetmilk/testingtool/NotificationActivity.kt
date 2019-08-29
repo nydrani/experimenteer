@@ -11,20 +11,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 import android.app.NotificationManager
 import android.app.NotificationManager.Policy.*
-
+import android.content.SharedPreferences
+import java.lang.StringBuilder
 
 class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = NotificationActivity::class.simpleName
+        private const val PREFERENCE_DND_KEY = "PREFERENCE_DND_KEY"
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, NotificationActivity::class.java)
         }
     }
+
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -41,7 +45,8 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE)
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Check if the notification policy access has been granted for the app.
         if (!notificationManager.isNotificationPolicyAccessGranted) {
@@ -72,12 +77,18 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
                 )
             }
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_PRIORITY)
+            sharedPreferences.edit()
+                .putBoolean(PREFERENCE_DND_KEY, true)
+                .apply()
 
             base_view.text = "INTERRUPTION_FILTER_PRIORITY"
         }
 
         fab2.setOnClickListener {
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
+            sharedPreferences.edit()
+                .putBoolean(PREFERENCE_DND_KEY, false)
+                .apply()
 
             base_view.text = "INTERRUPTION_FILTER_ALL"
         }
@@ -86,6 +97,14 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE)
 
             base_view.text = "INTERRUPTION_FILTER_NONE"
+        }
+
+        fab4.setOnClickListener {
+            val stringBuilder = StringBuilder()
+            stringBuilder.appendln(getSharedPreferences(TAG, Context.MODE_PRIVATE).getBoolean(PREFERENCE_DND_KEY, false))
+            stringBuilder.appendln(notificationManager.currentInterruptionFilter >= NotificationManager.INTERRUPTION_FILTER_PRIORITY)
+
+            base_view.text = stringBuilder.toString()
         }
     }
 
