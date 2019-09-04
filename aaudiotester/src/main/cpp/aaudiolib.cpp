@@ -4,7 +4,7 @@
 #include <string>
 #include <android/api-level.h>
 
-#define LOG_TAG "libaaudio"
+#define LOG_TAG "libaaudiotest"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 
 

@@ -1,1 +1,1 @@
-include ':app', ':aaudiotester'
+include ':app', ':aaudiotester', ':vulkantester'
