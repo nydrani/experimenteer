@@ -389,12 +389,12 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
                         val verBootKey = sequence.getObjectAt(VERIFIED_BOOT_KEY_INDEX) as ASN1OctetString
                         val deviceLocked = sequence.getObjectAt(DEVICE_LOCKED_INDEX) as ASN1Boolean
                         val verBootState = sequence.getObjectAt(VERIFIED_BOOT_STATE_INDEX) as ASN1Enumerated
-                        val verBootStateHash = sequence.getObjectAt(VERIFIED_BOOT_STATE_HASH) as ASN1OctetString
+//                        val verBootStateHash = sequence.getObjectAt(VERIFIED_BOOT_STATE_HASH) as ASN1OctetString
 
                         builder.appendln("VERIFIED_BOOT_KEY_INDEX: " + verBootKey.octets.toHexStringUTF8())
                         builder.appendln("DEVICE_LOCKED_INDEX: " + deviceLocked.isTrue)
                         builder.appendln("VERIFIED_BOOT_STATE_INDEX: " + VerifiedBootState.values()[verBootState.value.toInt()])
-                        builder.appendln("VERIFIED_BOOT_STATE_HASH: " + verBootStateHash.octets.toHexStringUTF8())
+//                        builder.appendln("VERIFIED_BOOT_STATE_HASH: " + verBootStateHash.octets.toHexStringUTF8())
                     }
                 }
                 break

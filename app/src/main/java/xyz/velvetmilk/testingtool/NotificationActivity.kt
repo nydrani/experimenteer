@@ -1,7 +1,5 @@
 package xyz.velvetmilk.testingtool
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +11,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import android.app.NotificationManager
 import android.app.NotificationManager.Policy.*
-import android.content.SharedPreferences
+import android.content.*
 import java.lang.StringBuilder
 
 class NotificationActivity : AppCompatActivity(), CoroutineScope {
@@ -36,6 +34,16 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
 
+    private val notificationPolicyListener = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val stringBuilder = StringBuilder()
+            stringBuilder.appendln("Action: ${intent.action}")
+            stringBuilder.appendln("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}")
+
+            base_view2.text = stringBuilder.toString()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
@@ -47,6 +55,9 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
         sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // register broadcast receiver here
+        registerReceiver(notificationPolicyListener, IntentFilter(NotificationManager.ACTION_NOTIFICATION_POLICY_ACCESS_GRANTED_CHANGED))
 
         // Check if the notification policy access has been granted for the app.
         if (!notificationManager.isNotificationPolicyAccessGranted) {
@@ -106,6 +117,11 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
             base_view.text = stringBuilder.toString()
         }
+
+        fab5.setOnClickListener {
+            val intent = Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -113,6 +129,8 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
         job.cancel()
         disposer.clear()
+
+        unregisterReceiver(notificationPolicyListener)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
