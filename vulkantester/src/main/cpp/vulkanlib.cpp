@@ -1,10 +1,24 @@
 #include <jni.h>
 #include <android/log.h>
 #include <string>
+#include <vulkan/vulkan.h>
+
 
 #define LOG_TAG "libvulkantest"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 
+
+bool initialize() {
+    VkApplicationInfo appInfo = {
+            .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+            .pNext = nullptr,
+            .apiVersion = VK_MAKE_VERSION(1, 0, 0),
+            .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
+            .engineVersion = VK_MAKE_VERSION(1, 0, 0),
+            .pApplicationName = "vulkantest",
+            .pEngineName = "tutorial",
+    };
+}
 
 extern "C" {
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {

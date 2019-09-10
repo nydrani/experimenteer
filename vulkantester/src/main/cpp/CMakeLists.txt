@@ -16,4 +16,5 @@ add_library(testvulkan
 
 target_link_libraries(testvulkan
         log
-        android)
+        android
+        vulkan)

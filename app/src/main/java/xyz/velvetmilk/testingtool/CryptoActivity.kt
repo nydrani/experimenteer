@@ -20,10 +20,7 @@ import retrofit2.http.POST
 import xyz.velvetmilk.testingtool.tools.*
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.security.KeyPairGenerator
-import java.security.KeyStore
-import java.security.PrivateKey
-import java.security.Signature
+import java.security.*
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
 import java.security.spec.MGF1ParameterSpec
@@ -36,6 +33,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = CryptoActivity::class.simpleName
+
         private const val RSA_SIGNATURE_ALGORITHM = "SHA256withRSA/PSS"
         private const val RSA_CIPHER_ALGORITHM = "RSA/ECB/OAEPwithSHA-256andMGF1Padding"
         private const val RSA_KEY_ALIAS = "RSAbabey"
@@ -121,21 +119,31 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
         // generate a keypair on background thread
         launch(Dispatchers.Default) {
-            val rsaSpec = KeyGenParameterSpec.Builder(RSA_KEY_ALIAS, KeyProperties.PURPOSE_SIGN or
-                    KeyProperties.PURPOSE_VERIFY or
-                    KeyProperties.PURPOSE_ENCRYPT or
-                    KeyProperties.PURPOSE_DECRYPT)
-
-                .setDigests(KeyProperties.DIGEST_SHA256)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-                .setAttestationChallenge("yeet".fromHexStringUTF8())
-                .setKeySize(2048)
-                .build()
-            keyPairGenerator.initialize(rsaSpec)
-            val pair = keyPairGenerator.genKeyPair()
-            launch(Dispatchers.Main) {
-                crypto_view.text = pair.public.encoded.toHexStringUTF8()
+            try {
+                val rsaSpec = KeyGenParameterSpec.Builder(
+                    RSA_KEY_ALIAS, KeyProperties.PURPOSE_SIGN or
+                            KeyProperties.PURPOSE_VERIFY or
+                            KeyProperties.PURPOSE_ENCRYPT or
+                            KeyProperties.PURPOSE_DECRYPT
+                )
+                    .setDigests(KeyProperties.DIGEST_SHA256)
+                    .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                    .setAttestationChallenge("yeet".fromHexStringUTF8())
+                    .setKeySize(2048)
+                    .build()
+                keyPairGenerator.initialize(rsaSpec)
+                val pair = keyPairGenerator.genKeyPair()
+                launch(Dispatchers.Main) {
+                    crypto_view.text = pair.public.encoded.toHexStringUTF8()
+                }
+            } catch (e: ProviderException) {
+                // add attestation challenge for devices on Nougat>
+                // NOTE: attestation challenge doesnt work for some reason for LG, Zebra phones (comes with keystore error -65)
+                // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/security/keymaster/KeymasterDefs.java
+                launch(Dispatchers.Main) {
+                    crypto_view.text = e.localizedMessage
+                }
             }
         }
 
