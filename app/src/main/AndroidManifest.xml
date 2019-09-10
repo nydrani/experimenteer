@@ -59,6 +59,7 @@
         <activity android:name=".PackageActivity"/>
         <activity android:name=".PlayServicesActivity"/>
         <activity android:name=".RippleActivity"/>
+        <activity android:name=".SafetyNetActivity"/>
         <activity android:name=".SecureSocketActivity"/>
         <activity android:name=".SensorActivity"/>
         <activity android:name=".SignalActivity"/>

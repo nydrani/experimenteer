@@ -146,6 +146,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(RippleActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_safety_net -> {
+                    startActivity(SafetyNetActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_secure_socket -> {
                     startActivity(SecureSocketActivity.buildIntent(this))
                     true
