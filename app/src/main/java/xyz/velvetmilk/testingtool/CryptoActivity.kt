@@ -12,6 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
+import org.apache.commons.lang3.exception.ExceptionUtils
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import retrofit2.Retrofit
@@ -28,6 +29,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 import kotlin.coroutines.CoroutineContext
+import kotlin.reflect.jvm.internal.impl.utils.ExceptionUtilsKt
 
 class CryptoActivity : AppCompatActivity(), CoroutineScope {
 
@@ -142,7 +144,7 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
                 // NOTE: attestation challenge doesnt work for some reason for LG, Zebra phones (comes with keystore error -65)
                 // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/security/keymaster/KeymasterDefs.java
                 launch(Dispatchers.Main) {
-                    crypto_view.text = e.localizedMessage
+                    crypto_view.text = ExceptionUtils.getStackTrace(e)
                 }
             }
         }
