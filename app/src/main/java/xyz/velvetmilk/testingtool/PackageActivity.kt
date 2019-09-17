@@ -9,13 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_package.*
 import kotlinx.coroutines.*
+import org.apache.commons.codec.binary.Hex
 import timber.log.Timber
-import java.lang.StringBuilder
 import kotlin.coroutines.CoroutineContext
 import java.io.File
 import org.apache.commons.io.DirectoryWalker
 import org.apache.commons.io.FileUtils
+import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicInteger
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
+import java.io.ByteArrayInputStream
 
 
 class PackageActivity : AppCompatActivity(), CoroutineScope {
@@ -32,7 +36,11 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
             return results
         }
 
-        override fun handleFile(file: File, depth: Int, results: MutableCollection<Pair<String, Long>>?) {
+        override fun handleFile(
+            file: File,
+            depth: Int,
+            results: MutableCollection<Pair<String, Long>>?
+        ) {
             results?.add(Pair(file.absolutePath, file.length()))
         }
     }
@@ -101,16 +109,18 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
 
             stringBuilder.appendln()
             stringBuilder.appendln("===== PackageInfo =====")
-            var packageFlags = PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or PackageManager.GET_GIDS or
-                    PackageManager.GET_INSTRUMENTATION or PackageManager.GET_INTENT_FILTERS or
-                    PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS or PackageManager.GET_PROVIDERS or
-                    PackageManager.GET_RECEIVERS or PackageManager.GET_SERVICES or PackageManager.GET_SHARED_LIBRARY_FILES or
-                    PackageManager.GET_URI_PERMISSION_PATTERNS
-            packageFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                packageFlags or PackageManager.GET_SIGNING_CERTIFICATES
-            } else {
-                packageFlags or PackageManager.GET_SIGNATURES
-            }
+            var packageFlags =
+                PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or PackageManager.GET_GIDS or
+                        PackageManager.GET_INSTRUMENTATION or PackageManager.GET_INTENT_FILTERS or
+                        PackageManager.GET_META_DATA or PackageManager.GET_PERMISSIONS or PackageManager.GET_PROVIDERS or
+                        PackageManager.GET_RECEIVERS or PackageManager.GET_SERVICES or PackageManager.GET_SHARED_LIBRARY_FILES or
+                        PackageManager.GET_URI_PERMISSION_PATTERNS
+            packageFlags =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    packageFlags or PackageManager.GET_SIGNING_CERTIFICATES
+                } else {
+                    packageFlags or PackageManager.GET_SIGNATURES
+                }
 
             for (packages in packageManager.getInstalledPackages(packageFlags)) {
                 stringBuilder.appendln(packages.gids.toString())
@@ -118,23 +128,24 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln(packages.sharedUserId)
                 stringBuilder.appendln(packages.sharedUserLabel)
 
-                /*
                 stringBuilder.appendln("===== SigningInfo =====")
-                val signatures = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                    stringBuilder.appendln(packages.signingInfo.hasMultipleSigners())
-                    stringBuilder.appendln(packages.signingInfo.hasPastSigningCertificates())
-                    if (packages.signingInfo.hasMultipleSigners()) {
-                        packages.signingInfo.apkContentsSigners
+                val signatures =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                        stringBuilder.appendln(packages.signingInfo.hasMultipleSigners())
+                        stringBuilder.appendln(packages.signingInfo.hasPastSigningCertificates())
+                        if (packages.signingInfo.hasMultipleSigners()) {
+                            packages.signingInfo.apkContentsSigners
+                        } else {
+                            packages.signingInfo.signingCertificateHistory
+                        }
                     } else {
-                        packages.signingInfo.signingCertificateHistory
+                        packages.signatures
                     }
-                } else {
-                    packages.signatures
-                }
                 for (signature in signatures) {
-                    stringBuilder.appendln(signature.toCharsString())
+                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "MD5"))
+                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA1"))
+                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA256"))
                 }
-                */
             }
 
             launch(Dispatchers.Main) {
@@ -225,5 +236,16 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getCertificateFingerprint(certArray: ByteArray, algorithm: String): String {
+        val input = ByteArrayInputStream(certArray)
+        val cert = CertificateFactory.getInstance("X509")
+            .generateCertificate(input) as X509Certificate
+
+        val digest = MessageDigest.getInstance(algorithm)
+        val hash = digest.digest(cert.encoded)
+
+        return Hex.encodeHexString(hash)
     }
 }
