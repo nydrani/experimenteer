@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_package.*
 import kotlinx.coroutines.*
-import org.apache.commons.codec.binary.Hex
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import java.io.File
 import org.apache.commons.io.DirectoryWalker
 import org.apache.commons.io.FileUtils
+import xyz.velvetmilk.testingtool.tools.encodeHexString
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicInteger
 import java.security.cert.CertificateFactory
@@ -47,6 +47,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = PackageActivity::class.simpleName
+        private const val TEST_KEYS_SHA256_FINGERPRINT = "a40da80a59d170caa950cf15c18c454d47a39b26989d8b640ecd745ba71bf5dc"
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, PackageActivity::class.java)
@@ -84,7 +85,6 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln(apps.deviceProtectedDataDir)
                 stringBuilder.append(apps.sourceDir)
 
-
                 if (apps.sourceDir != apps.publicSourceDir) {
                     Timber.d("sourceDir =/= publicSourceDir")
                     stringBuilder.append(" | ")
@@ -95,6 +95,8 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
 
                 // load package locations
                 packageLocations.add(apps.sourceDir.substringBeforeLast('/'))
+
+                stringBuilder.appendln()
             }
 
             stringBuilder.appendln()
@@ -104,6 +106,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                     stringBuilder.append(modules.name)
                     stringBuilder.append(" | ")
                     stringBuilder.appendln(modules.packageName)
+                    stringBuilder.appendln()
                 }
             }
 
@@ -142,10 +145,17 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                         packages.signatures
                     }
                 for (signature in signatures) {
-                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "MD5"))
-                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA1"))
-                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA256"))
+//                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "MD5"))
+//                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA1"))
+
+                    val fingerprint = getCertificateFingerprint(signature.toByteArray(), "SHA256")
+                    if (fingerprint == TEST_KEYS_SHA256_FINGERPRINT) {
+                        stringBuilder.appendln("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                        stringBuilder.appendln(fingerprint)
+                    }
                 }
+
+                stringBuilder.appendln()
             }
 
             launch(Dispatchers.Main) {
@@ -246,6 +256,6 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         val digest = MessageDigest.getInstance(algorithm)
         val hash = digest.digest(cert.encoded)
 
-        return Hex.encodeHexString(hash)
+        return encodeHexString(hash)
     }
 }

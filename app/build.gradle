@@ -101,7 +101,6 @@ dependencies {
     // Apache Commons
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'commons-codec:commons-codec:1.13'
 
     // Material design
     implementation 'com.google.android.material:material:1.1.0-alpha10'

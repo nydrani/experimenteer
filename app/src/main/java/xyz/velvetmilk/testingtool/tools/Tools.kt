@@ -106,3 +106,35 @@ fun getRandomString(length: Int) : String {
         }
         .joinToString("")
 }
+
+fun encodeHexString(data: ByteArray): String {
+    val DIGITS_LOWER = charArrayOf(
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f'
+    )
+    val l = data.size
+    val out = CharArray(l shl 1)
+    // two characters form the hex value.
+    var i = 0
+    var j = 0
+    while (i < l) {
+        out[j++] = DIGITS_LOWER[(0xF0 and data[i].toInt()).ushr(4)]
+        out[j++] = DIGITS_LOWER[0x0F and data[i].toInt()]
+        i++
+    }
+    return String(out)
+}
