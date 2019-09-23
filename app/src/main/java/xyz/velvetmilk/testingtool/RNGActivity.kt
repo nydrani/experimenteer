@@ -12,8 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import timber.log.Timber
 import java.security.SecureRandom
+import java.security.Security
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 
 class RNGActivity : AppCompatActivity(), CoroutineScope {
 
@@ -42,8 +42,10 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
-        secureRandom = SecureRandom.getInstance("SHA1PRNG", "SC")
+        secureRandom = SecureRandom()
         Timber.d(secureRandom.provider.name)
+
+        printAlgorithms()
 
         fab.setOnClickListener {
             base_view.text = secureRandom.nextInt().toString()
@@ -51,7 +53,7 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
 
         fab2.setOnClickListener {
             // reset secure random
-            val secureRandom = SecureRandom.getInstance("SHA1PRNG", "SC")
+            val secureRandom = SecureRandom()
             base_view.text = secureRandom.nextInt().toString()
         }
 
@@ -77,5 +79,13 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun printAlgorithms() {
+        val algorithms = Security.getAlgorithms("SecureRandom")
+
+        for (algorithm in algorithms) {
+            Timber.d(algorithm)
+        }
     }
 }

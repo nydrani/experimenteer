@@ -32,8 +32,7 @@ class TestingApp : Application() {
     init {
         signalJNILib.setupSignalHandler()
 
-        //Security.addProvider(BouncyCastleProvider())
-        Security.insertProviderAt(BouncyCastleProvider(), 1)
+        Security.addProvider(BouncyCastleProvider())
     }
 
 
