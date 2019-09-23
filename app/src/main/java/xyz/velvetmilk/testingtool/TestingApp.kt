@@ -6,6 +6,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.jakewharton.threetenabp.AndroidThreeTen
+import org.spongycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ApplicationComponent
 import xyz.velvetmilk.testingtool.di.ApplicationModule
@@ -30,6 +31,9 @@ class TestingApp : Application() {
 
     init {
         signalJNILib.setupSignalHandler()
+
+        //Security.addProvider(BouncyCastleProvider())
+        Security.insertProviderAt(BouncyCastleProvider(), 1)
     }
 
 

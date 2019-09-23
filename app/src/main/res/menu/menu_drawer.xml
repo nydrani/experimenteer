@@ -111,6 +111,10 @@
             android:title="Ripple activity"/>
 
         <item
+            android:id="@+id/nav_rng"
+            android:title="RNG activity"/>
+
+        <item
             android:id="@+id/nav_safety_net"
             android:title="Safety net activity"/>
 
