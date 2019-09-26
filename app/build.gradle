@@ -8,7 +8,6 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
-
     defaultConfig {
         applicationId "xyz.velvetmilk.testingtool"
         minSdkVersion 24
@@ -19,7 +18,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++14 -fexceptions -fvisibility=hidden -DANDROID_STL=c++_shared"
+                cppFlags "-std=c++17 -fexceptions -fvisibility=hidden -DANDROID_STL=c++_shared"
             }
         }
 

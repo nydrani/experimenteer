@@ -8,16 +8,19 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
-
     defaultConfig {
         applicationId "xyz.velvetmilk.aaudiotester"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17 -fexceptions -fvisibility=hidden -DANDROID_STL=c++_shared"
+            }
+        }
     }
 
     buildTypes {
