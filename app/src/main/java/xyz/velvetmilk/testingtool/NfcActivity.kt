@@ -176,12 +176,16 @@ class NfcActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        nfcAdapter?.disableReaderMode(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         disposer.clear()
-
-        nfcAdapter?.disableReaderMode(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
