@@ -9,10 +9,33 @@
 
 #define LOG_TAG "libvulkantest"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
+#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+
 
 // Vulkan call wrapper
 #define CALL_VK(func) if (VK_SUCCESS != (func)) { LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__); assert(false); }
+
+#define DEBUG
+#ifdef DEBUG
+/// @brief A debug callback called from Vulkan validation layers.
+static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT type,
+                                                     uint64_t object, size_t location, int32_t message_code,
+                                                     const char *layer_prefix, const char *message, void *user_data) {
+    if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) {
+        LOGE("Validation Layer: Error: {}: {}", layer_prefix, message);
+    } else if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) {
+        LOGW("Validation Layer: Warning: {}: {}", layer_prefix, message);
+    } else if (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
+        LOGI("Validation Layer: Performance warning: {}: {}", layer_prefix, message);
+    } else {
+        LOGI("Validation Layer: Information: {}: {}", layer_prefix, message);
+    }
+	return VK_FALSE;
+}
+#endif
+#undef DEBUG
 
 // Global variables
 VkInstance tutorialInstance;
@@ -46,6 +69,10 @@ void android_main(struct android_app* app) {
 }
 
 bool initialise(android_app *app) {
+//    uint32_t apiVersion;
+//    CALL_VK(vkEnumerateInstanceVersion(&apiVersion));
+//    LOGA("Vulkan Instance Version: %d", apiVersion);
+
     VkApplicationInfo appInfo = {
             .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
             .pNext = nullptr,
@@ -60,9 +87,13 @@ bool initialise(android_app *app) {
     std::vector<const char *> instanceExt;
     instanceExt.push_back("VK_KHR_surface");
     instanceExt.push_back("VK_KHR_android_surface");
+    instanceExt.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
     std::vector<const char *> deviceExt;
     deviceExt.push_back("VK_KHR_swapchain");
+
+    std::vector<const char *> validationLayers;
+    validationLayers.push_back("VK_LAYER_KHRONOS_validation");
 
     // Create the Vulkan instance
     VkInstanceCreateInfo instanceCreateInfo {
@@ -71,8 +102,8 @@ bool initialise(android_app *app) {
             .pApplicationInfo = &appInfo,
             .enabledExtensionCount = static_cast<uint32_t>(instanceExt.size()),
             .ppEnabledExtensionNames = instanceExt.data(),
-            .enabledLayerCount = 0,
-            .ppEnabledLayerNames = nullptr,
+            .enabledLayerCount = static_cast<uint32_t>(validationLayers.size()),
+            .ppEnabledLayerNames = validationLayers.data()
     };
     CALL_VK(vkCreateInstance(&instanceCreateInfo, nullptr, &tutorialInstance));
 
@@ -81,7 +112,8 @@ bool initialise(android_app *app) {
             .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
             .pNext = nullptr,
             .flags = 0,
-            .window = app->window };
+            .window = app->window
+    };
     CALL_VK(vkCreateAndroidSurfaceKHR(tutorialInstance, &createInfo, nullptr,
                                       &tutorialSurface));
 
@@ -105,7 +137,8 @@ bool initialise(android_app *app) {
     LOGA("API Version Supported: %d.%d.%d",
          VK_VERSION_MAJOR(gpuProperties.apiVersion),
          VK_VERSION_MINOR(gpuProperties.apiVersion),
-         VK_VERSION_PATCH(gpuProperties.apiVersion));
+         VK_VERSION_PATCH(gpuProperties.apiVersion)
+    );
 
     VkSurfaceCapabilitiesKHR surfaceCapabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(tutorialGpu,
