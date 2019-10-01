@@ -102,6 +102,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(InfoActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_json -> {
+                    startActivity(JSONActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_keystore -> {
                     startActivity(KeyStoreActivity.buildIntent(this))
                     true

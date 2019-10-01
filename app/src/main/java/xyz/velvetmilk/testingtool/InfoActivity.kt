@@ -104,8 +104,15 @@ class InfoActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln(String.format("SERIAL: %s", android.os.Build.SERIAL))
             }
 
-            stringBuilder.appendln(Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
-
+            stringBuilder.appendln(String.format("ANDROID_ID: %s", Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)))
+            stringBuilder.appendln()
+            stringBuilder.appendln(String.format("VERSION BASE_OS: %s", android.os.Build.VERSION.BASE_OS))
+            stringBuilder.appendln(String.format("VERSION CODENAME: %s", android.os.Build.VERSION.CODENAME))
+            stringBuilder.appendln(String.format("VERSION INCREMENTAL: %s", android.os.Build.VERSION.INCREMENTAL))
+            stringBuilder.appendln(String.format("VERSION PREVIEW_SDK_INT: %d", android.os.Build.VERSION.PREVIEW_SDK_INT))
+            stringBuilder.appendln(String.format("VERSION RELEASE: %s", android.os.Build.VERSION.RELEASE))
+            stringBuilder.appendln(String.format("VERSION SDK_INT: %d", android.os.Build.VERSION.SDK_INT))
+            stringBuilder.appendln(String.format("VERSION SECURITY_PATCH: %s", android.os.Build.VERSION.SECURITY_PATCH))
 
             base_view.text = stringBuilder.toString()
         }
