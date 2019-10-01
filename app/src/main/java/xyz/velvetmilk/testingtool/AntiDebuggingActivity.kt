@@ -58,8 +58,16 @@ class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
 
         fab.setOnClickListener {
             val stringBuilder = StringBuilder()
-//            stringBuilder.appendln(antiDebuggingJNILib.antiDebuggingPTrace())
+            // NOTE: Run once per application
+            stringBuilder.appendln(antiDebuggingJNILib.antiDebuggingPTrace())
             stringBuilder.appendln(String.format("QEMU check: %d", antiDebuggingJNILib.antiDebuggingQEMU()))
+
+            base_view.text = stringBuilder.toString()
+        }
+
+        fab2.setOnClickListener {
+            val stringBuilder = StringBuilder()
+            stringBuilder.appendln(antiDebuggingJNILib.pthreadTest())
 
             base_view.text = stringBuilder.toString()
         }

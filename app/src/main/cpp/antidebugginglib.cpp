@@ -11,6 +11,9 @@
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
+
+static int global_child_pid;
+
 // This will cause a SIGSEGV on some QEMU or be properly respected
 // 32 bit AArch
 /*
@@ -45,14 +48,37 @@ void setupSigTrap() {
 
 
 void *monitor_pid(void *arg) {
-    int *child_pid = (int *)arg;
     int status;
+    LOGA("0 Thread process: %d", global_child_pid);
 
     // Child status should never change.
     // child_pid status changing means tampering with process
-    waitpid(*child_pid, &status, 0);
+    waitpid(global_child_pid, &status, 0);
+    LOGA("1 Thread process: %d", global_child_pid);
 
     _exit(0); // Commit seppuku
+}
+
+void *pthread_test_call(void *arg) {
+    int *number = (int *)arg;
+    LOGA("Number: %d", *number);
+    pthread_exit(nullptr);
+}
+
+void pthread_test() {
+    pthread_t t;
+    int a = 10;
+    int b = 20;
+
+    LOGA("0 YEET");
+    pthread_create(&t, nullptr, pthread_test_call, (void *)&a);
+    LOGA("1 YEET");
+    pthread_join(t, nullptr);
+    LOGA("2 YEET");
+    pthread_create(&t, nullptr, pthread_test_call, (void *)&b);
+    LOGA("3 YEET");
+    pthread_join(t, nullptr);
+    LOGA("4 YEET");
 }
 
 bool anti_debug() {
@@ -60,35 +86,60 @@ bool anti_debug() {
 
     if (child_pid == 0) {
         // child process
-        LOGA("%d", child_pid);
+        LOGA("0 Child process: %d", child_pid);
         int ppid = getppid();
         int status;
 
         // attach ptrace to parent
+        LOGA("1 Child process: %d", child_pid);
         if (ptrace(PTRACE_ATTACH, ppid, NULL, NULL) == 0) {
+            LOGA("2 Child process: %d", child_pid);
             waitpid(ppid, &status, 0);
+            LOGA("3 Child process: %d", child_pid);
             ptrace(PTRACE_CONT, ppid, NULL, NULL);
+            LOGA("4 Child process: %d", child_pid);
 
             // listen to the parent
             while (waitpid(ppid, &status, 0)) {
+                LOGA("5 Child process: %d", child_pid);
                 if (WIFSTOPPED(status)) {
+                    LOGA("6 Child process: %d", child_pid);
+                    LOGA("6 Child sig: %d", WSTOPSIG(status));
                     ptrace(PTRACE_CONT, ppid, NULL, NULL);
+                } else if (WIFSIGNALED(status)) {
+                    LOGA("7 Child process: %d", child_pid);
+                    LOGA("7 Child sig: %d", WTERMSIG(status));
+
+                    // Process has exited
+                    _exit(0);
+                } else if (WIFEXITED(status)) {
+                    LOGA("8 Child process: %d", child_pid);
+                    LOGA("8 Child status: %d", WEXITSTATUS(status));
+
+                    // Process has exited
+                    _exit(0);
                 } else {
+                    LOGA("9 Child process: %d", child_pid);
                     // Process has exited
                     _exit(0);
                 }
             }
         }
+        LOGA("Fin Child process: %d", child_pid);
     } else if (child_pid == -1) {
+        LOGA("Failed to fork");
+
         // ded
         return false;
     } else {
+        global_child_pid = child_pid;
         // parent process
-        LOGA("%d", child_pid);
+        LOGA("Parent process: %d", global_child_pid);
 
         // Start the monitoring thread
         pthread_t t;
-        pthread_create(&t, nullptr, monitor_pid, (void *)&child_pid);
+        pthread_create(&t, nullptr, monitor_pid, nullptr);
+        LOGA("Parent process: %d", global_child_pid);
     }
 
     return true;
@@ -109,9 +160,13 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
 }
 
-JNIEXPORT jboolean JNICALL
-Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingPTrace(JNIEnv *env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingPTrace(JNIEnv *env, jobject obj) {
     return static_cast<jboolean>(anti_debug());
+}
+
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_pthreadTest(JNIEnv *env, jobject obj) {
+    pthread_test();
+    return static_cast<jboolean>(true);
 }
 
 JNIEXPORT jint Java_xyz_velvetmilk_testingtool_jni_AntiDebuggingJniLib_antiDebuggingQEMU(JNIEnv *env, jobject jObject) {

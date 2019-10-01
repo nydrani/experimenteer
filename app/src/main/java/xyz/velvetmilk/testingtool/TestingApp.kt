@@ -30,7 +30,8 @@ class TestingApp : Application() {
     internal val signalJNILib = SignalJniLib()
 
     init {
-        signalJNILib.setupSignalHandler()
+        // NOTE: dont grab any signals unless doing testing (it will ignore all crash signals)
+        //signalJNILib.setupSignalHandler()
 
         Security.addProvider(BouncyCastleProvider())
     }
