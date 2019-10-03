@@ -17,7 +17,6 @@ import org.threeten.bp.Instant
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.models.DeviceInfoCore
 import java.io.IOException
-import java.lang.reflect.Type
 import kotlin.coroutines.CoroutineContext
 
 class JSONActivity : AppCompatActivity(), CoroutineScope {
@@ -64,6 +63,10 @@ class JSONActivity : AppCompatActivity(), CoroutineScope {
             val res = gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName))
             Timber.d(res)
             base_view.text = res
+        }
+
+        fab2.setOnClickListener {
+            // random test
         }
     }
 
