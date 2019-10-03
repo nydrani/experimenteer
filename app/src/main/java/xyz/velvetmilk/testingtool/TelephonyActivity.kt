@@ -101,6 +101,10 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln("TelephonyManager: No read phone permissions")
             }
 
+            stringBuilder.appendln(telephonyManager.canChangeDtmfToneLength())
+            stringBuilder.appendln(telephonyManager.hasCarrierPrivileges())
+            stringBuilder.appendln(telephonyManager.hasIccCard())
+
             // android O
             stringBuilder.appendln("===== Android O =====")
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -176,6 +180,8 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln(telephonyManager.simSpecificCarrierIdName)
                 stringBuilder.appendln(telephonyManager.typeAllocationCode)
                 stringBuilder.appendln(telephonyManager.uiccCardsInfo)
+
+                stringBuilder.appendln(telephonyManager.doesSwitchMultiSimConfigTriggerReboot())
             }
 
             base_view.text = stringBuilder.toString()

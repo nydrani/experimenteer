@@ -7,6 +7,10 @@
     <group>
 
         <item
+            android:id="@+id/nav_activity_manager"
+            android:title="Activity manager activity"/>
+
+        <item
             android:id="@+id/nav_actor"
             android:title="Actor activity"/>
 

@@ -1,6 +1,7 @@
 package xyz.velvetmilk.testingtool.models
 
 import android.content.ContentResolver
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -66,7 +67,6 @@ class DeviceInfoCore {
                          val pss: Long,
                          val runtimeStats: Map<String, String>,
                          val isDebuggerConnected: Boolean)
-
 
     companion object {
 
@@ -151,7 +151,28 @@ class DeviceInfoCore {
             packageManager: PackageManager,
             packageName: String
         ): DeviceInfo {
-            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            var flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or
+                    PackageManager.GET_GIDS or PackageManager.GET_INSTRUMENTATION or
+                    PackageManager.GET_INTENT_FILTERS or PackageManager.GET_PERMISSIONS or
+                    PackageManager.GET_PROVIDERS or PackageManager.GET_RECEIVERS or
+                    PackageManager.GET_SERVICES
+
+            flags = flags or if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                PackageManager.GET_SIGNING_CERTIFICATES
+            } else {
+                PackageManager.GET_SIGNATURES
+            }
+
+            // componentinfo
+            flags = flags or PackageManager.GET_META_DATA
+
+            // applicationinfo
+            flags = flags or PackageManager.GET_SHARED_LIBRARY_FILES
+
+            // providerinfo
+            flags = flags or PackageManager.GET_URI_PERMISSION_PATTERNS
+
+            val packageInfo = packageManager.getPackageInfo(packageName, flags)
             return DeviceInfo(
                 generateBuildInfo(contentResolver),
                 generateBuildConfigInfo(),

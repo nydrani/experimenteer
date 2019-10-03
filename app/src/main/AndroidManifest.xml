@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ActivityManagerActivity"/>
         <activity android:name=".ActorActivity"/>
         <activity android:name=".AnimationActivity"/>
         <activity android:name=".AntiDebuggingActivity"/>
