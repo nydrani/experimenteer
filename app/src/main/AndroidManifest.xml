@@ -45,6 +45,7 @@
         <activity android:name=".systemservices.NotificationActivity"/>
         <activity android:name=".systemservices.SensorActivity"/>
         <activity android:name=".systemservices.SubscriptionActivity"/>
+        <activity android:name=".systemservices.SystemHealthActivity"/>
         <activity android:name=".systemservices.TelephonyActivity"/>
 
         <activity android:name=".ActorActivity"/>

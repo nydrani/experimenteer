@@ -151,6 +151,10 @@
             android:title="Subscription activity"/>
 
         <item
+            android:id="@+id/nav_system_health"
+            android:title="System health activity"/>
+
+        <item
             android:id="@+id/nav_telephony"
             android:title="Telephony activity"/>
 
