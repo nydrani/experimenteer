@@ -1,9 +1,7 @@
 package xyz.velvetmilk.testingtool.models
 
 import android.content.ContentResolver
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
+import android.content.pm.*
 import android.os.Build
 import android.os.Debug
 import android.provider.Settings
@@ -15,6 +13,7 @@ class DeviceInfoCore {
     data class DeviceInfo(val build: BuildInfo,
                           val buildConfig: BuildConfigInfo,
                           val packageInfo: PackageInfo,
+                          val packageList: List<CustomPackageInfo>,
                           val debug: DebugInfo)
 
     data class BuildConfigInfo(val applicationId: String,
@@ -23,6 +22,32 @@ class DeviceInfoCore {
                                val flavor: String,
                                val versionCode: Int,
                                val verisionName: String)
+
+    data class CustomPackageInfo(val applicationInfo: ApplicationInfo,
+                                 val baseRevisionCode: Int,
+                                 val configPrefences: List<ConfigurationInfo>,
+                                 val featureGroups: List<FeatureGroupInfo>,
+                                 val firstInstallTime: Long,
+                                 val gids: List<Int>,
+                                 val installLocation: Int,
+                                 val instrumentation: List<InstrumentationInfo>,
+                                 val isApex: Boolean,
+                                 val lastUpdateTime: Long,
+                                 val longVersionCode: Long,
+                                 val packageName: String,
+                                 val permissions: List<PermissionInfo>,
+                                 val providers: List<ProviderInfo>,
+                                 val receivers: List<ActivityInfo>,
+                                 val reqFeatures: List<FeatureInfo>,
+                                 val requestedPermissions: List<String>,
+                                 val requestedPermissionsFlags: List<Int>,
+                                 val services: List<ServiceInfo>,
+                                 val sharedUserId: String,
+                                 val sharedUserLabel: Int,
+                                 val signatures: List<Signature>,
+                                 val splitNames: List<String>,
+                                 val splitRevisionCodes: List<Int>,
+                                 val versionName: String)
 
     data class BuildInfo(val board: String,
                          val bootloader: String,
@@ -177,8 +202,88 @@ class DeviceInfoCore {
                 generateBuildInfo(contentResolver),
                 generateBuildConfigInfo(),
                 packageInfo,
+                generateCustomPackageInfo(packageManager),
                 generateDebugInfo()
             )
+        }
+
+        private fun generateCustomPackageInfo(packageManager: PackageManager): List<CustomPackageInfo> {
+            var flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or
+                    PackageManager.GET_GIDS or PackageManager.GET_INSTRUMENTATION or
+                    PackageManager.GET_INTENT_FILTERS or PackageManager.GET_PERMISSIONS or
+                    PackageManager.GET_PROVIDERS or PackageManager.GET_RECEIVERS or
+                    PackageManager.GET_SERVICES
+
+            flags = flags or if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                PackageManager.GET_SIGNING_CERTIFICATES
+            } else {
+                PackageManager.GET_SIGNATURES
+            }
+
+            // componentinfo
+            flags = flags or PackageManager.GET_META_DATA
+
+            // applicationinfo
+            flags = flags or PackageManager.GET_SHARED_LIBRARY_FILES
+
+            // providerinfo
+            flags = flags or PackageManager.GET_URI_PERMISSION_PATTERNS
+
+            val packageList = mutableListOf<CustomPackageInfo>()
+
+            val packages = packageManager.getInstalledPackages(flags)
+            for (pack in packages) {
+                val apex = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    pack.isApex
+                } else {
+                    false
+                }
+
+                val longVersionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    pack.longVersionCode
+                } else {
+                    pack.versionCode.toLong()
+                }
+
+                val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    if (pack.signingInfo.hasMultipleSigners()) {
+                        pack.signingInfo.apkContentsSigners
+                    } else {
+                        pack.signingInfo.signingCertificateHistory
+                    }
+                } else {
+                    pack.signatures
+                }
+
+                packageList.add(CustomPackageInfo(pack.applicationInfo,
+                    pack.baseRevisionCode,
+                    pack.configPreferences?.toList() ?: listOf(),
+                    pack.featureGroups?.toList() ?: listOf(),
+                    pack.firstInstallTime,
+                    pack.gids.toList(),
+                    pack.installLocation,
+                    pack.instrumentation?.toList() ?: listOf(),
+                    apex,
+                    pack.lastUpdateTime,
+                    longVersionCode,
+                    pack.packageName,
+                    pack.permissions?.toList() ?: listOf(),
+                    pack.providers?.toList() ?: listOf(),
+                    pack.receivers?.toList() ?: listOf(),
+                    pack.reqFeatures?.toList() ?: listOf(),
+                    pack.requestedPermissions?.toList() ?: listOf(),
+                    pack.requestedPermissionsFlags?.toList() ?: listOf(),
+                    pack.services?.toList() ?: listOf(),
+                    pack?.sharedUserId ?: "",
+                    pack.sharedUserLabel,
+                    signatures.toList(),
+                    pack.splitNames?.toList() ?: listOf(),
+                    pack.splitRevisionCodes?.toList() ?: listOf(),
+                    pack.versionName)
+                )
+            }
+
+            return packageList
         }
 
         private fun generateBuildConfigInfo(): BuildConfigInfo {

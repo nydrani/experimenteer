@@ -60,9 +60,12 @@ class JSONActivity : AppCompatActivity(), CoroutineScope {
             val gson = GsonBuilder()
                 .registerTypeAdapter(Instant::class.java, InstantTypeAdapter())
                 .create()
-            val res = gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName))
-            Timber.d(res)
-            base_view.text = res
+
+            val stringBuilder = StringBuilder()
+            gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName), stringBuilder)
+
+            base_view.text = stringBuilder.length.toString()
+            Timber.d(stringBuilder.toString())
         }
 
         fab2.setOnClickListener {
