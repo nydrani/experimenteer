@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_hardware_properties -> {
+                    startActivity(HardwarePropertiesActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_info -> {
                     startActivity(InfoActivity.buildIntent(this))
                     true

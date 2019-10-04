@@ -67,6 +67,10 @@
             android:title="Focusable activity"/>
 
         <item
+            android:id="@+id/nav_hardware_properties"
+            android:title="Hardware properties activity"/>
+
+        <item
             android:id="@+id/nav_info"
             android:title="Info activity"/>
 
