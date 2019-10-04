@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <!-- System permisisons -->
     <uses-permission
@@ -47,6 +48,7 @@
         <activity android:name=".systemservices.SubscriptionActivity"/>
         <activity android:name=".systemservices.SystemHealthActivity"/>
         <activity android:name=".systemservices.TelephonyActivity"/>
+        <activity android:name=".systemservices.VibratorActivity"/>
 
         <activity android:name=".ActorActivity"/>
         <activity android:name=".AnimationActivity"/>

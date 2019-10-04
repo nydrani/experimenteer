@@ -207,6 +207,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(TrustedScreenActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_vibrator -> {
+                    startActivity(VibratorActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }

@@ -170,6 +170,10 @@
             android:id="@+id/nav_trusted_screen"
             android:title="Trusted screen activity"/>
 
+        <item
+            android:id="@+id/nav_vibrator"
+            android:title="Vibrator activity"/>
+
     </group>
 
 </menu>
