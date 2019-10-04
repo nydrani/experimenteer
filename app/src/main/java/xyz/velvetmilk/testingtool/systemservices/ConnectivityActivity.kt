@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.R
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -54,7 +55,10 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
             // check network connectivity at this point
             Timber.d("%b", connectivityManager.activeNetworkInfo?.isConnected)
             Timber.d("%b", isInternetConnected())
-            Timber.d("%b", isServerAvailable(TEST_HOST_NAME, TEST_PORT))
+            Timber.d("%b", isServerAvailable(
+                TEST_HOST_NAME,
+                TEST_PORT
+            ))
         }
 
         override fun onCapabilitiesChanged(network: Network?, networkCapabilities: NetworkCapabilities?) {
@@ -132,10 +136,15 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
 
         fab3.setOnClickListener {
             launch(Dispatchers.IO) {
-                val isConnected = isServerAvailable(TEST_HOST_NAME, TEST_PORT)
+                val isConnected = isServerAvailable(
+                    TEST_HOST_NAME,
+                    TEST_PORT
+                )
                 Snackbar.make(
                     it,
-                    String.format("isServerAvailable | %s | %d | %b", TEST_HOST_NAME, TEST_PORT, isConnected),
+                    String.format("isServerAvailable | %s | %d | %b",
+                        TEST_HOST_NAME,
+                        TEST_PORT, isConnected),
                     Snackbar.LENGTH_LONG
                 ).show()
             }

@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -12,6 +12,7 @@ import kotlin.coroutines.CoroutineContext
 import android.app.NotificationManager
 import android.app.NotificationManager.Policy.*
 import android.content.*
+import xyz.velvetmilk.testingtool.R
 import java.lang.StringBuilder
 
 class NotificationActivity : AppCompatActivity(), CoroutineScope {
@@ -112,7 +113,8 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
         fab4.setOnClickListener {
             val stringBuilder = StringBuilder()
-            stringBuilder.appendln(getSharedPreferences(TAG, Context.MODE_PRIVATE).getBoolean(PREFERENCE_DND_KEY, false))
+            stringBuilder.appendln(getSharedPreferences(TAG, Context.MODE_PRIVATE).getBoolean(
+                PREFERENCE_DND_KEY, false))
             stringBuilder.appendln(notificationManager.currentInterruptionFilter >= NotificationManager.INTERRUPTION_FILTER_PRIORITY)
 
             base_view.text = stringBuilder.toString()

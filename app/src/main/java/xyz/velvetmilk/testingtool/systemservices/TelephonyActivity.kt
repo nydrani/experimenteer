@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import android.telephony.TelephonyManager
+import xyz.velvetmilk.testingtool.R
 import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 
 @SuppressLint("HardwareIds")

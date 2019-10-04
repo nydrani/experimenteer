@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ActivityManagerActivity"/>
+        <activity android:name=".systemservices.ActivityManagerActivity"/>
         <activity android:name=".ActorActivity"/>
         <activity android:name=".AnimationActivity"/>
         <activity android:name=".AntiDebuggingActivity"/>
@@ -42,7 +42,7 @@
         <activity android:name=".BarcodeScannerActivity"/>
         <activity android:name=".BaseActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
-        <activity android:name=".ConnectivityActivity"/>
+        <activity android:name=".systemservices.ConnectivityActivity"/>
         <activity android:name=".ConstraintBarrierActivity"/>
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".CryptoActivity"/>
@@ -55,8 +55,8 @@
         <activity android:name=".MaterialActivity"/>
         <activity android:name=".NativeActivity"/>
         <activity android:name=".NetworkActivity"/>
-        <activity android:name=".NfcActivity"/>
-        <activity android:name=".NotificationActivity"/>
+        <activity android:name=".systemservices.NfcActivity"/>
+        <activity android:name=".systemservices.NotificationActivity"/>
         <activity android:name=".OpenSlesActivity"/>
         <activity android:name=".PackageActivity"/>
         <activity android:name=".PlayServicesActivity"/>
@@ -64,11 +64,11 @@
         <activity android:name=".RNGActivity"/>
         <activity android:name=".SafetyNetActivity"/>
         <activity android:name=".SecureSocketActivity"/>
-        <activity android:name=".SensorActivity"/>
+        <activity android:name=".systemservices.SensorActivity"/>
         <activity android:name=".SignalActivity"/>
         <activity android:name=".SocketActivity"/>
-        <activity android:name=".SubscriptionActivity"/>
-        <activity android:name=".TelephonyActivity"/>
+        <activity android:name=".systemservices.SubscriptionActivity"/>
+        <activity android:name=".systemservices.TelephonyActivity"/>
         <activity android:name=".TimeActivity"/>
         <activity android:name=".TransitionActivity"/>
         <activity android:name=".TransitionTargetActivity"/>

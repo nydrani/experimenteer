@@ -1,8 +1,9 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.content.Context
 import android.content.Intent
 import android.nfc.NfcAdapter
+import android.nfc.NfcManager
 import android.nfc.tech.*
 import android.os.Bundle
 import android.view.MenuItem
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.R
 import xyz.velvetmilk.testingtool.tools.toByteString
 
 class NfcActivity : AppCompatActivity() {
@@ -38,7 +40,8 @@ class NfcActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // check for nfc availability
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        val nfcManager = getSystemService(Context.NFC_SERVICE) as NfcManager
+        nfcAdapter = nfcManager.defaultAdapter
 
         if (nfcAdapter == null) {
             nfc_view.text = "No NFC available on this device"

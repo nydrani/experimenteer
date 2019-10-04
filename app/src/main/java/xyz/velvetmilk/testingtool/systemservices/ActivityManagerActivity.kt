@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.app.ActivityManager
 import android.content.Context
@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_activity_manager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.R
 import kotlin.coroutines.CoroutineContext
 
 class ActivityManagerActivity : AppCompatActivity(), CoroutineScope {
@@ -64,6 +65,7 @@ class ActivityManagerActivity : AppCompatActivity(), CoroutineScope {
             stringBuilder.appendln(activityManager.lockTaskModeState)
             stringBuilder.appendln(activityManager.memoryClass)
             stringBuilder.appendln(activityManager.processesInErrorState)
+            stringBuilder.appendln(activityManager.runningAppProcesses)
 
             // other calls
             val memoryInfo = ActivityManager.MemoryInfo()

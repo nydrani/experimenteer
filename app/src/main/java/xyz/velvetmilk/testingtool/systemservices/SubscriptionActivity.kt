@@ -1,9 +1,7 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.telephony.SubscriptionManager
 import android.view.MenuItem
@@ -13,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_subscription.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.R
 import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 import kotlin.coroutines.CoroutineContext
 

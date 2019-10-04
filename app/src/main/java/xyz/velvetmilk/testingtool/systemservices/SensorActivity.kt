@@ -1,4 +1,4 @@
-package xyz.velvetmilk.testingtool
+package xyz.velvetmilk.testingtool.systemservices
 
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,7 @@ import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_sensor.*
 import kotlinx.coroutines.*
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.R
 import xyz.velvetmilk.testingtool.views.SensorAdapter
 import kotlin.coroutines.CoroutineContext
 
