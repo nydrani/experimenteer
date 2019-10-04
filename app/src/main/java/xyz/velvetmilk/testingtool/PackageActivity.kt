@@ -228,6 +228,47 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
         }
+
+        fab3.setOnClickListener {
+            val builder = StringBuilder()
+
+            builder.appendln(packageManager.isSafeMode)
+            for (feature in packageManager.systemAvailableFeatures) {
+                builder.appendln(feature.flags)
+                builder.appendln(feature.name)
+                builder.appendln(feature.version)
+
+                if (feature.name == null) {
+                    builder.appendln(feature.reqGlEsVersion)
+                    builder.appendln(feature.glEsVersion)
+                }
+            }
+
+            packageManager.systemSharedLibraryNames?.let {
+                for (library in it) {
+                    builder.appendln(library)
+                }
+            }
+
+            builder.appendln("===== ANDROID O =====")
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                builder.appendln(packageManager.instantAppCookie)
+                builder.appendln(packageManager.instantAppCookieMaxBytes)
+                builder.appendln(packageManager.isInstantApp)
+            }
+
+            builder.appendln("===== ANDROID P =====")
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                builder.appendln(packageManager.isPackageSuspended)
+            }
+
+            builder.appendln("===== ANDROID Q =====")
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                builder.appendln(packageManager.isDeviceUpgrading)
+            }
+
+            base_view.text = builder.toString()
+        }
     }
 
     override fun onDestroy() {
