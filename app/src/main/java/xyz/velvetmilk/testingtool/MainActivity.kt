@@ -211,6 +211,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(VibratorActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_window -> {
+                    startActivity(WindowActivity.buildIntent(this))
+                    true
+                }
                 else -> false
             }
         }
