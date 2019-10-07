@@ -14,6 +14,7 @@ import xyz.velvetmilk.testingtool.di.DaggerApplicationComponent
 import xyz.velvetmilk.testingtool.di.NetworkModule
 import xyz.velvetmilk.testingtool.jni.SignalJniLib
 import xyz.velvetmilk.testingtool.services.BackgroundCoroutineRunner
+import xyz.velvetmilk.testingtool.tools.FileLoggingTree
 import java.security.Security
 
 class TestingApp : Application() {
@@ -44,6 +45,7 @@ class TestingApp : Application() {
 
         AndroidThreeTen.init(this)
         Timber.plant(Timber.DebugTree())
+        Timber.plant(FileLoggingTree().also { it.init(this) })
 
         backgroundRunner = BackgroundCoroutineRunner()
         backgroundRunner.init()
