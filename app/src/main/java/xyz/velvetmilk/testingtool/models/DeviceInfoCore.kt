@@ -7,12 +7,13 @@ import android.os.Debug
 import android.provider.Settings
 import org.threeten.bp.Instant
 import xyz.velvetmilk.testingtool.BuildConfig
+import xyz.velvetmilk.testingtool.tools.toBase64
 
 class DeviceInfoCore {
 
     data class DeviceInfo(val build: BuildInfo,
                           val buildConfig: BuildConfigInfo,
-                          val packageInfo: PackageInfo,
+                          val packageInfo: CustomPackageInfo,
                           val packageList: List<CustomPackageInfo>,
                           val debug: DebugInfo)
 
@@ -25,26 +26,27 @@ class DeviceInfoCore {
 
     data class CustomPackageInfo(val applicationInfo: ApplicationInfo,
                                  val baseRevisionCode: Int,
-                                 val configPrefences: List<ConfigurationInfo>,
-                                 val featureGroups: List<FeatureGroupInfo>,
+//                                 val configPrefences: List<ConfigurationInfo>,
+//                                 val featureGroups: List<FeatureGroupInfo>,
                                  val firstInstallTime: Long,
-                                 val gids: List<Int>,
+//                                 val gids: List<Int>,
                                  val installLocation: Int,
-                                 val instrumentation: List<InstrumentationInfo>,
+//                                 val instrumentation: List<InstrumentationInfo>,
                                  val isApex: Boolean,
                                  val lastUpdateTime: Long,
                                  val longVersionCode: Long,
                                  val packageName: String,
-                                 val permissions: List<PermissionInfo>,
-                                 val providers: List<ProviderInfo>,
-                                 val receivers: List<ActivityInfo>,
+//                                 val permissions: List<PermissionInfo>,
+//                                 val providers: List<ProviderInfo>,
+//                                 val receivers: List<ActivityInfo>,
                                  val reqFeatures: List<FeatureInfo>,
                                  val requestedPermissions: List<String>,
                                  val requestedPermissionsFlags: List<Int>,
-                                 val services: List<ServiceInfo>,
+//                                 val services: List<ServiceInfo>,
                                  val sharedUserId: String,
                                  val sharedUserLabel: Int,
-                                 val signatures: List<Signature>,
+                                 // base64 of bytearray
+                                 val signatures: List<String>,
                                  val splitNames: List<String>,
                                  val splitRevisionCodes: List<Int>,
                                  val versionName: String)
@@ -85,28 +87,27 @@ class DeviceInfoCore {
                              val name: String)
 
     data class DebugInfo(val loadedClassCount: Int,
-                         val memoryInfo: Debug.MemoryInfo,
+//                         val memoryInfo: Debug.MemoryInfo,
                          val nativeHeapAllocatedSize: Long,
                          val nativeHeapFreeSize: Long,
                          val nativeHeapSize: Long,
                          val pss: Long,
-                         val runtimeStats: Map<String, String>,
+//                         val runtimeStats: Map<String, String>,
                          val isDebuggerConnected: Boolean)
 
     companion object {
-
         private fun generateDebugInfo(): DebugInfo {
             val memoryInfo = Debug.MemoryInfo()
             Debug.getMemoryInfo(memoryInfo)
 
             return DebugInfo(
                 Debug.getLoadedClassCount(),
-                memoryInfo,
+//                memoryInfo,
                 Debug.getNativeHeapAllocatedSize(),
                 Debug.getNativeHeapFreeSize(),
                 Debug.getNativeHeapSize(),
                 Debug.getPss(),
-                Debug.getRuntimeStats(),
+//                Debug.getRuntimeStats(),
                 Debug.isDebuggerConnected()
             )
         }
@@ -201,13 +202,67 @@ class DeviceInfoCore {
             return DeviceInfo(
                 generateBuildInfo(contentResolver),
                 generateBuildConfigInfo(),
-                packageInfo,
-                generateCustomPackageInfo(packageManager),
+                generateCustomPackageInfo(packageInfo),
+                generateCustomPackageListInfo(packageManager),
                 generateDebugInfo()
             )
         }
 
-        private fun generateCustomPackageInfo(packageManager: PackageManager): List<CustomPackageInfo> {
+        private fun generateCustomPackageInfo(packageInfo: PackageInfo): CustomPackageInfo {
+            val apex = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                packageInfo.isApex
+            } else {
+                false
+            }
+
+            val longVersionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo.longVersionCode
+            } else {
+                packageInfo.versionCode.toLong()
+            }
+
+            val signatures: Array<Signature> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (packageInfo.signingInfo.hasMultipleSigners()) {
+                    packageInfo.signingInfo.apkContentsSigners
+                } else {
+                    packageInfo.signingInfo.signingCertificateHistory
+                }
+            } else {
+                packageInfo.signatures
+            }
+
+            val signatureList: List<String> = signatures.map {
+                it.toByteArray().toBase64()
+            }
+
+            return CustomPackageInfo(packageInfo.applicationInfo,
+                packageInfo.baseRevisionCode,
+//                packageInfo.configPreferences?.toList() ?: listOf(),
+//                packageInfo.featureGroups?.toList() ?: listOf(),
+                packageInfo.firstInstallTime,
+//                packageInfo.gids.toList(),
+                packageInfo.installLocation,
+//                packageInfo.instrumentation?.toList() ?: listOf(),
+                apex,
+                packageInfo.lastUpdateTime,
+                longVersionCode,
+                packageInfo.packageName,
+//                packageInfo.permissions?.toList() ?: listOf(),
+//                packageInfo.providers?.toList() ?: listOf(),
+//                packageInfo.receivers?.toList() ?: listOf(),
+                packageInfo.reqFeatures?.toList() ?: listOf(),
+                packageInfo.requestedPermissions?.toList() ?: listOf(),
+                packageInfo.requestedPermissionsFlags?.toList() ?: listOf(),
+//                packageInfo.services?.toList() ?: listOf(),
+                packageInfo.sharedUserId ?: "",
+                packageInfo.sharedUserLabel,
+                signatureList,
+                packageInfo.splitNames?.toList() ?: listOf(),
+                packageInfo.splitRevisionCodes?.toList() ?: listOf(),
+                packageInfo.versionName)
+        }
+
+        private fun generateCustomPackageListInfo(packageManager: PackageManager): List<CustomPackageInfo> {
             var flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or
                     PackageManager.GET_GIDS or PackageManager.GET_INSTRUMENTATION or
                     PackageManager.GET_INTENT_FILTERS or PackageManager.GET_PERMISSIONS or
@@ -233,54 +288,7 @@ class DeviceInfoCore {
 
             val packages = packageManager.getInstalledPackages(flags)
             for (pack in packages) {
-                val apex = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    pack.isApex
-                } else {
-                    false
-                }
-
-                val longVersionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    pack.longVersionCode
-                } else {
-                    pack.versionCode.toLong()
-                }
-
-                val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    if (pack.signingInfo.hasMultipleSigners()) {
-                        pack.signingInfo.apkContentsSigners
-                    } else {
-                        pack.signingInfo.signingCertificateHistory
-                    }
-                } else {
-                    pack.signatures
-                }
-
-                packageList.add(CustomPackageInfo(pack.applicationInfo,
-                    pack.baseRevisionCode,
-                    pack.configPreferences?.toList() ?: listOf(),
-                    pack.featureGroups?.toList() ?: listOf(),
-                    pack.firstInstallTime,
-                    pack.gids.toList(),
-                    pack.installLocation,
-                    pack.instrumentation?.toList() ?: listOf(),
-                    apex,
-                    pack.lastUpdateTime,
-                    longVersionCode,
-                    pack.packageName,
-                    pack.permissions?.toList() ?: listOf(),
-                    pack.providers?.toList() ?: listOf(),
-                    pack.receivers?.toList() ?: listOf(),
-                    pack.reqFeatures?.toList() ?: listOf(),
-                    pack.requestedPermissions?.toList() ?: listOf(),
-                    pack.requestedPermissionsFlags?.toList() ?: listOf(),
-                    pack.services?.toList() ?: listOf(),
-                    pack?.sharedUserId ?: "",
-                    pack.sharedUserLabel,
-                    signatures.toList(),
-                    pack.splitNames?.toList() ?: listOf(),
-                    pack.splitRevisionCodes?.toList() ?: listOf(),
-                    pack.versionName)
-                )
+                packageList.add(generateCustomPackageInfo(pack))
             }
 
             return packageList
