@@ -16,13 +16,13 @@ import com.scottyab.rootbeer.RootBeer
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_attestation.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.jni.AttestationJniLib
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.FileReader
 import java.io.InputStreamReader
-import java.util.regex.Pattern
 import java.util.stream.Collectors
 import kotlin.coroutines.CoroutineContext
 
@@ -59,7 +59,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
             val builder = StringBuilder()
 
             launch(Dispatchers.IO) {
-                val attestResult = attestSafetyNetAsync().await()
+                val attestResult = attestSafetyNet()
                 builder.appendln(attestResult)
                 launch(Dispatchers.Main) {
                     log_view.text = builder.toString()
@@ -68,7 +68,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
             builder.appendln(String.format("Rootbeer: %s", attestRootbeer()))
             builder.appendln(String.format("File stat: %b", attestCustomMagiskFileStat()))
-            builder.appendln(String.format("UDS name check: %b", attestCustomMagiskUDS()))
             builder.appendln(String.format("Native file stat: %b", attestNativeFileStat()))
             builder.appendln(String.format("System mounts: %b", attestCustomSystemMounts()))
             builder.appendln(String.format("Native change directory: %b", attestNativeChangeDirectory()))
@@ -77,7 +76,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
             builder.appendln(String.format("Native lstat directory: %b", attestNativeLStatDirectory()))
             builder.appendln(String.format("Native get environ variables: %b", attestNativeGetEnvironVariables()))
             builder.appendln(String.format("Native check memory map: %b", attestNativeCheckMemoryMap()))
-            builder.appendln(String.format("Native call popen: %b", attestNativeCallPOpen()))
+            builder.appendln(String.format("Native call popen: %b", attestNativeCallPopen()))
             builder.appendln(String.format("Native call dmesg: %b", attestNativeCallDmesg()))
             builder.appendln(String.format("Native call system sh: %b", attestNativeCallSystemSh()))
             builder.appendln(String.format("Native call ps -A: %b", attestNativeCallProcessList()))
@@ -118,7 +117,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
-
+    /*
     private fun attestSafetyNetAsync(): Deferred<String> {
         val completableDeferred = CompletableDeferred<String>()
         SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey)
@@ -134,6 +133,17 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
         // do safetynet with output
         return completableDeferred
+    }
+    */
+
+    private suspend fun attestSafetyNet(): String {
+        val res = SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey).await()
+
+        val jwtParts = res.jwsResult.split(".")
+        val decodedResult = Base64.decode(jwtParts[1], Base64.DEFAULT).toString(Charsets.UTF_8)
+        val map = Gson().fromJson(decodedResult, Map::class.java)
+
+        return map.toString()
     }
 
     private fun attestRootbeer(): Map<String, Boolean> {
@@ -172,28 +182,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
                 return true
             } catch (e: ErrnoException) {
                 Timber.e(String.format("File stat error: %s", OsConstants.errnoName(e.errno)))
-            }
-        }
-
-        return false
-    }
-
-    // NOTE: Magisk v19.0 Uses custom UDS names of length 32 prepended by an @ symbol
-    // NOTE: This shouldnt work on android Q (no longer have read permissions to /proc/net)
-    // regex expression should be [a-zA-Z0-9] (no spaces, no special characters)
-    // e.g. @DFlakjl32slkfdjv23kjhfkjgho2vBDH
-    private fun attestCustomMagiskUDS(): Boolean {
-        BufferedReader(FileReader("/proc/net/unix")).use { reader ->
-            val pattern = Pattern.compile("^.+: \\d+ \\d+ \\d+ \\d+ \\d+ \\d+ (@\\w{32})$")
-
-            var line = reader.readLine()
-            while (line != null) {
-                val match = pattern.matcher(line)
-                if (match.find()) {
-                    Timber.d(match.group(1))
-                    return true
-                }
-                line = reader.readLine()
             }
         }
 
@@ -239,8 +227,8 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         return attestationJNILib.openProcDirectory()
     }
 
-    private fun attestNativeCallPOpen(): Boolean {
-        return attestationJNILib.callPOpen()
+    private fun attestNativeCallPopen(): Boolean {
+        return attestationJNILib.callPopen()
     }
 
     private fun attestNativeCallDmesg(): Boolean {

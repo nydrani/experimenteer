@@ -138,10 +138,9 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_accessDirectory(JNIEnv* env, jobject obj) {
-    const char *fname_list[3];
+    const char *fname_list[2];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin/su";
-    fname_list[2] = "/sbin";
 
 
     for (auto fname : fname_list) {
@@ -157,10 +156,9 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_lstatDirectory(JNIEnv* env, jobject obj) {
-    const char *fname_list[3];
+    const char *fname_list[2];
     fname_list[0] = "/sbin/magisk";
     fname_list[1] = "/sbin/su";
-    fname_list[2] = "/sbin";
 
     struct stat sb = {};
 
@@ -206,7 +204,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
     return static_cast<jboolean>(false);
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callPOpen(JNIEnv* env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callPopen(JNIEnv* env, jobject obj) {
     char buf[BUFSIZ];
     size_t size = 0;
 
@@ -245,7 +243,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
     pclose(pipe);
     LOGA("Size of the result from pipe is [%zu]\n", size);
 
-    return static_cast<jboolean>(size != 0);
+    return static_cast<jboolean>(false);
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_callDmesg(JNIEnv* env, jobject obj) {
@@ -352,7 +350,7 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
     }
 
     closedir(opened);
-    return static_cast<jboolean>(true);
+    return static_cast<jboolean>(false);
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_checkSystemProperties(JNIEnv* env, jobject obj) {
@@ -386,6 +384,6 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
         }
     }
 
-    return static_cast<jboolean>(true);
+    return static_cast<jboolean>(false);
 }
 }

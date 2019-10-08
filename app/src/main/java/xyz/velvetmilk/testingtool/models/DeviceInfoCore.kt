@@ -14,7 +14,7 @@ class DeviceInfoCore {
     data class DeviceInfo(val build: BuildInfo,
                           val buildConfig: BuildConfigInfo,
                           val packageInfo: CustomPackageInfo,
-                          val packageList: List<CustomPackageInfo>,
+//                          val packageList: List<CustomPackageInfo>,
                           val debug: DebugInfo)
 
     data class BuildConfigInfo(val applicationId: String,
@@ -203,7 +203,7 @@ class DeviceInfoCore {
                 generateBuildInfo(contentResolver),
                 generateBuildConfigInfo(),
                 generateCustomPackageInfo(packageInfo),
-                generateCustomPackageListInfo(packageManager),
+//                generateCustomPackageListInfo(packageManager),
                 generateDebugInfo()
             )
         }

@@ -17,7 +17,6 @@ import org.threeten.bp.Instant
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.models.DeviceInfoCore
 import xyz.velvetmilk.testingtool.tools.gzip
-import xyz.velvetmilk.testingtool.tools.ungzip
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
