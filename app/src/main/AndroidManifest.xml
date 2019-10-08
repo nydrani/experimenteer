@@ -64,6 +64,7 @@
         <activity android:name=".CryptoActivity"/>
         <activity android:name=".DaggerActivity"/>
         <activity android:name=".FocusableActivity"/>
+        <activity android:name=".GzipActivity"/>
         <activity android:name=".InfoActivity"/>
         <activity android:name=".JSONActivity"/>
         <activity android:name=".KeyStoreActivity"/>

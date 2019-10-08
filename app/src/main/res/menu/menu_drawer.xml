@@ -79,6 +79,10 @@
             android:title="JSON activity"/>
 
         <item
+            android:id="@+id/nav_gzip"
+            android:title="Gzip activity"/>
+
+        <item
             android:id="@+id/nav_keystore"
             android:title="Keystore activity"/>
 

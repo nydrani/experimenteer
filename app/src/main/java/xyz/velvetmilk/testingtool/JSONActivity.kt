@@ -16,6 +16,8 @@ import kotlinx.coroutines.Job
 import org.threeten.bp.Instant
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.models.DeviceInfoCore
+import xyz.velvetmilk.testingtool.tools.gzip
+import xyz.velvetmilk.testingtool.tools.ungzip
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
@@ -70,6 +72,20 @@ class JSONActivity : AppCompatActivity(), CoroutineScope {
 
         fab2.setOnClickListener {
             // random test
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Instant::class.java, InstantTypeAdapter())
+                .create()
+
+            val jsonBuilder = StringBuilder()
+            val stringBuilder = StringBuilder()
+
+            gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName), jsonBuilder)
+            val compressed = gzip(jsonBuilder.toString().toByteArray(Charsets.UTF_8))
+
+            stringBuilder.appendln(jsonBuilder.toString().toByteArray(Charsets.UTF_8).size)
+            stringBuilder.appendln(compressed.size)
+
+            base_view.text = stringBuilder.toString()
         }
     }
 

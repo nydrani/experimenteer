@@ -22,12 +22,13 @@ import kotlin.coroutines.CoroutineContext
 import okhttp3.CertificatePinner
 import retrofit2.HttpException
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import xyz.velvetmilk.testingtool.net.GzipInterceptor
 
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = NetworkActivity::class.simpleName
-        private const val SERVER_URL = "https://test.shield.airpayapp.com.au/"
+        private const val SERVER_URL = "http://192.168.105.14:3000/"
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, NetworkActivity::class.java)
@@ -36,6 +37,9 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
     interface NetworkService {
         data class TestResponse(val message: String)
+
+        @POST("/test-gzip")
+        suspend fun testGzipPost(): TestResponse
 
         @POST("/test")
         suspend fun testPost(): TestResponse
@@ -71,6 +75,7 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
             .build()
 
         val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(GzipInterceptor())
             .certificatePinner(certificatePinner)
             .build()
 
@@ -100,6 +105,20 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
             launch {
                 try {
                     network_view.text = service.testPost().message
+                } catch (e: IOException) {
+                    // io exception
+                    e.printStackTrace()
+                } catch (e: HttpException) {
+                    // http exception
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        fab3.setOnClickListener {
+            launch {
+                try {
+                    network_view.text = service.testGzipPost().message
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()

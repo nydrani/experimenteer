@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NetworkActivity">
+    tools:context=".GzipActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -29,7 +29,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/network_view"
+            android:id="@+id/base_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
@@ -47,25 +47,5 @@
         app:srcCompat="@drawable/ic_launcher_foreground"
         app:layout_anchor="@+id/scroll_view"
         app:layout_anchorGravity="bottom|end"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        app:layout_anchor="@+id/scroll_view"
-        app:layout_anchorGravity="bottom|center_horizontal"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:id="@+id/fab3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        app:layout_anchor="@+id/scroll_view"
-        app:layout_anchorGravity="bottom"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

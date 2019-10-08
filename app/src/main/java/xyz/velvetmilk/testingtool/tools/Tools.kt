@@ -7,6 +7,9 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.View
 import io.reactivex.Observable
+import java.io.ByteArrayOutputStream
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 
 fun dpToPx(context: Context, valueInDp: Float): Float {
     val metrics = context.resources.displayMetrics
@@ -137,4 +140,19 @@ fun encodeHexString(data: ByteArray): String {
         i++
     }
     return String(out)
+}
+
+fun gzip(bytes: ByteArray): ByteArray {
+    ByteArrayOutputStream().use { bos ->
+        GZIPOutputStream(bos).use {
+            it.write(bytes)
+        }
+        return bos.toByteArray()
+    }
+}
+
+fun ungzip(bytes: ByteArray): ByteArray {
+    GZIPInputStream(bytes.inputStream()).use {
+        return it.readBytes()
+    }
 }

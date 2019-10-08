@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_gzip -> {
+                    startActivity(GzipActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_hardware_properties -> {
                     startActivity(HardwarePropertiesActivity.buildIntent(this))
                     true
