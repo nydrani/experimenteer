@@ -24,4 +24,5 @@ class AttestationJniLib {
     external fun callProcessList(): Boolean
     external fun openProcDirectory(): Boolean
     external fun checkSystemProperties(): Boolean
+    external fun collectSystemProperties(): Map<String, String>
 }

@@ -15,6 +15,40 @@
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
+// build.props
+const char *const ANDROID_OS_BUILD_VERSION_RELEASE = "ro.build.version.release";
+const char *const ANDROID_OS_BUILD_VERSION_INCREMENTAL = "ro.build.version.incremental";
+const char *const ANDROID_OS_BUILD_VERSION_CODENAME = "ro.build.version.codename";
+const char *const ANDROID_OS_BUILD_VERSION_SDK = "ro.build.version.sdk";
+
+const char *const ANDROID_OS_BUILD_MODEL = "ro.product.model";
+const char *const ANDROID_OS_BUILD_MANUFACTURER = "ro.product.manufacturer";
+const char *const ANDROID_OS_BUILD_BOARD = "ro.product.board";
+const char *const ANDROID_OS_BUILD_BRAND = "ro.product.brand";
+const char *const ANDROID_OS_BUILD_DEVICE = "ro.product.device";
+const char *const ANDROID_OS_BUILD_PRODUCT = "ro.product.name";
+
+const char *const ANDROID_OS_BUILD_CPU_ABI = "ro.product.cpu.abi";
+const char *const ANDROID_OS_BUILD_CPU_ABI2 = "ro.product.cpu.abi2";
+
+const char *const ANDROID_OS_BUILD_HARDWARE = "ro.hardware";
+
+const char *const ANDROID_OS_BUILD_ID = "ro.build.id";
+const char *const ANDROID_OS_BUILD_DISPLAY = "ro.build.display.id";
+const char *const ANDROID_OS_BUILD_HOST = "ro.build.host";
+const char *const ANDROID_OS_BUILD_USER = "ro.build.user";
+const char *const ANDROID_OS_BUILD_TYPE = "ro.build.type";
+const char *const ANDROID_OS_BUILD_TAGS = "ro.build.tags";
+const char *const ANDROID_OS_BUILD_FINGERPRINT = "ro.build.fingerprint";
+
+const char *const ANDROID_OS_SECURE = "ro.secure";
+const char *const ANDROID_OS_DEBUGGABLE = "ro.debuggable";
+const char *const ANDROID_OS_BUILD_SELINUX = "ro.build.selinux";
+
+const char *const ANDROID_OS_SYS_INITD = "sys.initd";
+const char *const SERVICE_ADB_ROOT = "service.adb.root";
+
+
 const char* const MG_SU_PATH[] = {
         "/data/local/",
         "/data/local/bin/",
@@ -120,18 +154,14 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_openDirectory(JNIEnv* env, jobject obj) {
-    const char *fname_list[2];
-    fname_list[0] = "/sbin/magisk";
-    fname_list[1] = "/sbin";
+    const char *fname = "/sbin/magisk";
 
-    for (auto fname : fname_list) {
-        DIR *opened = opendir(fname);
-        if (opened != nullptr) {
-            closedir(opened);
-            return static_cast<jboolean>(true);
-        } else {
-            LOGE("Error: %s", strerror(errno));
-        }
+    DIR *opened = opendir(fname);
+    if (opened != nullptr) {
+        closedir(opened);
+        return static_cast<jboolean>(true);
+    } else {
+        LOGE("Error: %s", strerror(errno));
     }
 
     return static_cast<jboolean>(false);
@@ -385,5 +415,55 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
     }
 
     return static_cast<jboolean>(false);
+}
+
+JNIEXPORT jobject JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_collectSystemProperties(JNIEnv* env, jobject obj) {
+    jclass mapClass = env->FindClass("java/util/HashMap");
+    jmethodID mapInit = env->GetMethodID(mapClass, "<init>", "()V");
+    jmethodID putMethod = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    jobject hashMap = env->NewObject(mapClass, mapInit);
+
+    const char* prop_list[] = { ANDROID_OS_BUILD_FINGERPRINT,
+                                ANDROID_OS_BUILD_VERSION_RELEASE,
+                                ANDROID_OS_BUILD_VERSION_INCREMENTAL,
+                                ANDROID_OS_BUILD_VERSION_CODENAME,
+                                ANDROID_OS_BUILD_VERSION_SDK,
+
+                                ANDROID_OS_BUILD_MODEL,
+                                ANDROID_OS_BUILD_MANUFACTURER,
+                                ANDROID_OS_BUILD_BOARD,
+                                ANDROID_OS_BUILD_BRAND,
+                                ANDROID_OS_BUILD_DEVICE,
+                                ANDROID_OS_BUILD_PRODUCT,
+
+                                ANDROID_OS_BUILD_CPU_ABI,
+                                ANDROID_OS_BUILD_CPU_ABI2,
+
+                                ANDROID_OS_BUILD_HARDWARE,
+
+                                ANDROID_OS_BUILD_ID,
+                                ANDROID_OS_BUILD_DISPLAY,
+                                ANDROID_OS_BUILD_HOST,
+                                ANDROID_OS_BUILD_USER,
+                                ANDROID_OS_BUILD_TYPE,
+                                ANDROID_OS_BUILD_TAGS,
+                                ANDROID_OS_BUILD_FINGERPRINT,
+
+                                ANDROID_OS_SECURE,
+                                ANDROID_OS_DEBUGGABLE,
+                                ANDROID_OS_BUILD_SELINUX,
+
+                                ANDROID_OS_SYS_INITD,
+                                SERVICE_ADB_ROOT };
+
+    char value[PROP_VALUE_MAX + 1];
+
+    for (auto& prop : prop_list) {
+        memset(value, 0, PROP_NAME_MAX + 1);
+        __system_property_get(prop, value);
+        env->CallObjectMethod(hashMap, putMethod, env->NewStringUTF(prop), env->NewStringUTF(value));
+    }
+
+    return hashMap;
 }
 }

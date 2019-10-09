@@ -26,7 +26,6 @@ import java.io.InputStreamReader
 import java.util.stream.Collectors
 import kotlin.coroutines.CoroutineContext
 
-
 class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
@@ -70,20 +69,21 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
             builder.appendln(String.format("File stat: %b", attestCustomMagiskFileStat()))
             builder.appendln(String.format("Native file stat: %b", attestNativeFileStat()))
             builder.appendln(String.format("System mounts: %b", attestCustomSystemMounts()))
-            builder.appendln(String.format("Native change directory: %b", attestNativeChangeDirectory()))
-            builder.appendln(String.format("Native open directory: %b", attestNativeOpenDirectory()))
+//            builder.appendln(String.format("Native change directory: %b", attestNativeChangeDirectory()))
+//            builder.appendln(String.format("Native open directory: %b", attestNativeOpenDirectory()))
             builder.appendln(String.format("Native access directory: %b", attestNativeAccessDirectory()))
             builder.appendln(String.format("Native lstat directory: %b", attestNativeLStatDirectory()))
-            builder.appendln(String.format("Native get environ variables: %b", attestNativeGetEnvironVariables()))
+//            builder.appendln(String.format("Native get environ variables: %b", attestNativeGetEnvironVariables()))
             builder.appendln(String.format("Native check memory map: %b", attestNativeCheckMemoryMap()))
             builder.appendln(String.format("Native call popen: %b", attestNativeCallPopen()))
-            builder.appendln(String.format("Native call dmesg: %b", attestNativeCallDmesg()))
-            builder.appendln(String.format("Native call system sh: %b", attestNativeCallSystemSh()))
-            builder.appendln(String.format("Native call ps -A: %b", attestNativeCallProcessList()))
-            builder.appendln(String.format("Native call fork: %b", attestNativeCallFork()))
-            builder.appendln(String.format("Native open proc directory: %b", attestNativeOpenProcDirectory()))
-            builder.appendln(String.format("Native make directory: %b", attestNativeMakeDirectory()))
+//            builder.appendln(String.format("Native call dmesg: %b", attestNativeCallDmesg()))
+//            builder.appendln(String.format("Native call system sh: %b", attestNativeCallSystemSh()))
+//            builder.appendln(String.format("Native call ps -A: %b", attestNativeCallProcessList()))
+//            builder.appendln(String.format("Native call fork: %b", attestNativeCallFork()))
+//            builder.appendln(String.format("Native open proc directory: %b", attestNativeOpenProcDirectory()))
+//            builder.appendln(String.format("Native make directory: %b", attestNativeMakeDirectory()))
             builder.appendln(String.format("Native check system properties: %b", attestNativeCheckSystemProperties()))
+            builder.appendln(String.format("Native collect system properties: %s", attestNativeCollectSystemProperties().toString()))
 
             launch(Dispatchers.Main) {
                 log_view.text = builder.toString()
@@ -116,25 +116,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
         return super.onOptionsItemSelected(item)
     }
-
-    /*
-    private fun attestSafetyNetAsync(): Deferred<String> {
-        val completableDeferred = CompletableDeferred<String>()
-        SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey)
-            .addOnSuccessListener {
-                val jwtParts = it.jwsResult.split(".")
-                val decodedResult = Base64.decode(jwtParts[1], Base64.DEFAULT).toString(Charsets.UTF_8)
-                val map = Gson().fromJson(decodedResult, Map::class.java)
-                completableDeferred.complete(map.toString())
-            }
-            .addOnFailureListener {
-                completableDeferred.completeExceptionally(it)
-            }
-
-        // do safetynet with output
-        return completableDeferred
-    }
-    */
 
     private suspend fun attestSafetyNet(): String {
         val res = SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey).await()
@@ -190,7 +171,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     private fun attestCustomSystemMounts(): Boolean {
         BufferedReader(FileReader("/proc/mounts")).use { reader ->
-            Timber.d(reader.lines().parallel().collect(Collectors.joining("\n")))
             return reader.lines().parallel().collect(Collectors.joining()).contains("magisk", true)
         }
     }
@@ -253,6 +233,10 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     private fun attestNativeCheckSystemProperties(): Boolean {
         return attestationJNILib.checkSystemProperties()
+    }
+
+    private fun attestNativeCollectSystemProperties(): Map<String, String> {
+        return attestationJNILib.collectSystemProperties()
     }
 
     private fun suExec(strCommand: String) {

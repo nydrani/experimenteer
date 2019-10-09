@@ -14,7 +14,7 @@ class DeviceInfoCore {
     data class DeviceInfo(val build: BuildInfo,
                           val buildConfig: BuildConfigInfo,
                           val packageInfo: CustomPackageInfo,
-//                          val packageList: List<CustomPackageInfo>,
+//                          val packageList: List<StrippedPackageInfo>,
                           val debug: DebugInfo)
 
     data class BuildConfigInfo(val applicationId: String,
@@ -50,6 +50,11 @@ class DeviceInfoCore {
                                  val splitNames: List<String>,
                                  val splitRevisionCodes: List<Int>,
                                  val versionName: String)
+
+    data class StrippedPackageInfo(val longVersionCode: Long,
+                                   val packageName: String,
+                                   val signatures: List<String>,
+                                   val versionName: String)
 
     data class BuildInfo(val board: String,
                          val bootloader: String,
@@ -203,7 +208,7 @@ class DeviceInfoCore {
                 generateBuildInfo(contentResolver),
                 generateBuildConfigInfo(),
                 generateCustomPackageInfo(packageInfo),
-//                generateCustomPackageListInfo(packageManager),
+//                generateStrippedPackageListInfo(packageManager),
                 generateDebugInfo()
             )
         }
@@ -262,7 +267,36 @@ class DeviceInfoCore {
                 packageInfo.versionName)
         }
 
-        private fun generateCustomPackageListInfo(packageManager: PackageManager): List<CustomPackageInfo> {
+        private fun generateStrippedPackageInfo(packageInfo: PackageInfo): StrippedPackageInfo {
+            val longVersionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo.longVersionCode
+            } else {
+                packageInfo.versionCode.toLong()
+            }
+
+            val signatures: Array<Signature> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (packageInfo.signingInfo.hasMultipleSigners()) {
+                    packageInfo.signingInfo.apkContentsSigners
+                } else {
+                    packageInfo.signingInfo.signingCertificateHistory
+                }
+            } else {
+                packageInfo.signatures
+            }
+
+            val signatureList: List<String> = signatures.map {
+                it.toByteArray().toBase64()
+            }
+
+            return StrippedPackageInfo(
+                longVersionCode,
+                packageInfo.packageName,
+                signatureList,
+                packageInfo.versionName
+            )
+        }
+
+        private fun generateStrippedPackageListInfo(packageManager: PackageManager): List<StrippedPackageInfo> {
             var flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_CONFIGURATIONS or
                     PackageManager.GET_GIDS or PackageManager.GET_INSTRUMENTATION or
                     PackageManager.GET_INTENT_FILTERS or PackageManager.GET_PERMISSIONS or
@@ -284,11 +318,11 @@ class DeviceInfoCore {
             // providerinfo
             flags = flags or PackageManager.GET_URI_PERMISSION_PATTERNS
 
-            val packageList = mutableListOf<CustomPackageInfo>()
+            val packageList = mutableListOf<StrippedPackageInfo>()
 
             val packages = packageManager.getInstalledPackages(flags)
             for (pack in packages) {
-                packageList.add(generateCustomPackageInfo(pack))
+                packageList.add(generateStrippedPackageInfo(pack))
             }
 
             return packageList
