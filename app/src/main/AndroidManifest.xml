@@ -47,7 +47,9 @@
         <activity android:name=".systemservices.SensorActivity"/>
         <activity android:name=".systemservices.SubscriptionActivity"/>
         <activity android:name=".systemservices.SystemHealthActivity"/>
+        <activity android:name=".systemservices.TelecomActivity"/>
         <activity android:name=".systemservices.TelephonyActivity"/>
+        <activity android:name=".systemservices.USBActivity"/>
         <activity android:name=".systemservices.VibratorActivity"/>
         <activity android:name=".systemservices.WindowActivity"/>
 

@@ -11,6 +11,7 @@ class PermissionsHelper {
         val infoPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE)
         val openSlesPermissions = arrayOf(Manifest.permission.RECORD_AUDIO)
         val telephonyPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val telecomPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE)
         val subscriptionPermissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION)
         val gpsPermissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
 

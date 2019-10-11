@@ -195,6 +195,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(SystemHealthActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_telecom -> {
+                    startActivity(TelecomActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_telephony -> {
                     startActivity(TelephonyActivity.buildIntent(this))
                     true
@@ -209,6 +213,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_trusted_screen -> {
                     startActivity(TrustedScreenActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_usb -> {
+                    startActivity(USBActivity.buildIntent(this))
                     true
                 }
                 R.id.nav_vibrator -> {

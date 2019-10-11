@@ -159,6 +159,10 @@
             android:title="System health activity"/>
 
         <item
+            android:id="@+id/nav_telecom"
+            android:title="Telecom activity"/>
+
+        <item
             android:id="@+id/nav_telephony"
             android:title="Telephony activity"/>
 
@@ -173,6 +177,10 @@
         <item
             android:id="@+id/nav_trusted_screen"
             android:title="Trusted screen activity"/>
+
+        <item
+            android:id="@+id/nav_usb"
+            android:title="USB activity"/>
 
         <item
             android:id="@+id/nav_vibrator"
