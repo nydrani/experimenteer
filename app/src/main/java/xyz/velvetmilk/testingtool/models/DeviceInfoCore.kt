@@ -177,6 +177,7 @@ class DeviceInfoCore {
                 Build.VERSION.SECURITY_PATCH)
         }
 
+        @Throws(PackageManager.NameNotFoundException::class)
         fun generateDeviceInfo(
             contentResolver: ContentResolver,
             packageManager: PackageManager,

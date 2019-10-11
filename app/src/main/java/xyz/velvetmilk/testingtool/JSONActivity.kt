@@ -2,6 +2,7 @@ package xyz.velvetmilk.testingtool
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -63,7 +64,18 @@ class JSONActivity : AppCompatActivity(), CoroutineScope {
                 .create()
 
             val stringBuilder = StringBuilder()
-            gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName), stringBuilder)
+
+            try {
+                gson.toJson(
+                    DeviceInfoCore.generateDeviceInfo(
+                        contentResolver,
+                        packageManager,
+                        packageName
+                    ), stringBuilder
+                )
+            } catch (e: PackageManager.NameNotFoundException) {
+                stringBuilder.appendln(e.localizedMessage)
+            }
 
             base_view.text = stringBuilder.length.toString()
             Timber.d(stringBuilder.toString())
@@ -78,11 +90,21 @@ class JSONActivity : AppCompatActivity(), CoroutineScope {
             val jsonBuilder = StringBuilder()
             val stringBuilder = StringBuilder()
 
-            gson.toJson(DeviceInfoCore.generateDeviceInfo(contentResolver, packageManager, packageName), jsonBuilder)
-            val compressed = gzip(jsonBuilder.toString().toByteArray(Charsets.UTF_8))
+            try {
+                gson.toJson(
+                    DeviceInfoCore.generateDeviceInfo(
+                        contentResolver,
+                        packageManager,
+                        packageName
+                    ), jsonBuilder
+                )
+                val compressed = gzip(jsonBuilder.toString().toByteArray(Charsets.UTF_8))
 
-            stringBuilder.appendln(jsonBuilder.toString().toByteArray(Charsets.UTF_8).size)
-            stringBuilder.appendln(compressed.size)
+                stringBuilder.appendln(jsonBuilder.toString().toByteArray(Charsets.UTF_8).size)
+                stringBuilder.appendln(compressed.size)
+            } catch (e: PackageManager.NameNotFoundException) {
+                stringBuilder.appendln(e.localizedMessage)
+            }
 
             base_view.text = stringBuilder.toString()
         }
