@@ -42,6 +42,7 @@
         <activity android:name=".systemservices.ActivityManagerActivity"/>
         <activity android:name=".systemservices.ConnectivityActivity"/>
         <activity android:name=".systemservices.HardwarePropertiesActivity"/>
+        <activity android:name=".systemservices.MediaProjectionActivity"/>
         <activity android:name=".systemservices.NfcActivity"/>
         <activity android:name=".systemservices.NotificationActivity"/>
         <activity android:name=".systemservices.SensorActivity"/>

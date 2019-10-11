@@ -131,6 +131,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(MaterialActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_media_projection -> {
+                    startActivity(MediaProjectionActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_native -> {
                     startActivity(NativeActivity.buildIntent(this))
                     true
