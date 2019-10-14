@@ -69,12 +69,11 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
-        val stringBuilder = StringBuilder()
         val packageLocations = mutableListOf<String>()
-        val allFiles = mutableListOf<Pair<String, Long>>()
 
         launch(Dispatchers.Default) {
             val packageManager = packageManager
+            val stringBuilder = StringBuilder()
 
             stringBuilder.appendln("===== ApplicationInfo =====")
             val appFlags = PackageManager.GET_META_DATA or PackageManager.GET_SHARED_LIBRARY_FILES
@@ -144,17 +143,8 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                     } else {
                         packages.signatures
                     }
-                for (signature in signatures) {
-//                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "MD5"))
-//                    stringBuilder.appendln(getCertificateFingerprint(signature.toByteArray(), "SHA1"))
 
-                    val fingerprint = getCertificateFingerprint(signature.toByteArray(), "SHA256")
-                    if (fingerprint == TEST_KEYS_SHA256_FINGERPRINT) {
-                        stringBuilder.appendln("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                        stringBuilder.appendln(fingerprint)
-                    }
-                }
-
+                stringBuilder.appendln(signatures)
                 stringBuilder.appendln()
             }
 
@@ -167,17 +157,36 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
             val count = AtomicInteger(0)
             val completedCount = AtomicInteger(0)
             val builder = StringBuffer()
+            val fileList = mutableListOf<Pair<String, Long>>()
+
 
             launch(Dispatchers.Default) {
-                for (i in allFiles.indices) {
+                withContext(Dispatchers.IO) {
+                    for (directory in packageLocations) {
+                        val files = SizeWalker().size(directory)
+                        fileList.addAll(files)
+                    }
+                }
+                fileList.removeAll {
+                    // remove apk which is larger than 10mb (check all base.apk strings)
+                    // TODO: decompile and read the manifest file
+                    !it.first.endsWith(".apk") || it.second > 1024L * 1024L * 10L
+                }
+                fileList.sortBy { it.second }
+
+                launch(Dispatchers.Main) {
+                    progress_bar.max = fileList.lastIndex
+                }
+
+                for (i in fileList.indices) {
                     while (count.get() > 10) {
                         delay(10)
                     }
-                    Timber.d("LETS GO: " + allFiles[i].first)
+                    Timber.d("LETS GO: " + fileList[i].first)
                     count.incrementAndGet()
 
                     launch(Dispatchers.IO) {
-                        val file = File(allFiles[i].first)
+                        val file = File(fileList[i].first)
                         FileUtils.lineIterator(file, "UTF-8").use {
                             var found = false
                             val results = mutableListOf<String>()
@@ -207,67 +216,77 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
+            val fileList = mutableListOf<Pair<String, Long>>()
+            val stringBuilder = StringBuilder()
+
             launch(Dispatchers.Default) {
-                allFiles.clear()
                 withContext(Dispatchers.IO) {
                     for (directory in packageLocations) {
                         val files = SizeWalker().size(directory)
-                        allFiles.addAll(files)
+                        fileList.addAll(files)
                     }
                 }
-                allFiles.removeAll {
+                fileList.removeAll {
                     // remove apk which is larger than 10mb (check all base.apk strings)
                     // TODO: decompile and read the manifest file
                     !it.first.endsWith(".apk") || it.second > 1024L * 1024L * 10L
                 }
-                allFiles.sortBy { it.second }
+                fileList.sortBy { it.second }
+
+                fileList.forEach {
+                    stringBuilder.appendln(String.format("%s | %d", it.first, it.second))
+                }
+                stringBuilder.appendln(fileList.size)
 
                 launch(Dispatchers.Main) {
-                    base_view.text = String.format("%s\n%d", allFiles.toString(), allFiles.size)
-                    progress_bar.max = allFiles.lastIndex
+                    base_view.text = stringBuilder.toString()
                 }
             }
         }
 
         fab3.setOnClickListener {
-            val builder = StringBuilder()
+            val stringBuilder = StringBuilder()
 
-            builder.appendln(packageManager.isSafeMode)
+            stringBuilder.appendln(packageManager.isSafeMode)
             for (feature in packageManager.systemAvailableFeatures) {
-                builder.appendln(feature.flags)
-                builder.appendln(feature.name)
-                builder.appendln(feature.version)
+                stringBuilder.appendln(feature.flags)
+                stringBuilder.appendln(feature.name)
+                stringBuilder.appendln(feature.version)
 
                 if (feature.name == null) {
-                    builder.appendln(feature.reqGlEsVersion)
-                    builder.appendln(feature.glEsVersion)
+                    stringBuilder.appendln(feature.reqGlEsVersion)
+                    stringBuilder.appendln(feature.glEsVersion)
                 }
             }
 
             packageManager.systemSharedLibraryNames?.let {
                 for (library in it) {
-                    builder.appendln(library)
+                    stringBuilder.appendln(library)
                 }
             }
 
-            builder.appendln("===== ANDROID O =====")
+            stringBuilder.appendln("===== ANDROID O =====")
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                builder.appendln(packageManager.instantAppCookie)
-                builder.appendln(packageManager.instantAppCookieMaxBytes)
-                builder.appendln(packageManager.isInstantApp)
+                stringBuilder.appendln(packageManager.instantAppCookie)
+                stringBuilder.appendln(packageManager.instantAppCookieMaxBytes)
+                stringBuilder.appendln(packageManager.isInstantApp)
             }
 
-            builder.appendln("===== ANDROID P =====")
+            stringBuilder.appendln("===== ANDROID P =====")
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                builder.appendln(packageManager.isPackageSuspended)
+                stringBuilder.appendln(packageManager.isPackageSuspended)
             }
 
-            builder.appendln("===== ANDROID Q =====")
+            stringBuilder.appendln("===== ANDROID Q =====")
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                builder.appendln(packageManager.isDeviceUpgrading)
+                stringBuilder.appendln(packageManager.isDeviceUpgrading)
             }
 
-            base_view.text = builder.toString()
+            base_view.text = stringBuilder.toString()
+        }
+
+        fab4.setOnClickListener {
+            base_view.text = listTestKeyApps().toString()
         }
     }
 
@@ -298,5 +317,38 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         val hash = digest.digest(cert.encoded)
 
         return encodeHexString(hash)
+    }
+
+    private fun listTestKeyApps(): List<String> {
+        val testApps: MutableList<String> = mutableListOf()
+
+        val packageFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            PackageManager.GET_SIGNING_CERTIFICATES
+        } else {
+            PackageManager.GET_SIGNATURES
+        }
+
+        for (pack in packageManager.getInstalledPackages(packageFlags)) {
+            val signatures =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    if (pack.signingInfo.hasMultipleSigners()) {
+                        pack.signingInfo.apkContentsSigners
+                    } else {
+                        pack.signingInfo.signingCertificateHistory
+                    }
+                } else {
+                    pack.signatures
+                }
+
+            for (signature in signatures) {
+                val fingerprint = getCertificateFingerprint(signature.toByteArray(), "SHA256")
+                if (fingerprint == TEST_KEYS_SHA256_FINGERPRINT) {
+                    testApps.add(pack.packageName)
+                    break
+                }
+            }
+        }
+
+        return testApps
     }
 }
