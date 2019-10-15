@@ -24,7 +24,8 @@ class AppBarLayoutTestActivity : AppCompatActivity() {
     }
 
     private lateinit var adapter: TestAdapter
-    private val disposer = CompositeDisposable()
+
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +33,8 @@ class AppBarLayoutTestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_appbarlayout)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        disposer = CompositeDisposable()
 
         adapter = TestAdapter()
         adapter.setHasStableIds(true)

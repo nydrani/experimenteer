@@ -7,15 +7,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.security.ProviderInstaller
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_play_services.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class PlayServicesActivity : AppCompatActivity(), CoroutineScope {

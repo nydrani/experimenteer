@@ -68,4 +68,14 @@
         app:layout_anchor="@+id/scroll_view"
         app:layout_anchorGravity="bottom"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:id="@+id/fab4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        app:layout_anchor="@+id/scroll_view"
+        app:layout_anchorGravity="center_vertical|end"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,6 @@
 package xyz.velvetmilk.testingtool
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -33,6 +34,8 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
 
+    // We actually testing here
+    @SuppressLint("SecureRandom")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rng)
@@ -43,23 +46,22 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         disposer = CompositeDisposable()
 
         secureRandom = SecureRandom()
-        Timber.d(secureRandom.provider.name)
 
         printAlgorithms()
 
         fab.setOnClickListener {
-            base_view.text = secureRandom.nextInt().toString()
-        }
-
-        fab2.setOnClickListener {
             // reset secure random
             val secureRandom = SecureRandom()
             base_view.text = secureRandom.nextInt().toString()
         }
 
-        fab3.setOnClickListener {
+        fab2.setOnClickListener {
             // reset secure random
             secureRandom.setSeed(byteArrayOf(1, 2, 3, 4))
+        }
+
+        fab3.setOnClickListener {
+            base_view.text = secureRandom.nextInt().toString()
         }
     }
 
@@ -81,11 +83,14 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
+
     private fun printAlgorithms() {
         val algorithms = Security.getAlgorithms("SecureRandom")
+        val stringBuilder = StringBuilder()
 
-        for (algorithm in algorithms) {
-            Timber.d(algorithm)
-        }
+        stringBuilder.appendln(secureRandom.provider.name)
+        stringBuilder.appendln(algorithms)
+
+        base_view.text = stringBuilder.toString()
     }
 }

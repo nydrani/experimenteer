@@ -34,7 +34,6 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-
     private val notificationPolicyListener = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val stringBuilder = StringBuilder()

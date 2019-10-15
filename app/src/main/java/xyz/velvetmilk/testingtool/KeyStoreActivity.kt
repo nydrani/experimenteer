@@ -62,9 +62,9 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         suspend fun sendCertificateChain(@Body body: SendCertificateRequest): SendCertificateResponse
     }
 
-
     companion object {
         private val TAG = KeyStoreActivity::class.simpleName
+
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
         private const val RSA_KEY_ALIAS = "RSAbabey"
         private const val GOOGLE_ROOT_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n" +
@@ -122,6 +122,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -132,8 +133,6 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
     private lateinit var keyFactory: KeyFactory
     private lateinit var secureRoot: X509Certificate
 
-    private val disposer = CompositeDisposable()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +141,7 @@ class KeyStoreActivity : AppCompatActivity(), CoroutineScope {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         job = Job()
+        disposer = CompositeDisposable()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)

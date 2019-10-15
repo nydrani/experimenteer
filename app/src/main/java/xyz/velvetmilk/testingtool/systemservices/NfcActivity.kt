@@ -30,7 +30,8 @@ class NfcActivity : AppCompatActivity() {
 
     private var count = 0
     private var nfcAdapter: NfcAdapter? = null
-    private val disposer = CompositeDisposable()
+
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,8 @@ class NfcActivity : AppCompatActivity() {
         setContentView(R.layout.activity_nfc)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        disposer = CompositeDisposable()
 
         // check for nfc availability
         val nfcManager = getSystemService(Context.NFC_SERVICE) as NfcManager

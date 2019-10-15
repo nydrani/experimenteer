@@ -74,6 +74,7 @@ class VibratorActivity : AppCompatActivity(), CoroutineScope {
                     vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
                 else -> {
+                    @Suppress("DEPRECATION")
                     vibrator.vibrate(100)
                 }
             }

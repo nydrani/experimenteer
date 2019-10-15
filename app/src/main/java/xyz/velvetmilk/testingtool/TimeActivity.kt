@@ -18,6 +18,7 @@ class TimeActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = TimeActivity::class.simpleName
+
         private val BASIC_ISO_DATE_TIME = DateTimeFormatterBuilder().parseCaseInsensitive()
             .appendValue(ChronoField.YEAR, 4)
             .appendValue(ChronoField.MONTH_OF_YEAR, 2)
@@ -33,7 +34,7 @@ class TimeActivity : AppCompatActivity() {
         }
     }
 
-    private val disposer = CompositeDisposable()
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +42,8 @@ class TimeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_time)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        disposer = CompositeDisposable()
 
         val stringBuilder = StringBuilder()
         stringBuilder.appendln(Instant.now())

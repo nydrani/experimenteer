@@ -34,19 +34,19 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    @UseExperimental(kotlinx.coroutines.ObsoleteCoroutinesApi::class)
+    @UseExperimental(ObsoleteCoroutinesApi::class)
     private val singleThreadedContext = newSingleThreadContext("singleThreadBaby")
 
-    @UseExperimental(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     private val broadcastChannel: BroadcastChannel<String> = BroadcastChannel(Channel.CONFLATED)
     private val channel: Channel<String> = Channel()
     private val subject: Subject<String> = PublishSubject.create()
 
-    private val disposer = CompositeDisposable()
     private var logBuilder = StringBuilder()
     private var debounceBuilder = StringBuilder()
 
@@ -60,6 +60,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         job = Job()
+        disposer = CompositeDisposable()
 
         fab.setOnClickListener {
             Snackbar.make(it, "Coroutine run non-blocking", Snackbar.LENGTH_SHORT).show()
@@ -153,7 +154,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
         // using flow to debounce clicks
         launch {
-            @UseExperimental(kotlinx.coroutines.FlowPreview::class)
+            @UseExperimental(FlowPreview::class)
             broadcastChannel.asFlow().debounce(1000).collect {
                 log_view3.text = it
             }
@@ -252,13 +253,13 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
     private fun click() {
         debounceBuilder.append("x")
 
-        @UseExperimental(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+        @UseExperimental(ExperimentalCoroutinesApi::class)
         broadcastChannel.offer(debounceBuilder.toString())
         channel.offer(debounceBuilder.toString())
         subject.onNext(debounceBuilder.toString())
     }
 
-    @UseExperimental(kotlinx.coroutines.ObsoleteCoroutinesApi::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    @UseExperimental(ObsoleteCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     fun <T> ReceiveChannel<T>.debounce(settleTime: Long): ReceiveChannel<T> {
         return produce {
             var job: Job? = null

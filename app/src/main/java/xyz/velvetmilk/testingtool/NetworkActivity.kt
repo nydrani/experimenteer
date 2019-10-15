@@ -38,9 +38,6 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
     interface NetworkService {
         data class TestResponse(val message: String)
 
-        @POST("/test-gzip")
-        suspend fun testGzipPost(): TestResponse
-
         @POST("/test")
         suspend fun testPost(): TestResponse
 
@@ -52,6 +49,7 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private lateinit var service: NetworkService
+    private lateinit var gzipService: NetworkService
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -83,9 +81,17 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
             .baseUrl(SERVER_URL)
             .client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        val gzipRetrofit = Retrofit.Builder()
+            .baseUrl(SERVER_URL)
+            .client(okHttpClient)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
+
         service = retrofit.create(NetworkService::class.java)
+        gzipService = gzipRetrofit.create(NetworkService::class.java)
 
         fab.setOnClickListener {
             launch {
@@ -118,7 +124,21 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         fab3.setOnClickListener {
             launch {
                 try {
-                    network_view.text = service.testGzipPost().message
+                    network_view.text = service.testGet().message
+                } catch (e: IOException) {
+                    // io exception
+                    e.printStackTrace()
+                } catch (e: HttpException) {
+                    // http exception
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        fab4.setOnClickListener {
+            launch {
+                try {
+                    network_view.text = gzipService.testPost().message
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()

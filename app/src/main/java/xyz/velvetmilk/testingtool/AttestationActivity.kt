@@ -33,11 +33,11 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private val attestationJNILib = AttestationJniLib()
+
+    private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
-    private val disposer = CompositeDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +47,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         job = Job()
+        disposer = CompositeDisposable()
 
         fab.setOnClickListener {
             val builder = StringBuilder()

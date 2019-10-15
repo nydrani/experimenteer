@@ -27,7 +27,6 @@ class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
 
     private val antiDebuggingJNILib = AntiDebuggingJniLib()
 
-
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext

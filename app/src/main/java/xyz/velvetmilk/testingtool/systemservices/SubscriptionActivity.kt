@@ -43,7 +43,6 @@ class SubscriptionActivity : AppCompatActivity(), CoroutineScope {
         // Request permissions
         PermissionsHelper.requestPermissions(this, PermissionsHelper.subscriptionPermissions)
 
-
         fab.setOnClickListener {
             val subscriptionManager = getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
             val stringBuilder = StringBuilder()

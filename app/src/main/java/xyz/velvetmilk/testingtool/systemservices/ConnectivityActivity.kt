@@ -35,11 +35,11 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val disposer = CompositeDisposable()
     private val builder = StringBuilder()
     private lateinit var connectivityManager: ConnectivityManager
 
@@ -115,6 +115,7 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         job = Job()
+        disposer = CompositeDisposable()
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         fab.setOnClickListener {
@@ -220,6 +221,7 @@ class ConnectivityActivity : AppCompatActivity(), CoroutineScope {
         return false
     }
 
+    @Suppress("SameParameterValue")
     private fun isServerAvailable(host: String, port: Int): Boolean {
         try {
             // Connect to host to check for connection

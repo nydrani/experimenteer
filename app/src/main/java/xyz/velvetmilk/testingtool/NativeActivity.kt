@@ -25,7 +25,8 @@ class NativeActivity : AppCompatActivity() {
     }
 
     private val testingJNILib = TestingJniLib()
-    private val disposer = CompositeDisposable()
+
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,8 @@ class NativeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_native)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        disposer = CompositeDisposable()
 
         fab.setOnClickListener {
             native_view.text = testingJNILib.nativeString()

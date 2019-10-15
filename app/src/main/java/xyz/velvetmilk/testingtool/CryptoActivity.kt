@@ -80,7 +80,6 @@ class CryptoActivity : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-
     private lateinit var service: NetworkService
 
     private lateinit var store: KeyStore

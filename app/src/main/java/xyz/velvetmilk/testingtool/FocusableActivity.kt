@@ -22,7 +22,7 @@ class FocusableActivity : AppCompatActivity() {
         }
     }
 
-    private val disposer = CompositeDisposable()
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +30,8 @@ class FocusableActivity : AppCompatActivity() {
         setContentView(R.layout.activity_focusable)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        disposer = CompositeDisposable()
 
         keyboardCheckObservable(this).subscribe {
                 // clear focus of currently focused

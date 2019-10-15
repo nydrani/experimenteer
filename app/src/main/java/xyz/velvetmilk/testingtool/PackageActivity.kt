@@ -21,7 +21,6 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.io.ByteArrayInputStream
 
-
 class PackageActivity : AppCompatActivity(), CoroutineScope {
 
     inner class SizeWalker : DirectoryWalker<Pair<String, Long>>() {
@@ -121,6 +120,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                     packageFlags or PackageManager.GET_SIGNING_CERTIFICATES
                 } else {
+                    @Suppress("DEPRECATION")
                     packageFlags or PackageManager.GET_SIGNATURES
                 }
 
@@ -141,6 +141,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                             packages.signingInfo.signingCertificateHistory
                         }
                     } else {
+                        @Suppress("DEPRECATION")
                         packages.signatures
                     }
 
@@ -182,7 +183,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
                     while (count.get() > 10) {
                         delay(10)
                     }
-                    Timber.d("LETS GO: " + fileList[i].first)
+                    Timber.d(String.format("LETS GO: %s", fileList[i].first))
                     count.incrementAndGet()
 
                     launch(Dispatchers.IO) {
@@ -308,6 +309,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
+    @Suppress("SameParameterValue")
     private fun getCertificateFingerprint(certArray: ByteArray, algorithm: String): String {
         val input = ByteArrayInputStream(certArray)
         val cert = CertificateFactory.getInstance("X509")
@@ -319,6 +321,7 @@ class PackageActivity : AppCompatActivity(), CoroutineScope {
         return encodeHexString(hash)
     }
 
+    @Suppress("DEPRECATION")
     private fun listTestKeyApps(): List<String> {
         val testApps: MutableList<String> = mutableListOf()
 

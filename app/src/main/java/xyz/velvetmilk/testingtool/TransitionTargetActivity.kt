@@ -21,6 +21,7 @@ class TransitionTargetActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = TransitionTargetActivity::class.simpleName
+
         const val TRANSITION_IMAGE = "transition:image"
 
         fun buildIntent(context: Context): Intent {

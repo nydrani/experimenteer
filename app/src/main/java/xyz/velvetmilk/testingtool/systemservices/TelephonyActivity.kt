@@ -16,7 +16,6 @@ import android.telephony.TelephonyManager
 import xyz.velvetmilk.testingtool.R
 import xyz.velvetmilk.testingtool.tools.PermissionsHelper
 
-@SuppressLint("HardwareIds")
 class TelephonyActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
@@ -33,6 +32,7 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_telephony)
@@ -138,6 +138,7 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
             } else {
                 // imei
                 try {
+                    @Suppress("DEPRECATION")
                     stringBuilder.appendln(telephonyManager.deviceId)
                 } catch (e: SecurityException) {
                     stringBuilder.appendln("Android O: No read phone permissions")
@@ -157,6 +158,7 @@ class TelephonyActivity : AppCompatActivity(), CoroutineScope {
                     stringBuilder.appendln("Android P: No read phone permissions")
                 }
             } else {
+                @Suppress("DEPRECATION")
                 stringBuilder.appendln(telephonyManager.isTtyModeSupported)
             }
 

@@ -19,8 +19,9 @@ class MainActivity : AppCompatActivity() {
         private val TAG = MainActivity::class.simpleName
     }
 
-    private val disposer = CompositeDisposable()
     private val logger = LoggerFactory.getLogger(MainActivity::class.java)
+
+    private lateinit var disposer: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        disposer = CompositeDisposable()
 
         Log.d(TAG, "hello there from android log")
         Timber.d("hello there from timber")
