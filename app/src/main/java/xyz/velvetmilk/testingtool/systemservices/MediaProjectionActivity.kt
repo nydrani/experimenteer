@@ -57,6 +57,7 @@ class MediaProjectionActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_projection)
@@ -143,6 +144,7 @@ class MediaProjectionActivity : AppCompatActivity(), CoroutineScope {
             }
         }
     }
+
 
     private fun prepareMediaRecorder() {
         // prepare here

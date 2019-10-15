@@ -6,17 +6,13 @@ import android.os.Bundle
 import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
-import android.util.Base64
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.safetynet.SafetyNet
-import com.google.gson.Gson
 import com.scottyab.rootbeer.RootBeer
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_attestation.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.jni.AttestationJniLib
 import java.io.BufferedReader
@@ -30,8 +26,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = AttestationActivity::class.simpleName
-        private const val apiKey = "***REMOVED***"
-
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, AttestationActivity::class.java)
@@ -56,14 +50,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
         fab.setOnClickListener {
             val builder = StringBuilder()
-
-            launch(Dispatchers.IO) {
-                val attestResult = attestSafetyNet()
-                builder.appendln(attestResult)
-                launch(Dispatchers.Main) {
-                    log_view.text = builder.toString()
-                }
-            }
 
             builder.appendln(String.format("Rootbeer: %s", attestRootbeer()))
             builder.appendln(String.format("File stat: %b", attestCustomMagiskFileStat()))
@@ -117,15 +103,6 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
-    private suspend fun attestSafetyNet(): String {
-        val res = SafetyNet.getClient(this).attest("hello".toByteArray(Charsets.UTF_8), apiKey).await()
-
-        val jwtParts = res.jwsResult.split(".")
-        val decodedResult = Base64.decode(jwtParts[1], Base64.DEFAULT).toString(Charsets.UTF_8)
-        val map = Gson().fromJson(decodedResult, Map::class.java)
-
-        return map.toString()
-    }
 
     private fun attestRootbeer(): Map<String, Boolean> {
         val rootBeer = RootBeer(this)

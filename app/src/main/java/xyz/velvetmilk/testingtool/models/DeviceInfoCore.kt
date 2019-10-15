@@ -22,7 +22,7 @@ class DeviceInfoCore {
                                val debug: Boolean,
                                val flavor: String,
                                val versionCode: Int,
-                               val verisionName: String)
+                               val verisonName: String)
 
     data class CustomPackageInfo(val applicationInfo: ApplicationInfo,
                                  val baseRevisionCode: Int,
@@ -45,7 +45,7 @@ class DeviceInfoCore {
 //                                 val services: List<ServiceInfo>,
                                  val sharedUserId: String,
                                  val sharedUserLabel: Int,
-                                 // base64 of bytearray
+                                 // base64 of bytearray signature
                                  val signatures: List<String>,
                                  val splitNames: List<String>,
                                  val splitRevisionCodes: List<Int>,

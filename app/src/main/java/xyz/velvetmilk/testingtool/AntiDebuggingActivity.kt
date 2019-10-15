@@ -60,6 +60,8 @@ class AntiDebuggingActivity : AppCompatActivity(), CoroutineScope {
             val stringBuilder = StringBuilder()
             // NOTE: Run once per application
             stringBuilder.appendln(antiDebuggingJNILib.antiDebuggingPTrace())
+
+            // NOTE: QEMU check never tested
             stringBuilder.appendln(String.format("QEMU check: %d", antiDebuggingJNILib.antiDebuggingQEMU()))
 
             base_view.text = stringBuilder.toString()
