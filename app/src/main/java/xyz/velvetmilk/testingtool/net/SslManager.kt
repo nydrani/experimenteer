@@ -11,6 +11,8 @@ import java.io.ByteArrayInputStream
 import java.io.StringReader
 import java.security.KeyFactory
 import java.security.KeyStore
+import java.security.Provider
+import java.security.Security
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.security.spec.PKCS8EncodedKeySpec
@@ -18,6 +20,7 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
+// NOTE: this could probably just be a static class (theres no useful state)
 class SslManager {
 
     companion object {
@@ -145,9 +148,14 @@ class SslManager {
 
     private fun checkSecurity() {
         // prints out default security properties
-        Timber.d(java.security.Security.getProperty("ssl.ServerSocketFactory.provider"))
-        Timber.d(java.security.Security.getProperty("ssl.SocketFactory.provider"))
-        Timber.d(java.security.Security.getProperty("ssl.KeyManagerFactory.algorithm"))
-        Timber.d(java.security.Security.getProperty("keystore.type"))
+        Timber.d(Security.getProperty("ssl.ServerSocketFactory.provider"))
+        Timber.d(Security.getProperty("ssl.SocketFactory.provider"))
+        Timber.d(Security.getProperty("ssl.KeyManagerFactory.algorithm"))
+        Timber.d(Security.getProperty("keystore.type"))
+    }
+
+    @Throws(IllegalStateException::class)
+    fun getGoogleSecurityProvider(): Provider {
+        return Security.getProvider(ProviderInstaller.PROVIDER_NAME)
     }
 }
