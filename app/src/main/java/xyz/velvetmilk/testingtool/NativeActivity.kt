@@ -38,11 +38,13 @@ class NativeActivity : AppCompatActivity() {
         disposer = CompositeDisposable()
 
         fab.setOnClickListener {
-            native_view.text = testingJNILib.nativeString()
+            //native_view.text = testingJNILib.nativeString()
+            native_view.text = testingJNILib.random().toString()
         }
 
         fab2.setOnClickListener {
-            native_view.text = testingJNILib.nativeByteArray("cool string".fromHexStringUTF8())
+            //native_view.text = testingJNILib.nativeByteArray("cool string".fromHexStringUTF8())
+            native_view.text = testingJNILib.urandom().toString()
         }
 
         fab3.setOnClickListener {
@@ -65,7 +67,7 @@ class NativeActivity : AppCompatActivity() {
         }
 
         fab5.setOnClickListener {
-            native_view.text = testingJNILib.nativeTestDlSym("ignored").toString()
+            native_view.text = testingJNILib.nativeTestDlSym().toString()
         }
     }
 

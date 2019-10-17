@@ -2,10 +2,32 @@
 #include <android/log.h>
 #include <string>
 #include <dlfcn.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cerrno>
 
 #define LOG_TAG "libtest"
 #define LOGA(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 
+// NOTE: PIN BLOCK STUFF
+#define PIN_MAX_LENGTH 12
+static unsigned char pinBlock[PIN_MAX_LENGTH];
+static unsigned char curPos = 0;
+static int randomFd = -1;
+
+char getRandomByte(JNIEnv* env) {
+    // securerandom instance --> finish
+
+    jclass secRandomClass = env->FindClass("java/security/SecureRandom");
+    jmethodID secRandomInit = env->GetMethodID(secRandomClass, "<init>", "()V");
+    jmethodID secRandomNextInt = env->GetMethodID(secRandomClass, "nextInt", "()I");
+
+    jobject secRandomObj = env->NewObject(secRandomClass, secRandomInit);
+
+    char rand = static_cast<char>(env->CallIntMethod(secRandomObj, secRandomNextInt));
+
+    return rand;
+}
 
 extern "C" {
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
@@ -14,11 +36,21 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         return JNI_ERR;
     }
 
+    // am i even allowed to do this?
+    // TODO: what do when this fails????
+    randomFd = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
+    if (randomFd == -1) {
+        LOGA("Failed to open /dev/urandom | %d", errno);
+    }
+
     return JNI_VERSION_1_6;
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     // do nothing lol
+    if (randomFd != -1) {
+        close(randomFd);
+    }
 }
 
 JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeString(JNIEnv* env, jobject obj) {
@@ -70,7 +102,7 @@ JNIEXPORT jstring JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nati
     return string;
 }
 
-JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeTestDlSym(JNIEnv* env, jobject obj, jstring string) {
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nativeTestDlSym(JNIEnv* env, jobject obj) {
     void *handle;
     void (*func_dynamic_call)();
 
@@ -93,5 +125,59 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_nat
     dlclose(handle);
 
     return static_cast<jboolean>(true);
+}
+
+// NOTE: PIN BLOCK CODE
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_prepare(JNIEnv* env, jobject obj) {
+    // clear block
+    memset(pinBlock, 0, sizeof(pinBlock));
+    curPos = 2;
+}
+
+JNIEXPORT void JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_addDigit(JNIEnv* env, jobject obj, jbyte byte) {
+    // dont add if beyond max length
+    if (curPos >= PIN_MAX_LENGTH) {
+        return;
+    }
+
+    pinBlock[curPos] = static_cast<unsigned char>(byte);
+    ++curPos;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_complete(JNIEnv* env, jobject obj) {
+    jbyteArray arr = env->NewByteArray(PIN_MAX_LENGTH);
+
+    // fill header
+    pinBlock[0] = 1;
+    pinBlock[1] = static_cast<unsigned char>(curPos - 2);
+
+    // fill the rest with random bytes
+    for (unsigned char i = curPos; i < PIN_MAX_LENGTH; ++i) {
+        pinBlock[i] = static_cast<unsigned char>(getRandomByte(env));
+    }
+
+    env->SetByteArrayRegion(arr, 0, PIN_MAX_LENGTH, reinterpret_cast<jbyte*>(pinBlock));
+
+    // clear block after copying
+    memset(pinBlock, 0, sizeof(pinBlock));
+    curPos = 2;
+
+    return arr;
+}
+
+JNIEXPORT jbyte JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_random(JNIEnv* env, jobject obj) {
+    char rand = getRandomByte(env);
+
+    return static_cast<jbyte>(rand);
+}
+
+JNIEXPORT jbyte JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_urandom(JNIEnv* env, jobject obj) {
+    char rand;
+    ssize_t res = read(randomFd, &rand, 1);
+    if (res == -1) {
+        LOGA("Failed to read | %d", errno);
+    }
+
+    return static_cast<jbyte>(rand);
 }
 }

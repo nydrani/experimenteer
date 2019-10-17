@@ -23,6 +23,8 @@ import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.atan
+import kotlin.math.tan
 
 class CoroutineActivity : AppCompatActivity(), CoroutineScope {
 
@@ -119,8 +121,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope {
                 val builder = StringBuilder()
                 var res = Math.random()
                 for (i in 1..10000000) {
-                    res = Math.atan(res)
-                    res = Math.tan(res)
+                    res = atan(res)
+                    res = tan(res)
                 }
                 builder.appendln(res)
                 launch(Dispatchers.Main) {

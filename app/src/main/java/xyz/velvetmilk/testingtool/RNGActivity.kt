@@ -12,8 +12,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.di.ActivityModule
+import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import xyz.velvetmilk.testingtool.net.SslManager
 import java.security.SecureRandom
 import java.security.Security
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 class RNGActivity : AppCompatActivity(), CoroutineScope {
@@ -25,6 +29,9 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, RNGActivity::class.java)
         }
     }
+
+    @Inject
+    lateinit var sslManager: SslManager
 
     private lateinit var secureRandom: SecureRandom
 
@@ -42,9 +49,15 @@ class RNGActivity : AppCompatActivity(), CoroutineScope {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // dagger injection
+        DaggerActivityComponent.factory()
+            .create((application as TestingApp).appComponent, ActivityModule(this))
+            .inject(this)
+
         job = Job()
         disposer = CompositeDisposable()
 
+        sslManager.updateProvider(this)
         secureRandom = SecureRandom()
 
         printAlgorithms()

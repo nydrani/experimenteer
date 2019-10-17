@@ -68,6 +68,27 @@ fun ByteArray?.toByteString(): String {
     return builder.toString()
 }
 
+@kotlin.ExperimentalUnsignedTypes
+fun ByteArray?.toUByteString(): String {
+    if (this == null) {
+        return "null"
+    }
+
+    val builder = StringBuilder()
+    builder.append('[')
+    for (item in this) {
+        builder.append(item.toUByte())
+        builder.append(", ")
+    }
+    if (this.isNotEmpty()) {
+        builder.deleteCharAt(builder.length - 1)
+        builder.deleteCharAt(builder.length - 1)
+    }
+    builder.append(']')
+
+    return builder.toString()
+}
+
 fun ByteArray?.toRawString(size: Int, offset: Int): String {
     if (this == null) {
         return "null"

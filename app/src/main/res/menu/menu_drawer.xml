@@ -123,6 +123,10 @@
             android:title="Package activity"/>
 
         <item
+            android:id="@+id/nav_pin_block"
+            android:title="Pin block activity"/>
+
+        <item
             android:id="@+id/nav_play_services"
             android:title="Play services activity"/>
 

@@ -162,6 +162,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(PackageActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_pin_block -> {
+                    startActivity(PinBlockActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_play_services -> {
                     startActivity(PlayServicesActivity.buildIntent(this))
                     true

@@ -1,10 +1,7 @@
 package xyz.velvetmilk.testingtool.di
 
 import dagger.Component
-import xyz.velvetmilk.testingtool.DaggerActivity
-import xyz.velvetmilk.testingtool.PlayServicesActivity
-import xyz.velvetmilk.testingtool.SecureSocketActivity
-import xyz.velvetmilk.testingtool.SocketActivity
+import xyz.velvetmilk.testingtool.*
 
 @ActivityScope
 @Component(dependencies = [ApplicationComponent::class],
@@ -20,4 +17,5 @@ interface ActivityComponent {
     fun inject(activity: SocketActivity)
     fun inject(activity: SecureSocketActivity)
     fun inject(activity: PlayServicesActivity)
+    fun inject(activity: RNGActivity)
 }
