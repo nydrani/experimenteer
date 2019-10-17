@@ -36,6 +36,7 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
 
     private val notificationPolicyListener = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            // NOTE: isNotificationPolicyAccessGranted changed (intent is the same)
             val stringBuilder = StringBuilder()
             stringBuilder.appendln("Action: ${intent.action}")
             stringBuilder.appendln("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}")
@@ -66,6 +67,10 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab.setOnClickListener {
+            if (!notificationManager.isNotificationPolicyAccessGranted) {
+                return@setOnClickListener
+            }
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                 notificationManager.notificationPolicy = NotificationManager.Policy(
                     PRIORITY_CATEGORY_SYSTEM or PRIORITY_CATEGORY_ALARMS or PRIORITY_CATEGORY_MEDIA or
@@ -79,6 +84,7 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
                             SUPPRESSED_EFFECT_STATUS_BAR
                 )
             } else {
+                @Suppress("DEPRECATION")
                 notificationManager.notificationPolicy = NotificationManager.Policy(
                     PRIORITY_CATEGORY_CALLS or PRIORITY_CATEGORY_EVENTS or
                             PRIORITY_CATEGORY_MESSAGES or PRIORITY_CATEGORY_REMINDERS or
@@ -96,6 +102,10 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
+            if (!notificationManager.isNotificationPolicyAccessGranted) {
+                return@setOnClickListener
+            }
+
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL)
             sharedPreferences.edit()
                 .putBoolean(PREFERENCE_DND_KEY, false)
@@ -105,6 +115,10 @@ class NotificationActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab3.setOnClickListener {
+            if (!notificationManager.isNotificationPolicyAccessGranted) {
+                return@setOnClickListener
+            }
+
             notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE)
 
             base_view.text = "INTERRUPTION_FILTER_NONE"
