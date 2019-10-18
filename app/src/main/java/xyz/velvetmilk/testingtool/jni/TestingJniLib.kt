@@ -13,7 +13,8 @@ class TestingJniLib {
     external fun nativeTestDlSym(): Boolean
 
     external fun prepare()
-    external fun addDigit(byte: Byte)
+    external fun addDigit(byte: Byte): Boolean
+    external fun removeDigit(): Boolean
     external fun complete(): ByteArray
 
     external fun random(): Byte

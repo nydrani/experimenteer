@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
+import kotlin.experimental.and
 
 fun dpToPx(context: Context, valueInDp: Float): Float {
     val metrics = context.resources.displayMetrics
@@ -60,8 +61,7 @@ fun ByteArray?.toByteString(): String {
         builder.append(", ")
     }
     if (this.isNotEmpty()) {
-        builder.deleteCharAt(builder.length - 1)
-        builder.deleteCharAt(builder.length - 1)
+        builder.setLength(builder.length - 2)
     }
     builder.append(']')
 
@@ -81,8 +81,30 @@ fun ByteArray?.toUByteString(): String {
         builder.append(", ")
     }
     if (this.isNotEmpty()) {
-        builder.deleteCharAt(builder.length - 1)
-        builder.deleteCharAt(builder.length - 1)
+        builder.setLength(builder.length - 2)
+    }
+    builder.append(']')
+
+    return builder.toString()
+}
+
+
+@kotlin.ExperimentalUnsignedTypes
+fun ByteArray?.toUNibbleString(): String {
+    if (this == null) {
+        return "null"
+    }
+
+    val builder = StringBuilder()
+    builder.append('[')
+    for (item in this) {
+        builder.append((item.toInt() and 0xF0) ushr 4)
+        builder.append(", ")
+        builder.append(item and 0x0F)
+        builder.append(", ")
+    }
+    if (this.isNotEmpty()) {
+        builder.setLength(builder.length - 2)
     }
     builder.append(']')
 

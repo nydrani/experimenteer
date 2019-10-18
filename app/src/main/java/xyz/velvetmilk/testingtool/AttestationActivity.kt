@@ -54,8 +54,8 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
             builder.appendln(String.format("Rootbeer: %s", attestRootbeer()))
             builder.appendln(String.format("File stat: %b", attestCustomMagiskFileStat()))
-            builder.appendln(String.format("Native file stat: %b", attestNativeFileStat()))
             builder.appendln(String.format("System mounts: %b", attestCustomSystemMounts()))
+            builder.appendln(String.format("Native file stat: %b", attestNativeFileStat()))
 //            builder.appendln(String.format("Native change directory: %b", attestNativeChangeDirectory()))
 //            builder.appendln(String.format("Native open directory: %b", attestNativeOpenDirectory()))
             builder.appendln(String.format("Native access directory: %b", attestNativeAccessDirectory()))
