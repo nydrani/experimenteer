@@ -143,6 +143,11 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_add
         return static_cast<jboolean>(false);
     }
 
+    // dont add if greater than (4 bit value) [2^4] {'0' -> 'F'}
+    if (static_cast<unsigned char>(byte) > 16) {
+        return static_cast<jboolean>(false);
+    }
+
     pinBlock[curPos] = static_cast<unsigned char>(byte);
     ++curPos;
 

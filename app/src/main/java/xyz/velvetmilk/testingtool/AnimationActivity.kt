@@ -29,6 +29,7 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
     private var opaque = true
     private var content = true
     private var animationFinished = true
+    private val valueAnimatorList = mutableListOf<ValueAnimator>()
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -45,48 +46,56 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
-        ValueAnimator.ofFloat(0f, 360f).apply {
-            duration = 1000
-            addUpdateListener {
-                base_view.rotation = it.animatedValue as Float
+        valueAnimatorList.add(ValueAnimator.ofFloat(0f, 360f)
+            .apply {
+                duration = 1000
+                addUpdateListener {
+                    base_view.rotation = it.animatedValue as Float
+                }
+                interpolator = LinearInterpolator()
+                repeatMode = ValueAnimator.RESTART
+                repeatCount = Animation.INFINITE
+                start()
             }
-            interpolator = LinearInterpolator()
-            repeatMode = ValueAnimator.RESTART
-            repeatCount = Animation.INFINITE
-            start()
-        }
+        )
 
-        ValueAnimator.ofFloat(0f, 360f).apply {
-            duration = 1600
-            addUpdateListener {
-                ring_inner_view.rotation = it.animatedValue as Float
+        valueAnimatorList.add(ValueAnimator.ofFloat(0f, 360f)
+            .apply {
+                duration = 1600
+                addUpdateListener {
+                    ring_inner_view.rotation = it.animatedValue as Float
+                }
+                interpolator = LinearInterpolator()
+                repeatMode = ValueAnimator.RESTART
+                repeatCount = Animation.INFINITE
+                start()
             }
-            interpolator = LinearInterpolator()
-            repeatMode = ValueAnimator.RESTART
-            repeatCount = Animation.INFINITE
-            start()
-        }
+        )
 
-        ValueAnimator.ofFloat(0f, 360f).apply {
-            duration = 4000
-            addUpdateListener {
-                ring_outer_view.rotation = it.animatedValue as Float
+        valueAnimatorList.add(ValueAnimator.ofFloat(0f, 360f)
+            .apply {
+                duration = 4000
+                addUpdateListener {
+                    ring_outer_view.rotation = it.animatedValue as Float
+                }
+                interpolator = LinearInterpolator()
+                repeatMode = ValueAnimator.RESTART
+                repeatCount = Animation.INFINITE
+                reverse()
             }
-            interpolator = LinearInterpolator()
-            repeatMode = ValueAnimator.RESTART
-            repeatCount = Animation.INFINITE
-            reverse()
-        }
+        )
 
-        ValueAnimator.ofFloat(0f, 360f).apply {
-            duration = 1000
-            addUpdateListener {
-                image_view.rotation = it.animatedValue as Float
+        valueAnimatorList.add(ValueAnimator.ofFloat(0f, 360f)
+            .apply {
+                duration = 1000
+                addUpdateListener {
+                    image_view.rotation = it.animatedValue as Float
+                }
+                repeatMode = ValueAnimator.REVERSE
+                repeatCount = Animation.INFINITE
+                start()
             }
-            repeatMode = ValueAnimator.REVERSE
-            repeatCount = Animation.INFINITE
-            start()
-        }
+        )
 
         fab.setOnClickListener {
             if (opaque) {
@@ -168,6 +177,10 @@ class AnimationActivity : AppCompatActivity(), CoroutineScope {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        valueAnimatorList.forEach {
+            it.cancel()
+        }
 
         job.cancel()
         disposer.clear()
