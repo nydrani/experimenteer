@@ -202,6 +202,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(SubscriptionActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_system -> {
+                    startActivity(SystemActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_system_health -> {
                     startActivity(SystemHealthActivity.buildIntent(this))
                     true

@@ -163,6 +163,10 @@
             android:title="Subscription activity"/>
 
         <item
+            android:id="@+id/nav_system"
+            android:title="System activity"/>
+
+        <item
             android:id="@+id/nav_system_health"
             android:title="System health activity"/>
 
