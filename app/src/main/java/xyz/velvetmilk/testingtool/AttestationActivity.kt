@@ -67,6 +67,7 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 //            builder.appendln(String.format("Native call system sh: %b", attestNativeCallSystemSh()))
 //            builder.appendln(String.format("Native call ps -A: %b", attestNativeCallProcessList()))
 //            builder.appendln(String.format("Native call fork: %b", attestNativeCallFork()))
+            builder.appendln(String.format("Native call cpuInfo: %b", attestNativeCpuInfo()))
 //            builder.appendln(String.format("Native open proc directory: %b", attestNativeOpenProcDirectory()))
 //            builder.appendln(String.format("Native make directory: %b", attestNativeMakeDirectory()))
             builder.appendln(String.format("Native check system properties: %b", attestNativeCheckSystemProperties()))
@@ -203,6 +204,10 @@ class AttestationActivity : AppCompatActivity(), CoroutineScope {
 
     private fun attestNativeCallFork(): Boolean {
         return attestationJNILib.callFork()
+    }
+
+    private fun attestNativeCpuInfo(): Boolean {
+        return attestationJNILib.cpuInfo()
     }
 
     private fun attestNativeMakeDirectory(): Boolean {

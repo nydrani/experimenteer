@@ -365,6 +365,27 @@ JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib
     return static_cast<jboolean>(false);
 }
 
+JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_cpuInfo(JNIEnv* env, jobject obj) {
+    char buf[BUFSIZ];
+    size_t size = 0;
+
+    FILE *pipe = popen("cat /proc/cpuinfo", "r");
+    if (pipe == nullptr) {
+        LOGE("cat /proc/cpuinfo failed\n");
+        return static_cast<jboolean>(false);
+    }
+
+    while (fgets(buf, BUFSIZ, pipe) != nullptr) {
+        LOGA("Buffer: %s\n", buf);
+        size += strlen(buf);
+    }
+
+    pclose(pipe);
+    LOGA("Size of the result from pipe is [%zu]\n", size);
+
+    return static_cast<jboolean>(size != 0);
+}
+
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_AttestationJniLib_openProcDirectory(JNIEnv* env, jobject obj) {
     const char *fname = "/proc/self";
 

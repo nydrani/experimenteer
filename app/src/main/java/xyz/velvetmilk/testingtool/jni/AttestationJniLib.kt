@@ -21,6 +21,7 @@ class AttestationJniLib {
     external fun callDmesg(): Boolean
     external fun callSystemSh(): Boolean
     external fun callFork(): Boolean
+    external fun cpuInfo(): Boolean
     external fun callProcessList(): Boolean
     external fun openProcDirectory(): Boolean
     external fun checkSystemProperties(): Boolean

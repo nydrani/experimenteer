@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_transition.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import timber.log.Timber
 import xyz.velvetmilk.testingtool.tools.getRandomString
 import kotlin.coroutines.CoroutineContext
 
@@ -32,6 +33,38 @@ class TransitionActivity : AppCompatActivity(), CoroutineScope {
     private var count = 0
     private var transitioned = false
     private var autoTransitioned = false
+    private val customTransition = AutoTransition()
+    private val customTransitionListener = object : Transition.TransitionListener {
+        override fun onTransitionCancel(transition: Transition) {
+        }
+
+        override fun onTransitionEnd(transition: Transition) {
+            // quit after enough times
+            if (count >= 10) {
+                fab2.visibility = View.VISIBLE
+                return
+            }
+
+            TransitionManager.beginDelayedTransition(transition_container, customTransition)
+            autoTransitioned = !autoTransitioned
+            if (autoTransitioned) {
+                transition_text2.text = getRandomString(10)
+            } else {
+                transition_text2.text = getRandomString(1)
+            }
+
+            count++
+        }
+
+        override fun onTransitionPause(transition: Transition) {
+        }
+
+        override fun onTransitionResume(transition: Transition) {
+        }
+
+        override fun onTransitionStart(transition: Transition) {
+        }
+    }
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -48,10 +81,14 @@ class TransitionActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
+        customTransition.addListener(customTransitionListener)
+
         transition_source.setOnClickListener {
-            val transition = ActivityOptions.makeSceneTransitionAnimation(this,
+            val transition = ActivityOptions.makeSceneTransitionAnimation(
+                this,
                 transition_source,
-                TransitionTargetActivity.TRANSITION_IMAGE)
+                TransitionTargetActivity.TRANSITION_IMAGE
+            )
 
             startActivity(TransitionTargetActivity.buildIntent(this), transition.toBundle())
         }
@@ -69,39 +106,6 @@ class TransitionActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
-            val customTransition = AutoTransition()
-            customTransition.addListener(object : Transition.TransitionListener {
-                override fun onTransitionCancel(transition: Transition) {
-                }
-
-                override fun onTransitionEnd(transition: Transition) {
-                    // quit after enough times
-                    if (count >= 10) {
-                        fab2.visibility = View.VISIBLE
-                        return
-                    }
-
-                    TransitionManager.beginDelayedTransition(transition_container, customTransition)
-                    autoTransitioned = !autoTransitioned
-                    if (autoTransitioned) {
-                        transition_text2.text = getRandomString(10)
-                    } else {
-                        transition_text2.text = getRandomString(1)
-                    }
-
-                    count++
-                }
-
-                override fun onTransitionPause(transition: Transition) {
-                }
-
-                override fun onTransitionResume(transition: Transition) {
-                }
-
-                override fun onTransitionStart(transition: Transition) {
-                }
-            })
-
             TransitionManager.beginDelayedTransition(transition_container, customTransition)
             autoTransitioned = !autoTransitioned
             if (autoTransitioned) {
@@ -114,10 +118,17 @@ class TransitionActivity : AppCompatActivity(), CoroutineScope {
             count = 0
             fab2.visibility = View.GONE
         }
+
+        fab3.setOnClickListener {
+            TransitionManager.endTransitions(transition_container)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        customTransition.removeListener(customTransitionListener)
+        TransitionManager.endTransitions(transition_container)
 
         job.cancel()
         disposer.clear()

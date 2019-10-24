@@ -40,8 +40,6 @@ class SystemActivity : AppCompatActivity(), CoroutineScope {
     }
 
     interface NetworkService {
-        data class TestResponse(val message: String)
-
         @GET("/external")
         @Streaming
         suspend fun externalGet(): ResponseBody
