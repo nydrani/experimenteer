@@ -14,8 +14,10 @@ interface ActivityComponent {
     }
 
     fun inject(activity: DaggerActivity)
+    fun inject(activity: NetworkActivity)
     fun inject(activity: SocketActivity)
     fun inject(activity: SecureSocketActivity)
     fun inject(activity: PlayServicesActivity)
     fun inject(activity: RNGActivity)
+    fun inject(activity: SystemActivity)
 }

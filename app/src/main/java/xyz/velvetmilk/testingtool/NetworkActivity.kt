@@ -20,9 +20,13 @@ import retrofit2.http.POST
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 import okhttp3.CertificatePinner
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import xyz.velvetmilk.testingtool.di.ActivityModule
+import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
 import xyz.velvetmilk.testingtool.net.GzipInterceptor
+import javax.inject.Inject
 
 class NetworkActivity : AppCompatActivity(), CoroutineScope {
 
@@ -48,6 +52,11 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         suspend fun homeGet(): String
     }
 
+    @Inject
+    lateinit var gsonConverterFactory: GsonConverterFactory
+    @Inject
+    lateinit var scalarsConverterFactory: ScalarsConverterFactory
+
     private lateinit var service: NetworkService
     private lateinit var gzipService: NetworkService
 
@@ -66,6 +75,11 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         job = Job()
         disposer = CompositeDisposable()
 
+        // dagger injection
+        DaggerActivityComponent.factory()
+            .create((application as TestingApp).appComponent, ActivityModule(this))
+            .inject(this)
+
         val certificatePinner = CertificatePinner.Builder()
             .add("test.shield.airpayapp.com.au", "sha256/LK+SR338fYlYypXGIS3BQLBvgKKdC7gdn8PFf4vm6ps=")
             .add("test.shield.airpayapp.com.au", "sha256/RkhWTcfJAQN/YxOR12VkPo+PhmIoSfWd/JVkg44einY=")
@@ -73,30 +87,40 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
             .build()
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(GzipInterceptor())
+            .addNetworkInterceptor(HttpLoggingInterceptor())
+            .certificatePinner(certificatePinner)
+            .build()
+
+        val gzipOkHttpClient = OkHttpClient.Builder()
+            .addNetworkInterceptor(HttpLoggingInterceptor())
+            .addNetworkInterceptor(GzipInterceptor())
             .certificatePinner(certificatePinner)
             .build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
             .client(okHttpClient)
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(scalarsConverterFactory)
+            .addConverterFactory(gsonConverterFactory)
             .build()
 
         val gzipRetrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
-            .client(okHttpClient)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .client(gzipOkHttpClient)
+            .addConverterFactory(scalarsConverterFactory)
+            .addConverterFactory(gsonConverterFactory)
             .build()
 
         service = retrofit.create(NetworkService::class.java)
         gzipService = gzipRetrofit.create(NetworkService::class.java)
 
         fab.setOnClickListener {
-            launch {
+            launch(Dispatchers.IO) {
                 try {
-                    network_view.text = service.homeGet()
+                    val res = service.homeGet()
+                    launch(Dispatchers.Main) {
+                        network_view.text = res
+                    }
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()
@@ -108,9 +132,12 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
-            launch {
+            launch(Dispatchers.IO) {
                 try {
-                    network_view.text = service.testPost().message
+                    val res = service.testPost().message
+                    launch(Dispatchers.Main) {
+                        network_view.text = res
+                    }
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()
@@ -122,9 +149,12 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab3.setOnClickListener {
-            launch {
+            launch(Dispatchers.IO) {
                 try {
-                    network_view.text = service.testGet().message
+                    val res = service.testGet().message
+                    launch(Dispatchers.Main) {
+                        network_view.text = res
+                    }
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()
@@ -136,9 +166,12 @@ class NetworkActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab4.setOnClickListener {
-            launch {
+            launch(Dispatchers.IO) {
                 try {
-                    network_view.text = gzipService.testPost().message
+                    val res = gzipService.testPost().message
+                    launch(Dispatchers.Main) {
+                        network_view.text = res
+                    }
                 } catch (e: IOException) {
                     // io exception
                     e.printStackTrace()

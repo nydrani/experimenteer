@@ -25,6 +25,6 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT jboolean JNICALL Java_xyz_velvetmilk_testingtool_jni_ExternalJniLib_ping(JNIEnv* env, jobject obj) {
-    return static_cast<jboolean>(true);
+    return static_cast<jboolean>(false);
 }
 }

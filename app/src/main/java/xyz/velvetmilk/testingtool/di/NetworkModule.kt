@@ -2,9 +2,14 @@ package xyz.velvetmilk.testingtool.di
 
 import dagger.Module
 import dagger.Provides
+import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import xyz.velvetmilk.testingtool.net.*
+import javax.inject.Named
+import javax.inject.Qualifier
 
 @Module
 class NetworkModule {
@@ -13,8 +18,21 @@ class NetworkModule {
     @ApplicationScope
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor())
+            .addNetworkInterceptor(HttpLoggingInterceptor())
+            .addNetworkInterceptor(GzipInterceptor())
             .build()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideScalarsConverterFactory(): ScalarsConverterFactory {
+        return ScalarsConverterFactory.create()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideGsonConverterFactory(): GsonConverterFactory {
+        return GsonConverterFactory.create()
     }
 
     @Provides
