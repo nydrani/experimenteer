@@ -18,6 +18,7 @@ static unsigned char pinBlock[PIN_BLOCK_NIBBLE_SIZE];
 static unsigned char curPos = 0;
 static int randomFd = -1;
 
+
 char getRandomByte(JNIEnv* env) {
     // securerandom instance --> finish
 
@@ -50,7 +51,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
-    // do nothing lol
+    // close urandom fd if open
     if (randomFd != -1) {
         close(randomFd);
     }

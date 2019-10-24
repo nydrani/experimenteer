@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_system.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.velvetmilk.testingtool.jni.ExternalJniLib
 import kotlin.coroutines.CoroutineContext
 
 class SystemActivity : AppCompatActivity(), CoroutineScope {
@@ -21,6 +22,8 @@ class SystemActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, SystemActivity::class.java)
         }
     }
+
+    private val externalJniLib = ExternalJniLib()
 
     private lateinit var disposer: CompositeDisposable
     private lateinit var job: Job
@@ -47,6 +50,10 @@ class SystemActivity : AppCompatActivity(), CoroutineScope {
             stringBuilder.appendln(System.nanoTime())
 
             base_view.text = stringBuilder.toString()
+        }
+
+        fab2.setOnClickListener {
+            base_view.text = externalJniLib.ping().toString()
         }
     }
 
