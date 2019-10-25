@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(BaseActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_cipher -> {
+                    startActivity(CipherActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_collapsing_toolbar -> {
                     startActivity(CollapsingToolbarLayoutTestActivity.buildIntent(this))
                     true

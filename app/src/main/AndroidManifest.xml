@@ -61,6 +61,7 @@
         <activity android:name=".AttestationActivity"/>
         <activity android:name=".BarcodeScannerActivity"/>
         <activity android:name=".BaseActivity"/>
+        <activity android:name=".CipherActivity"/>
         <activity android:name=".CollapsingToolbarLayoutTestActivity"/>
         <activity android:name=".ConstraintBarrierActivity"/>
         <activity android:name=".CoroutineActivity"/>
