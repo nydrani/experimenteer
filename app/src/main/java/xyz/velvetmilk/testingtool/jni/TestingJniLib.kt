@@ -1,5 +1,7 @@
 package xyz.velvetmilk.testingtool.jni
 
+import xyz.velvetmilk.testingtool.models.CipherResult
+
 class TestingJniLib {
 
     init {
@@ -19,4 +21,6 @@ class TestingJniLib {
 
     external fun random(): Byte
     external fun urandom(): Byte
+
+    external fun encryptPin(key: ByteArray, data: ByteArray): CipherResult
 }

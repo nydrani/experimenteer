@@ -33,6 +33,50 @@ char getRandomByte(JNIEnv* env) {
     return rand;
 }
 
+jobject encryptPin(JNIEnv* env, jbyteArray key, jbyteArray data) {
+    jstring jdesstring = env->NewStringUTF("DESede");
+    jstring jdesalgostring = env->NewStringUTF("DESede/CBC/NoPadding");
+
+    jclass secretKeyFactoryClass = env->FindClass("javax/crypto/SecretKeyFactory");
+    jmethodID secretKeyFactoryGetInstance = env->GetStaticMethodID(secretKeyFactoryClass, "getInstance", "(Ljava/lang/String;)Ljavax/crypto/SecretKeyFactory;");
+    jmethodID secretKeyFactoryGenerateSecret = env->GetMethodID(secretKeyFactoryClass, "generateSecret", "(Ljava/security/spec/KeySpec;)Ljavax/crypto/SecretKey;");
+
+    jclass desedeKeySpecClass = env->FindClass("javax/crypto/spec/DESedeKeySpec");
+    jmethodID desedeKeySpecInit = env->GetMethodID(desedeKeySpecClass, "<init>", "([B)V");
+
+    jclass cipherClass = env->FindClass("javax/crypto/Cipher");
+    jmethodID cipherGetInstance = env->GetStaticMethodID(cipherClass, "getInstance", "(Ljava/lang/String;)Ljavax/crypto/Cipher;");
+    jmethodID cipherInit = env->GetMethodID(cipherClass, "init", "(ILjava/security/Key;)V");
+    jmethodID cipherGetIV = env->GetMethodID(cipherClass, "getIV", "()[B");
+    jmethodID cipherDoFinal = env->GetMethodID(cipherClass, "doFinal", "([B)[B");
+
+    // make calls here
+    jobject desedeKeySpecInstance = env->NewObject(desedeKeySpecClass, desedeKeySpecInit, key);
+
+//    jobject secretKeyFactoryObj = env->GetObjectClass(secretKeyFactoryClass);
+    jobject secretKeyFactoryInstance = env->CallStaticObjectMethod(secretKeyFactoryClass, secretKeyFactoryGetInstance, jdesstring);
+    jobject secretKey = env->CallObjectMethod(secretKeyFactoryInstance, secretKeyFactoryGenerateSecret, desedeKeySpecInstance);
+
+//    jobject cipherObj = env->GetObjectClass(cipherClass);
+    jobject cipherInstance = env->CallStaticObjectMethod(cipherClass, cipherGetInstance, jdesalgostring);
+
+    // 1 is Cipher.ENCRYPT_MODE
+    env->CallVoidMethod(cipherInstance, cipherInit, 1, secretKey);
+    auto iv = reinterpret_cast<jbyteArray>(env->CallObjectMethod(cipherInstance, cipherGetIV));
+    auto res = reinterpret_cast<jbyteArray>(env->CallObjectMethod(cipherInstance, cipherDoFinal, data));
+
+    // free strings
+    env->DeleteLocalRef(jdesstring);
+    env->DeleteLocalRef(jdesalgostring);
+
+    // return this
+    jclass cipherResultClass = env->FindClass("xyz/velvetmilk/testingtool/models/CipherResult");
+    jmethodID cipherResultInit = env->GetMethodID(cipherResultClass, "<init>", "([B[B)V");
+    jobject cipherResultInstance = env->NewObject(cipherResultClass, cipherResultInit, iv, res);
+
+    return cipherResultInstance;
+}
+
 extern "C" {
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env;
@@ -214,5 +258,12 @@ JNIEXPORT jbyte JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_urando
     }
 
     return static_cast<jbyte>(rand);
+}
+
+JNIEXPORT jobject JNICALL Java_xyz_velvetmilk_testingtool_jni_TestingJniLib_encryptPin(JNIEnv* env, jobject obj, jbyteArray key, jbyteArray data) {
+    // TODO: figure out what to do if copied
+    jobject encrypted = encryptPin(env, key, data);
+
+    return encrypted;
 }
 }

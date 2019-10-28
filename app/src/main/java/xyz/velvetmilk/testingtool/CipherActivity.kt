@@ -21,10 +21,14 @@ import android.security.keystore.KeyProtection
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import xyz.velvetmilk.testingtool.jni.TestingJniLib
 import xyz.velvetmilk.testingtool.net.SslManager
 import java.security.SecureRandom
 import java.security.Security
 import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.DESKeySpec
+import javax.crypto.spec.DESedeKeySpec
+import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
@@ -51,6 +55,8 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
 
     @Inject
     lateinit var sslManager: SslManager
+
+    private val testingJNILib = TestingJniLib()
 
     private lateinit var store: KeyStore
 
@@ -84,24 +90,27 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
         fab.setOnClickListener {
             launch(Dispatchers.Default) {
                 val secure = SecureRandom()
-                val key = ByteArray(192 / 8 )
+                val key = ByteArray(192 / 8)
                 secure.nextBytes(key)
 
-                val secretKeyFactory = SecretKeyFactory.getInstance(TDES_ALGORITHM, Security.getProvider(SPONGYCASTLE_PROVIDER))
-
-                val keyProtection = KeyProtection.Builder(KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build()
-
-                val secretKeySpec = SecretKeySpec(key, TDES_ALGORITHM)
+                val secretKeyFactory = SecretKeyFactory.getInstance(TDES_ALGORITHM)
+                val secretKeySpec = DESedeKeySpec(key)
                 val secretKey = secretKeyFactory.generateSecret(secretKeySpec)
 
-                store.setEntry(TDES_KEY_ALIAS, KeyStore.SecretKeyEntry(secretKey), keyProtection)
+//                val keyProtection = KeyProtection.Builder(KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+//                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+//                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+//                    .build()
 
+                // NOTE: AndroidKeyStore does not support storage of DESede keys
+                //store.setEntry(TDES_KEY_ALIAS, KeyStore.SecretKeyEntry(secretKey), keyProtection)
+
+                val stringBuilder = StringBuilder()
+                stringBuilder.appendln(key.toBase64())
+                stringBuilder.appendln(secretKey.encoded.toBase64())
 
                 launch(Dispatchers.Main) {
-                    cipher_view.text = key.toBase64()
+                    cipher_view.text = stringBuilder.toString()
                 }
             }
         }
@@ -124,7 +133,7 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
         fab3.setOnClickListener {
             launch(Dispatchers.Default) {
                 val secure = SecureRandom()
-                val randomData = ByteArray(64 / 8)
+                val randomData = ByteArray(192 / 8)
                 secure.nextBytes(randomData)
 
                 val keyGenerator = KeyGenerator.getInstance(TDES_ALGORITHM)
@@ -141,6 +150,38 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
                 stringBuilder.appendln(keyGenerator.provider)
                 stringBuilder.appendln(desedeKey.encoded.toBase64())
                 stringBuilder.appendln(encrypted.toBase64())
+
+                launch(Dispatchers.Main) {
+                    cipher_view.text = stringBuilder.toString()
+                }
+            }
+        }
+
+        fab4.setOnClickListener {
+            launch(Dispatchers.Default) {
+                val data = byteArrayOf(1, 2, 3, 4, 5, 6, 7, 8)
+
+                val secure = SecureRandom()
+                val randomKey = ByteArray(192 / 8)
+                secure.nextBytes(randomKey)
+
+                // encrypt using NDK
+                val encrypted = testingJNILib.encryptPin(randomKey, data)
+
+                // decrypt using Java API
+                val secretKeyFactory = SecretKeyFactory.getInstance(TDES_ALGORITHM)
+                val secretKeySpec = DESedeKeySpec(randomKey)
+                val secretKey = secretKeyFactory.generateSecret(secretKeySpec)
+
+                // decrypt data
+                val cipherInstance = Cipher.getInstance(TDES_CIPHER_ALGORITHM)
+                cipherInstance.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(encrypted.iv))
+                val decrypted = cipherInstance.doFinal(encrypted.result)
+
+                val stringBuilder = StringBuilder()
+                stringBuilder.appendln(data.toBase64())
+                stringBuilder.appendln(encrypted.result.toBase64())
+                stringBuilder.appendln(decrypted.toBase64())
 
                 launch(Dispatchers.Main) {
                     cipher_view.text = stringBuilder.toString()
