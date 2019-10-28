@@ -17,14 +17,16 @@ import javax.crypto.Cipher
 import kotlin.coroutines.CoroutineContext
 import javax.crypto.KeyGenerator
 import android.security.keystore.KeyProperties
-import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProtection
 import timber.log.Timber
+import xyz.velvetmilk.testingtool.di.ActivityModule
+import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
+import xyz.velvetmilk.testingtool.net.SslManager
 import java.security.SecureRandom
 import java.security.Security
 import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.DESedeKeySpec
 import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
 
 class CipherActivity : AppCompatActivity(), CoroutineScope {
 
@@ -33,6 +35,7 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
 
         private const val TDES_ALGORITHM = "DESede"
         private const val TDES_CIPHER_ALGORITHM = "DESede/CBC/NoPadding"
+//        private const val TDES_CIPHER_ALGORITHM = "DESede/CBC/PKCS5Padding"
         private const val TDES_KEY_ALIAS = "TDESbabey"
 
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
@@ -45,6 +48,9 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
             return Intent(context, CipherActivity::class.java)
         }
     }
+
+    @Inject
+    lateinit var sslManager: SslManager
 
     private lateinit var store: KeyStore
 
@@ -60,10 +66,20 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // dagger injection
+        DaggerActivityComponent.factory()
+            .create((application as TestingApp).appComponent, ActivityModule(this))
+            .inject(this)
+
         job = Job()
         disposer = CompositeDisposable()
 
         store = KeyStore.getInstance(KEYSTORE_TYPE).apply { this.load(null) }
+
+        // update sslmanager
+        launch {
+            sslManager.updateProvider(this@CipherActivity)
+        }
 
         fab.setOnClickListener {
             launch(Dispatchers.Default) {
@@ -108,7 +124,7 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
         fab3.setOnClickListener {
             launch(Dispatchers.Default) {
                 val secure = SecureRandom()
-                val randomData = ByteArray(192 / 8)
+                val randomData = ByteArray(64 / 8)
                 secure.nextBytes(randomData)
 
                 val keyGenerator = KeyGenerator.getInstance(TDES_ALGORITHM)
@@ -120,8 +136,14 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
                 val encrypted = cipherInstance.doFinal(randomData)
 
                 Timber.d(encrypted.toBase64())
+
+                val stringBuilder = StringBuilder()
+                stringBuilder.appendln(keyGenerator.provider)
+                stringBuilder.appendln(desedeKey.encoded.toBase64())
+                stringBuilder.appendln(encrypted.toBase64())
+
                 launch(Dispatchers.Main) {
-                    cipher_view.text = encrypted.toBase64()
+                    cipher_view.text = stringBuilder.toString()
                 }
             }
         }

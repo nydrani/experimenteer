@@ -13,6 +13,7 @@ interface ActivityComponent {
         fun create(applicationComponent: ApplicationComponent, activityModule: ActivityModule): ActivityComponent
     }
 
+    fun inject(activity: CipherActivity)
     fun inject(activity: DaggerActivity)
     fun inject(activity: NetworkActivity)
     fun inject(activity: SocketActivity)
