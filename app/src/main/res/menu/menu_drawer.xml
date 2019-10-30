@@ -67,6 +67,10 @@
             android:title="Dagger activity"/>
 
         <item
+            android:id="@+id/nav_flow"
+            android:title="Flow activity"/>
+
+        <item
             android:id="@+id/nav_focusable"
             android:title="Focusable activity"/>
 

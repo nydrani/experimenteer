@@ -67,6 +67,7 @@
         <activity android:name=".CoroutineActivity"/>
         <activity android:name=".CryptoActivity"/>
         <activity android:name=".DaggerActivity"/>
+        <activity android:name=".FlowActivity"/>
         <activity android:name=".FocusableActivity"/>
         <activity android:name=".GzipActivity"/>
         <activity android:name=".InfoActivity"/>

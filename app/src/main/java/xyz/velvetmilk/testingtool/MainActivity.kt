@@ -106,6 +106,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(DaggerActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_flow -> {
+                    startActivity(FlowActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_focusable -> {
                     startActivity(FocusableActivity.buildIntent(this))
                     true
