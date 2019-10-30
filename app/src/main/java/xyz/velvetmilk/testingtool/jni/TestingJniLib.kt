@@ -22,5 +22,6 @@ class TestingJniLib {
     external fun random(): Byte
     external fun urandom(): Byte
 
+    external fun decryptKey(key: ByteArray, iv: ByteArray): ByteArray
     external fun encryptPin(key: ByteArray, data: ByteArray): CipherResult
 }

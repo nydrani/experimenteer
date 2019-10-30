@@ -3,6 +3,8 @@ package xyz.velvetmilk.testingtool
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
@@ -16,8 +18,6 @@ import java.security.KeyStore
 import javax.crypto.Cipher
 import kotlin.coroutines.CoroutineContext
 import javax.crypto.KeyGenerator
-import android.security.keystore.KeyProperties
-import android.security.keystore.KeyProtection
 import timber.log.Timber
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
@@ -26,10 +26,8 @@ import xyz.velvetmilk.testingtool.net.SslManager
 import java.security.SecureRandom
 import java.security.Security
 import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.DESKeySpec
 import javax.crypto.spec.DESedeKeySpec
 import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
 class CipherActivity : AppCompatActivity(), CoroutineScope {
@@ -39,8 +37,10 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
 
         private const val TDES_ALGORITHM = "DESede"
         private const val TDES_CIPHER_ALGORITHM = "DESede/CBC/NoPadding"
+        private const val AES_CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding"
 //        private const val TDES_CIPHER_ALGORITHM = "DESede/CBC/PKCS5Padding"
         private const val TDES_KEY_ALIAS = "TDESbabey"
+        private const val AES_KEY_ALIAS = "AES256babey"
 
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
 
@@ -181,6 +181,47 @@ class CipherActivity : AppCompatActivity(), CoroutineScope {
                 val stringBuilder = StringBuilder()
                 stringBuilder.appendln(data.toBase64())
                 stringBuilder.appendln(encrypted.result.toBase64())
+                stringBuilder.appendln(decrypted.toBase64())
+
+                launch(Dispatchers.Main) {
+                    cipher_view.text = stringBuilder.toString()
+                }
+            }
+        }
+
+        fab5.setOnClickListener {
+            launch(Dispatchers.Default) {
+                // generate key for encrypting and decrypting
+                val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, Security.getProvider(ANDROID_KEYSTORE_PROVIDER))
+                val spec = KeyGenParameterSpec.Builder(AES_KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .setKeySize(128)
+                    .build()
+                keyGenerator.init(spec)
+                keyGenerator.generateKey()
+
+                val secretKeyEntry = store.getEntry(AES_KEY_ALIAS, null) as KeyStore.SecretKeyEntry
+                val secretKey = secretKeyEntry.secretKey
+                // NOTE: more direct way to get the key
+                // val secretKey = store.getKey(AES_KEY_ALIAS, null) as SecretKey
+
+                val secure = SecureRandom()
+                val randomKey = ByteArray(192 / 8)
+                secure.nextBytes(randomKey)
+
+                // encrypt using Java API
+                val cipherInstance = Cipher.getInstance(AES_CIPHER_ALGORITHM)
+                cipherInstance.init(Cipher.ENCRYPT_MODE, secretKey)
+                val iv = cipherInstance.iv
+                val encrypted = cipherInstance.doFinal(randomKey)
+
+                // decrypt key in ndk
+                val decrypted = testingJNILib.decryptKey(encrypted, iv)
+
+                val stringBuilder = StringBuilder()
+                stringBuilder.appendln(randomKey.toBase64())
+                stringBuilder.appendln(encrypted.toBase64())
                 stringBuilder.appendln(decrypted.toBase64())
 
                 launch(Dispatchers.Main) {
