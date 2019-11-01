@@ -134,6 +134,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(KeyStoreActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_kotlin -> {
+                    startActivity(KotlinActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_location -> {
                     startActivity(LocationActivity.buildIntent(this))
                     true

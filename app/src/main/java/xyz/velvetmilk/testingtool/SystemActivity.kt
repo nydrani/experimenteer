@@ -23,7 +23,6 @@ import retrofit2.http.Streaming
 import xyz.velvetmilk.testingtool.di.ActivityModule
 import xyz.velvetmilk.testingtool.di.DaggerActivityComponent
 import xyz.velvetmilk.testingtool.jni.ExternalJniLib
-import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -97,13 +96,13 @@ class SystemActivity : AppCompatActivity(), CoroutineScope {
         }
 
         fab2.setOnClickListener {
-            val externalJniLib = ExternalJniLib(this, true)
+            val externalJniLib = ExternalJniLib(this, ExternalJniLib.LibraryType.INTERNAL)
             base_view.text = externalJniLib.ping().toString()
         }
 
         fab3.setOnClickListener {
             try {
-                val externalJniLib = ExternalJniLib(this, false)
+                val externalJniLib = ExternalJniLib(this, ExternalJniLib.LibraryType.EXTERNAL)
                 base_view.text = externalJniLib.ping().toString()
             } catch (e: UnsatisfiedLinkError) {
                 base_view.text = e.localizedMessage
@@ -114,10 +113,10 @@ class SystemActivity : AppCompatActivity(), CoroutineScope {
             launch(Dispatchers.IO) {
                 try {
                     val stream = service.externalGet().byteStream()
-                    // write bytes to file
-                    File(filesDir, "libexternal.so")
-                        .outputStream()
-                        .use { stream.copyTo(it) }
+
+                    // store file for jni usage
+                    ExternalJniLib.storeEncFile(this@SystemActivity, stream)
+
                     launch(Dispatchers.Main) {
                         base_view.text = "done"
                     }

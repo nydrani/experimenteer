@@ -72,6 +72,7 @@
         <activity android:name=".GzipActivity"/>
         <activity android:name=".InfoActivity"/>
         <activity android:name=".JSONActivity"/>
+        <activity android:name=".KotlinActivity"/>
         <activity android:name=".KeyStoreActivity"/>
         <activity android:name=".LocationActivity"/>
         <activity android:name=".MaterialActivity"/>

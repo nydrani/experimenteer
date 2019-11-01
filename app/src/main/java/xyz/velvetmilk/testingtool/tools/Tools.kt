@@ -154,7 +154,7 @@ fun getRandomString(length: Int) : String {
 }
 
 fun encodeHexString(data: ByteArray): String {
-    val DIGITS_LOWER = charArrayOf(
+    val digitsLower = charArrayOf(
         '0',
         '1',
         '2',
@@ -178,8 +178,8 @@ fun encodeHexString(data: ByteArray): String {
     var i = 0
     var j = 0
     while (i < l) {
-        out[j++] = DIGITS_LOWER[(0xF0 and data[i].toInt()).ushr(4)]
-        out[j++] = DIGITS_LOWER[0x0F and data[i].toInt()]
+        out[j++] = digitsLower[(0xF0 and data[i].toInt()).ushr(4)]
+        out[j++] = digitsLower[0x0F and data[i].toInt()]
         i++
     }
     return String(out)

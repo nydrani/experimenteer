@@ -95,6 +95,10 @@
             android:title="Keystore activity"/>
 
         <item
+            android:id="@+id/nav_kotlin"
+            android:title="Kotlin activity"/>
+
+        <item
             android:id="@+id/nav_location"
             android:title="Location activity"/>
 
