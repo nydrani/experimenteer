@@ -26,11 +26,12 @@ class ExternalJniLib @Throws(UnsatisfiedLinkError::class, GeneralSecurityExcepti
     }
 
     companion object {
+        private val TAG = ExternalJniLib::class.simpleName
+
         private const val AES_ALGORITHM = "AES"
         private const val AES_CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding"
         private const val AES_KEY_ALIAS = "externalaeskey"
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
-        private const val EXTERNAL_SHARED_PREFERENCES_NAME = "EXTERNAL_LIB_PREFERENCES"
         private const val EXTERNAL_LIB_IV_KEY = "EXTERNAL_LIB_IV"
 
         // NOTE: last 32 bytes are [key, iv]
@@ -60,10 +61,8 @@ class ExternalJniLib @Throws(UnsatisfiedLinkError::class, GeneralSecurityExcepti
             val secretKey = secretKeyFactory.generateSecret(secretKeySpec)
             store.setEntry(AES_KEY_ALIAS, KeyStore.SecretKeyEntry(secretKey), aesKeyProtection)
 
-
             // store iv in sharedpreferences
-            val sharedPreferences =
-                context.getSharedPreferences(EXTERNAL_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE)
             sharedPreferences.edit().putString(EXTERNAL_LIB_IV_KEY, iv.toBase64()).apply()
         }
     }
@@ -84,8 +83,7 @@ class ExternalJniLib @Throws(UnsatisfiedLinkError::class, GeneralSecurityExcepti
 
     @Throws(GeneralSecurityException::class)
     private fun unencryptFile(context: Context): File {
-        val sharedPreferences =
-            context.getSharedPreferences(EXTERNAL_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE)
         val iv = (sharedPreferences.getString(EXTERNAL_LIB_IV_KEY, null) ?: "").fromBase64()
 
         val store = KeyStore.getInstance(KEYSTORE_TYPE).apply { this.load(null) }

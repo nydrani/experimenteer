@@ -83,6 +83,10 @@
             android:title="Info activity"/>
 
         <item
+            android:id="@+id/nav_job_scheduler"
+            android:title="Job scheduler activity"/>
+
+        <item
             android:id="@+id/nav_json"
             android:title="JSON activity"/>
 
@@ -213,6 +217,10 @@
         <item
             android:id="@+id/nav_window"
             android:title="Window activity"/>
+
+        <item
+            android:id="@+id/nav_work"
+            android:title="Work activity"/>
 
     </group>
 

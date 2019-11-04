@@ -126,6 +126,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(InfoActivity.buildIntent(this))
                     true
                 }
+                R.id.nav_job_scheduler -> {
+                    startActivity(JobSchedulerActivity.buildIntent(this))
+                    true
+                }
                 R.id.nav_json -> {
                     startActivity(JSONActivity.buildIntent(this))
                     true
@@ -252,6 +256,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_window -> {
                     startActivity(WindowActivity.buildIntent(this))
+                    true
+                }
+                R.id.nav_work -> {
+                    startActivity(WorkActivity.buildIntent(this))
                     true
                 }
                 else -> false
