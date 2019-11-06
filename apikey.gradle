@@ -1,0 +1,7 @@
+def fileName = rootProject.file("api.keys")
+def apiKeysFile = new Properties()
+apiKeysFile.load(new FileInputStream(fileName))
+
+ext {
+    googleSafetyNetApiKey = apiKeysFile['googleSafetyNetApiKey']
+}

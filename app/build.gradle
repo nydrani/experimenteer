@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply from: "$rootDir/apikey.gradle"
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -41,11 +43,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+
+            buildConfigField "String", "GOOGLE_SAFETY_NET_API_KEY", "\"$googleSafetyNetApiKey\""
+
         }
 
         debug {
             minifyEnabled false
             debuggable true
+
+            buildConfigField "String", "GOOGLE_SAFETY_NET_API_KEY", "\"$googleSafetyNetApiKey\""
 
             kotlinOptions {
                 freeCompilerArgs += [

@@ -20,7 +20,7 @@ class SafetyNetActivity : AppCompatActivity(), CoroutineScope {
 
     companion object {
         private val TAG = SafetyNetActivity::class.simpleName
-        private const val apiKey = "***REMOVED***"
+        private const val apiKey: String = BuildConfig.GOOGLE_SAFETY_NET_API_KEY
 
         fun buildIntent(context: Context): Intent {
             return Intent(context, SafetyNetActivity::class.java)

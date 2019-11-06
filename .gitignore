@@ -12,3 +12,7 @@ captures
 *.iml
 .externalNativeBuild
 */.cxx
+
+# API keys
+api.keys
+
